@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>963212891501-7ktu4329e5el4fm0h2cafm9ca5b7q9lh.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.963212891501-7ktu4329e5el4fm0h2cafm9ca5b7q9lh</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>963212891501-irr55ugeod8vb3hnjdkpj7vtvd57hnpe.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCPC4dl9xkDFEr90Y0LAH9vq1G9JuflKs0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>963212891501</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>dev.celera.coach</string>
+	<key>PROJECT_ID</key>
+	<string>celera-coach</string>
+	<key>STORAGE_BUCKET</key>
+	<string>celera-coach.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:963212891501:ios:377fb29a2d1a3c22047664</string>
+</dict>
+</plist>
