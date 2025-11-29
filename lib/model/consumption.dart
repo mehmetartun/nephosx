@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coach/model/conversions.dart';
+import 'package:nephosx/model/conversions.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'drink.dart';

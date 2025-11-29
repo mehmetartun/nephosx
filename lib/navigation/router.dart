@@ -1,13 +1,16 @@
-import 'package:coach/pages/consumption_entry/consumption_entry_page.dart';
-import 'package:coach/pages/data_entry/data_entry_page.dart';
-import 'package:coach/pages/sign_in/sign_in_page.dart';
+import 'package:nephosx/pages/consumption_entry/consumption_entry_page.dart';
+import 'package:nephosx/pages/data_entry/data_entry_page.dart';
+import 'package:nephosx/pages/sign_in/sign_in_page.dart';
 import 'package:go_router/go_router.dart';
 
 import '../blocs/authentication/authentication_bloc.dart';
+import '../pages/companies/companies_page.dart';
+import '../pages/datacenters/datacenters_page.dart';
 import '../pages/generic_page.dart';
 import '../pages/profile/profile_page.dart';
 import '../pages/splash_page.dart';
 import '../pages/statistics/statistics_page.dart';
+import '../pages/users/users_page.dart';
 import '../widgets/scaffolds/responsive_scaffold.dart';
 import 'my_navigator_route.dart';
 
@@ -66,7 +69,7 @@ class NestedRouter {
   late final GoRouter _router = GoRouter(
     debugLogDiagnostics: true,
     // navigatorKey: _rootNavigatorKey,
-    initialLocation: "/stats",
+    initialLocation: "/users",
     redirect: (BuildContext context, GoRouterState state) {
       if (state.matchedLocation == MyNavigatorRoute.splash.path) {
         return null;
@@ -77,7 +80,7 @@ class NestedRouter {
           if (state.matchedLocation.contains(MyNavigatorRoute.signIn.path)) {
             // return MyNavigatorRoute.dataEntryTop.path;
             // return MyNavigatorRoute.consumptionEntry.path;
-            return "/stats";
+            return "/users";
             // return null;
           } else {
             return null;
@@ -111,38 +114,17 @@ class NestedRouter {
                   GoRouterState state,
                   StatefulNavigationShell navigationShell,
                 ) {
-                  // Return the widget that implements the custom shell (in this case
-                  // using a BottomNavigationBar). The StatefulNavigationShell is passed
-                  // to be able access the state of the shell and to navigate to other
-                  // branches in a stateful way.
                   return ResponsiveScaffold(navigationShell: navigationShell);
                 },
-            // #enddocregion configuration-builder
-            // #docregion configuration-branches
             branches: <StatefulShellBranch>[
-              // The route branch for the first tab of the bottom navigation bar.
               StatefulShellBranch(
                 // navigatorKey: _sectionANavigatorKey,
                 routes: <RouteBase>[
                   GoRoute(
-                    // The screen to display as the root in the first tab of the
-                    // bottom navigation bar.
-                    // name: "documents",
-                    path: MyNavigatorRoute.stats.path,
-                    name: MyNavigatorRoute.stats.name,
+                    path: MyNavigatorRoute.users.path,
+                    name: MyNavigatorRoute.users.name,
                     builder: (BuildContext context, GoRouterState state) =>
-                        const StatisticsPage(),
-                    // routes: <RouteBase>[
-                    //   // The details screen to display stacked on navigator of the
-                    //   // first tab. This will cover screen A but not the application
-                    //   // shell (bottom navigation bar).
-                    //   GoRoute(
-                    //     // parentNavigatorKey: _sectionANavigatorKey,
-                    //     path: 'details',
-                    //     builder: (BuildContext context, GoRouterState state) =>
-                    //         const DetailsScreen(label: 'A'),
-                    //   ),
-                    // ],
+                        const UsersPage(),
                   ),
                 ],
                 // To enable preloading of the initial locations of branches, pass
@@ -160,21 +142,45 @@ class NestedRouter {
                     // The screen to display as the root in the second tab of the
                     // bottom navigation bar.
                     // name: "convertPdf",
-                    path: MyNavigatorRoute.day.path,
-                    name: MyNavigatorRoute.day.name,
+                    path: MyNavigatorRoute.companies.path,
+                    name: MyNavigatorRoute.companies.name,
                     builder: (BuildContext context, GoRouterState state) =>
-                        const ConsumptionPage(),
-                    // routes: <RouteBase>[
-                    //   GoRoute(
-                    //     name: 'templateManagement',
-                    //     path: 'templateManagement',
-                    //     builder: (BuildContext context, GoRouterState state) =>
-                    //         const TemplateManagementPage(),
-                    //   ),
-                    // ],
+                        const CompaniesPage(),
                   ),
                 ],
               ),
+              StatefulShellBranch(
+                // It's not necessary to provide a navigatorKey if it isn't also
+                // needed elsewhere. If not provided, a default key will be used.
+                // navigatorKey: _sectionANavigatorKey,
+                routes: <RouteBase>[
+                  GoRoute(
+                    // The screen to display as the root in the second tab of the
+                    // bottom navigation bar.
+                    // name: "convertPdf",
+                    path: MyNavigatorRoute.datacenters.path,
+                    name: MyNavigatorRoute.datacenters.name,
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const DatacentersPage(),
+                  ),
+                ],
+              ),
+              // StatefulShellBranch(
+              //   // It's not necessary to provide a navigatorKey if it isn't also
+              //   // needed elsewhere. If not provided, a default key will be used.
+              //   // navigatorKey: _sectionANavigatorKey,
+              //   routes: <RouteBase>[
+              //     GoRoute(
+              //       // The screen to display as the root in the second tab of the
+              //       // bottom navigation bar.
+              //       // name: "convertPdf",
+              //       path: MyNavigatorRoute.gpus.path,
+              //       name: MyNavigatorRoute.gpus.name,
+              //       builder: (BuildContext context, GoRouterState state) =>
+              //           const GpuPage(),
+              //     ),
+              //   ],
+              // ),
 
               // The route branch for the third tab of the bottom navigation bar.
               StatefulShellBranch(

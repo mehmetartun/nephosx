@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:coach/widgets/drinking_note_view.dart';
+import 'package:nephosx/widgets/drinking_note_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_framework/responsive_framework.dart';

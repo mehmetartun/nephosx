@@ -42,6 +42,25 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(width: double.infinity),
+        Container(
+          decoration: ShapeDecoration(shape: CircleBorder()),
+          clipBehavior: Clip.hardEdge,
+          child: Image.memory(
+            _parseBase64Image(user.photoBase64)!,
+            height: 140,
+            fit: BoxFit.cover,
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(user.displayName, style: Theme.of(context).textTheme.titleLarge),
+        SizedBox(height: 10),
+        Text(user.email),
+      ],
+    );
+
     return SizedBox(
       // width: 200,
       child: Card(

@@ -1,51 +1,26 @@
 {
   "project_info": {
-    "project_number": "963212891501",
-    "project_id": "celera-coach",
-    "storage_bucket": "celera-coach.firebasestorage.app"
+    "project_number": "714731543492",
+    "project_id": "nephosx-dev",
+    "storage_bucket": "nephosx-dev.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:963212891501:android:8023be47281e82fd047664",
+        "mobilesdk_app_id": "1:714731543492:android:bd57746927fde862126291",
         "android_client_info": {
-          "package_name": "dev.celera.coach"
+          "package_name": "com.nephosx.dev"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "963212891501-irr55ugeod8vb3hnjdkpj7vtvd57hnpe.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "dev.celera.coach",
-            "certificate_hash": "50537036a64a27f1cf73fcaf0eeebb08a8e7efb0"
-          }
-        },
-        {
-          "client_id": "963212891501-bjtlbml09h1v7f2vkkbo07ikicq6rlqs.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCF0NwViJq-1oz6Aj_L7zU4MtKe-_SiHfk"
+          "current_key": "AIzaSyC2ojfJIQRfY0KEJiv-kAsozWzcCg0fwY4"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "963212891501-bjtlbml09h1v7f2vkkbo07ikicq6rlqs.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "963212891501-7ktu4329e5el4fm0h2cafm9ca5b7q9lh.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "dev.celera.coach"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

@@ -1,6 +1,6 @@
-import 'package:coach/model/consumption_period.dart';
-import 'package:coach/navigation/my_navigator_route.dart';
-import 'package:coach/widgets/month_summary_statistics_widget.dart';
+import 'package:nephosx/model/consumption_period.dart';
+import 'package:nephosx/navigation/my_navigator_route.dart';
+import 'package:nephosx/widgets/month_summary_statistics_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';

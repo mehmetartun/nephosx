@@ -1,4 +1,4 @@
-import 'package:coach/pages/data_entry/data_entry_page.dart';
+import 'package:nephosx/pages/data_entry/data_entry_page.dart';
 import 'package:flutter/material.dart';
 
 import 'profile/profile_page.dart';

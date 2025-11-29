@@ -5,6 +5,11 @@ enum MyNavigatorRoute {
   stats("stats", "stats"),
   day("day", "day"),
   profile("profile", "profile"),
+  users("users", "users"),
+  companies("companies", "companies"),
+  datacenters("datacenters", "datacenters"),
+  gpus("gpus", "gpus"),
+
   splash("/splash", "splash"),
   dataEntry("data_entry", "data_entry"),
   dataEntryTop("/data_entry_top", "data_entry_top"),

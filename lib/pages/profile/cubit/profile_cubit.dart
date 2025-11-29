@@ -1,5 +1,4 @@
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:coach/repositories/database/database.dart';
+import 'package:nephosx/repositories/database/database.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../model/user.dart';
@@ -15,18 +14,10 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   User? user;
 
-  HttpsCallable getProvidersForEmail = FirebaseFunctions.instance.httpsCallable(
-    'getProvidersForEmail',
-  );
-
   void init() async {
     emit(ProfileLoading());
-    HttpsCallableResult result;
     if (uid != null) {
       user = await databaseRepository.getUserData(uid!);
-      result = await getProvidersForEmail.call(<String, dynamic>{
-        'email': user?.email,
-      });
     } else {
       user = null;
     }

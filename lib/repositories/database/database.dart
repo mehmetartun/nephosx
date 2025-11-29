@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../model/company.dart';
 import '../../model/consumption.dart';
+import '../../model/datacenter.dart';
 import '../../model/drink.dart';
 import '../../model/drink_image.dart';
 import '../../model/drinking_note.dart';
+import '../../model/gpu.dart';
 import '../../model/user.dart';
 
 class DatabaseException implements Exception {
@@ -38,6 +41,13 @@ abstract class DatabaseRepository {
   Stream<List<Drink>> getDrinkStream();
   Stream<List<Consumption>> getConsumptionStream(String uid);
   Stream<List<DrinkingNote>> getDrinkingNoteStream(String uid);
+  Stream<User?> getUserStream(String uid);
+
+  Stream<List<User>> getUsersStream();
+  Future<List<User>> getUsers();
+  Future<List<Company>> getCompanies();
+  Future<List<Datacenter>> getDatacenters({String? companyId});
+  Future<List<Gpu>> getGpus({String? datacenterId});
 }
 
 class FirestoreDatabaseRepository extends DatabaseRepository {
@@ -103,6 +113,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
     required Map<String, dynamic> data,
   }) async {
     var ref = await db.collection(collectionPath).add(data);
+    await ref.update({'id': ref.id});
     return {'id': ref.id, 'path': ref.path};
   }
 
@@ -158,7 +169,22 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .collection('users')
         .doc(uid)
         .get();
+
     if (userDocument.exists) {
+      if ((userDocument.data() as Map<String, dynamic>)['company_id'] != null) {
+        var companyDocument = await db
+            .collection('companies')
+            .doc((userDocument.data() as Map<String, dynamic>)['company_id'])
+            .get();
+        if (companyDocument.exists) {
+          Company company = Company.fromJson({
+            ...companyDocument.data()!,
+            'id': companyDocument.id,
+          });
+          final data = userDocument.data() as Map<String, dynamic>;
+          return User.fromMap(data)..company = company;
+        }
+      }
       final data = userDocument.data() as Map<String, dynamic>;
       return User.fromMap(data);
     } else {
@@ -180,5 +206,76 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .collection('users')
         .doc(userData['uid'])
         .update(userData);
+  }
+
+  @override
+  Stream<List<User>> getUsersStream() {
+    return db.collection('users').snapshots().map<List<User>>((snapshot) {
+      return snapshot.docs.map((doc) {
+        return User.fromMap(doc.data());
+      }).toList();
+    });
+  }
+
+  @override
+  Future<List<User>> getUsers() async {
+    var qs = await db.collection("users").get();
+    return qs.docs.map((doc) => User.fromMap(doc.data())).toList();
+  }
+
+  @override
+  Future<List<Company>> getCompanies() async {
+    var qs = await db.collection("companies").get();
+    return qs.docs
+        .map((doc) => Company.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
+  }
+
+  @override
+  Future<List<Datacenter>> getDatacenters({String? companyId}) async {
+    QuerySnapshot<Map<String, dynamic>> qs;
+    if (companyId != null) {
+      qs = await db
+          .collection("datacenters")
+          .where('company_id', isEqualTo: companyId)
+          .get();
+    } else {
+      qs = await db.collection("datacenters").get();
+    }
+
+    return qs.docs
+        .map<Datacenter>(
+          (doc) => Datacenter.fromJson({...doc.data(), 'id': doc.id}),
+        )
+        .toList();
+  }
+
+  @override
+  Stream<User?> getUserStream(String uid) {
+    return db
+        .collection('users')
+        .where('uid', isEqualTo: uid)
+        .snapshots()
+        .map<User?>((snapshot) {
+          return snapshot.docs
+              .map((doc) {
+                return User.fromMap(doc.data());
+              })
+              .toList()
+              .firstOrNull;
+        });
+  }
+
+  @override
+  Future<List<Gpu>> getGpus({String? datacenterId}) async {
+    QuerySnapshot<Map<String, dynamic>> qs;
+    if (datacenterId != null) {
+      qs = await db.collection("datacenters/$datacenterId/gpus").get();
+    } else {
+      qs = await db.collectionGroup("gpus").get();
+    }
+    return qs.docs
+        .map((doc) => Gpu.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
   }
 }

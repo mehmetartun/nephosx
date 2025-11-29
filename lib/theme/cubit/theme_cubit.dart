@@ -6,7 +6,7 @@ import '../../services/local_storage/local_storage.dart';
 part 'theme_state.dart';
 
 class ThemeCubit extends Cubit<ThemeState> {
-  ThemeCubit() : super(const ThemeState(themeMode: ThemeMode.dark));
+  ThemeCubit() : super(const ThemeState(themeMode: ThemeMode.light));
   ThemeMode themeMode = ThemeMode.dark;
 
   void changeThemeMode(ThemeMode mode) async {
@@ -25,6 +25,6 @@ class ThemeCubit extends Cubit<ThemeState> {
     //   default:
     //     return ThemeMode.dark;
     // }
-    return ThemeMode.dark;
+    return ThemeMode.light;
   }
 }

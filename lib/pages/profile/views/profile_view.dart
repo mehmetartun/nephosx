@@ -1,4 +1,4 @@
-import 'package:coach/blocs/authentication/authentication_bloc.dart';
+import 'package:nephosx/blocs/authentication/authentication_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
@@ -15,6 +15,7 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text('Profile'),
         actions: [
           IconButton(icon: const Icon(Icons.edit), onPressed: editProfile),

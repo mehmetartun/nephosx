@@ -1,4 +1,4 @@
-import 'package:coach/widgets/search_field.dart';
+import 'package:nephosx/widgets/search_field.dart';
 import 'package:flutter/material.dart';
 
 import '../../../model/search_result_item.dart';

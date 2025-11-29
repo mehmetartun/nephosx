@@ -1,5 +1,6 @@
-import 'package:coach/widgets/formfields/image_form_field.dart';
+import 'package:nephosx/widgets/formfields/image_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/user.dart';
 
@@ -50,10 +51,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
 
       final updates = {
         'uid': widget.user.uid, // Important for identifying the document
-        'firstName': _firstNameController.text,
-        'lastName': _lastNameController.text,
-        'displayName': _displayNameController.text,
-        'photoBase64': _photoBase64,
+        'first_name': _firstNameController.text,
+        'last_name': _lastNameController.text,
+        'display_name': _displayNameController.text,
+        'photo_base64': _photoBase64,
       };
 
       // Call the cubit to update the user data
@@ -67,54 +68,56 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       appBar: AppBar(
         title: const Text('Edit Profile'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _saveProfile,
-            tooltip: 'Save',
-          ),
-          IconButton(
-            icon: const Icon(Icons.cancel),
-            onPressed: widget.onCancel,
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.save),
+          //   onPressed: _saveProfile,
+          //   tooltip: 'Save',
+          // ),
+          IconButton(icon: const Icon(Icons.close), onPressed: widget.onCancel),
         ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ImageFormfield(
-                onSaved: (value) {
-                  _photoBase64 = value;
-                },
-                onValidate: (value) {
-                  return null;
-                },
-                initialValue: widget.user.photoBase64,
-              ),
-              TextFormField(
-                controller: _firstNameController,
-                decoration: const InputDecoration(labelText: 'First Name'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please enter a first name' : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _lastNameController,
-                decoration: const InputDecoration(labelText: 'Last Name'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please enter a last name' : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _displayNameController,
-                decoration: const InputDecoration(labelText: 'Display Name'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please enter a display name' : null,
-              ),
-            ],
+          child: MaxWidthBox(
+            maxWidth: 500,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ImageFormfield(
+                  onSaved: (value) {
+                    _photoBase64 = value;
+                  },
+                  onValidate: (value) {
+                    return null;
+                  },
+                  initialValue: widget.user.photoBase64,
+                ),
+                TextFormField(
+                  controller: _firstNameController,
+                  decoration: const InputDecoration(labelText: 'First Name'),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter a first name' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _lastNameController,
+                  decoration: const InputDecoration(labelText: 'Last Name'),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter a last name' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _displayNameController,
+                  decoration: const InputDecoration(labelText: 'Display Name'),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter a display name' : null,
+                ),
+                const SizedBox(height: 16),
+                FilledButton(child: Text("Save"), onPressed: _saveProfile),
+              ],
+            ),
           ),
         ),
       ),

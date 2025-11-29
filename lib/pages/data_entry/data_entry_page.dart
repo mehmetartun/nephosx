@@ -1,6 +1,6 @@
-import 'package:coach/pages/data_entry/views/data_entry_main.dart';
-import 'package:coach/pages/data_entry/views/drink_edit_view.dart';
-import 'package:coach/pages/data_entry/views/drinks_list_view.dart';
+import 'package:nephosx/pages/data_entry/views/data_entry_main.dart';
+import 'package:nephosx/pages/data_entry/views/drink_edit_view.dart';
+import 'package:nephosx/pages/data_entry/views/drinks_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

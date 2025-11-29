@@ -1,5 +1,5 @@
-import 'package:coach/extensions/capitalize.dart';
-import 'package:coach/model/drink.dart';
+import 'package:nephosx/extensions/capitalize.dart';
+import 'package:nephosx/model/drink.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 

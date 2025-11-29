@@ -1,11 +1,11 @@
 {
-    "name": "coach",
-    "short_name": "coach",
+    "name": "nephosx",
+    "short_name": "nephosx",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#6B0606",
     "theme_color": "#6B0606",
-    "description": "A new Flutter project.",
+    "description": "NephosX Project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

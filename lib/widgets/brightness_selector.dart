@@ -1,4 +1,4 @@
-import 'package:coach/widgets/rounded_rectangle_snackbar.dart';
+import 'package:nephosx/widgets/rounded_rectangle_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,11 +22,12 @@ class BrightnessSelector extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             state.themeMode == ThemeMode.light
-                ? IconButton.filled(
+                ? IconButton.filledTonal(
                     icon: const Icon(Icons.light_mode),
                     onPressed: () {},
+                    visualDensity: VisualDensity.standard,
                   )
-                : IconButton.filledTonal(
+                : IconButton(
                     icon: const Icon(Icons.light_mode),
                     onPressed: () {
                       cubit.changeThemeMode(ThemeMode.light);
@@ -52,11 +53,11 @@ class BrightnessSelector extends StatelessWidget {
                   ),
             const SizedBox(width: 10),
             state.themeMode == ThemeMode.dark
-                ? IconButton.filled(
+                ? IconButton.filledTonal(
                     icon: const Icon(Icons.dark_mode),
                     onPressed: () {},
                   )
-                : IconButton.filledTonal(
+                : IconButton(
                     icon: const Icon(Icons.dark_mode),
                     onPressed: () {
                       cubit.changeThemeMode(ThemeMode.dark);
@@ -83,11 +84,11 @@ class BrightnessSelector extends StatelessWidget {
                   ),
             const SizedBox(width: 10),
             state.themeMode == ThemeMode.system
-                ? IconButton.filled(
+                ? IconButton.filledTonal(
                     icon: const Icon(Icons.smartphone),
                     onPressed: () {},
                   )
-                : IconButton.filledTonal(
+                : IconButton(
                     icon: const Icon(Icons.smartphone),
                     onPressed: () {
                       cubit.changeThemeMode(ThemeMode.system);

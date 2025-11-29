@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:coach/extensions/capitalize.dart';
-import 'package:coach/model/drink.dart';
-import 'package:coach/widgets/labeled_text.dart';
+import 'package:nephosx/extensions/capitalize.dart';
+import 'package:nephosx/model/drink.dart';
+import 'package:nephosx/widgets/labeled_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';

@@ -54,144 +54,178 @@ class _EmailPasswordViewState extends State<EmailPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login Page")),
-      body: MaxWidthBox(
-        maxWidth: 500,
-        child: Center(
-          child: Form(
-            key: formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      text: "If you have an account, please sign in or ",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      children: [
-                        TextSpan(
-                          text: "  Sign up  ",
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = widget.newUserRequest,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: emailController,
-                    decoration: InputDecoration(label: Text("Email")),
-                    onSaved: (val) {
-                      email = val;
-                    },
-                    validator: (val) {
-                      if (val == null || val.trim() == "") {
-                        return "Email must not be empty";
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(label: Text("Password")),
-                    onSaved: (val) {
-                      password = val;
-                    },
-                    validator: (val) {
-                      if (val == null || val.trim() == "") {
-                        return "Password must not be empty";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  if (widget.lastError != null) ...[
-                    ErrorBanner(
-                      errorType: ErrorType.loginError,
-                      width: double.infinity,
-                      text:
-                          widget.lastError!.message ??
-                          widget.lastError!.code.description,
-                    ),
-
-                    SizedBox(height: 20),
-                  ],
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                    children: [
-                      FilledButton(
-                        child: Text("Login"),
-                        onPressed: () {
-                          if (formKey.currentState?.validate() ?? false) {
-                            formKey.currentState?.save();
-                            widget.signInWithEmail(
-                              email: email!,
-                              password: password!,
-                            );
-                          }
-                        },
-                      ),
-                      TextButton(
-                        child: Text("Forgot Password?"),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-
-                  // FilledButton.icon(
-                  //   icon: GoogleIcon(),
-                  //   label: Text("Sign in with Google"),
-                  //   onPressed: () {},
-                  // ),
-                  // FilledButton.icon(
-                  //   icon: AppleIcon(),
-                  //   label: Text("Sign in with Apple"),
-                  //   onPressed: () {},
-                  // ),
-                  Divider(height: 40),
-                  Container(
-                    width: double.infinity,
-                    child: SignInButton(
-                      // Theme.of(context).brightness == Brightness.dark
-                      //     ? Buttons.GoogleDark
-                      //     :
-                      Buttons.Google,
-
-                      onPressed: widget.signInWithGoogle,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  if (!kIsWeb || defaultTargetPlatform == TargetPlatform.iOS)
-                    Container(
-                      width: double.infinity,
-                      child: SignInButton(
-                        elevation: 0,
-                        // Theme.of(context).brightness == Brightness.dark
-                        //     ? Buttons.AppleDark
-                        //     :
-                        Buttons.Apple,
-                        onPressed: widget.signInWithApple,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                      ),
-                    ),
-                ],
+      // appBar: AppBar(
+      //   title: Text("Login Page"),
+      //   actions: [
+      //     IconButton(
+      //       onPressed: () {
+      //         BlocProvider.of<AuthenticationBloc>(
+      //           context,
+      //         ).add(AuthenticationEventSignOut());
+      //       },
+      //       icon: Icon(Icons.logout),
+      //     ),
+      //   ],
+      // ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            // title: Text("Sign In"),
+            pinned: true,
+            snap: true,
+            floating: true,
+            backgroundColor: Colors.transparent,
+            expandedHeight: 200,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Image.asset(
+                "assets/images/nephosx2/nephosx.png",
+                fit: BoxFit.fitHeight,
               ),
             ),
           ),
-        ),
+          SliverToBoxAdapter(
+            child: MaxWidthBox(
+              maxWidth: 500,
+              child: Center(
+                child: Form(
+                  key: formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            text: "If you have an account, please sign in or ",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            children: [
+                              TextSpan(
+                                text: "  Sign up  ",
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = widget.newUserRequest,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        TextFormField(
+                          controller: emailController,
+                          decoration: InputDecoration(label: Text("Email")),
+                          onSaved: (val) {
+                            email = val;
+                          },
+                          validator: (val) {
+                            if (val == null || val.trim() == "") {
+                              return "Email must not be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(label: Text("Password")),
+                          onSaved: (val) {
+                            password = val;
+                          },
+                          validator: (val) {
+                            if (val == null || val.trim() == "") {
+                              return "Password must not be empty";
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        if (widget.lastError != null) ...[
+                          ErrorBanner(
+                            errorType: ErrorType.loginError,
+                            width: double.infinity,
+                            text:
+                                widget.lastError!.message ??
+                                widget.lastError!.code.description,
+                          ),
+
+                          SizedBox(height: 20),
+                        ],
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                          children: [
+                            FilledButton(
+                              child: Text("Login"),
+                              onPressed: () {
+                                if (formKey.currentState?.validate() ?? false) {
+                                  formKey.currentState?.save();
+                                  widget.signInWithEmail(
+                                    email: email!,
+                                    password: password!,
+                                  );
+                                }
+                              },
+                            ),
+                            TextButton(
+                              child: Text("Forgot Password?"),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+
+                        // FilledButton.icon(
+                        //   icon: GoogleIcon(),
+                        //   label: Text("Sign in with Google"),
+                        //   onPressed: () {},
+                        // ),
+                        // FilledButton.icon(
+                        //   icon: AppleIcon(),
+                        //   label: Text("Sign in with Apple"),
+                        //   onPressed: () {},
+                        // ),
+                        // Divider(height: 40),
+                        // Container(
+                        //   width: double.infinity,
+                        //   child: SignInButton(
+                        //     // Theme.of(context).brightness == Brightness.dark
+                        //     //     ? Buttons.GoogleDark
+                        //     //     :
+                        //     Buttons.Google,
+
+                        //     onPressed: widget.signInWithGoogle,
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(100),
+                        //     ),
+                        //   ),
+                        // ),
+                        // SizedBox(height: 20),
+                        // if (!kIsWeb ||
+                        //     defaultTargetPlatform == TargetPlatform.iOS)
+                        //   Container(
+                        //     width: double.infinity,
+                        //     child: SignInButton(
+                        //       elevation: 0,
+                        //       // Theme.of(context).brightness == Brightness.dark
+                        //       //     ? Buttons.AppleDark
+                        //       //     :
+                        //       Buttons.Apple,
+                        //       onPressed: widget.signInWithApple,
+                        //       shape: RoundedRectangleBorder(
+                        //         borderRadius: BorderRadius.circular(100),
+                        //       ),
+                        //     ),
+                        //   ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

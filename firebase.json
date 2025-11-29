@@ -3,30 +3,44 @@
     "platforms": {
       "android": {
         "default": {
-          "projectId": "celera-coach",
-          "appId": "1:963212891501:android:8023be47281e82fd047664",
+          "projectId": "nephosx-dev",
+          "appId": "1:714731543492:android:bd57746927fde862126291",
           "fileOutput": "android/app/google-services.json"
         }
       },
       "ios": {
         "default": {
-          "projectId": "celera-coach",
-          "appId": "1:963212891501:ios:377fb29a2d1a3c22047664",
+          "projectId": "nephosx-dev",
+          "appId": "1:714731543492:ios:311eebe5dac53089126291",
           "uploadDebugSymbols": false,
           "fileOutput": "ios/Runner/GoogleService-Info.plist"
         }
       },
       "dart": {
         "lib/firebase_options.dart": {
-          "projectId": "celera-coach",
+          "projectId": "nephosx-dev",
           "configurations": {
-            "android": "1:963212891501:android:8023be47281e82fd047664",
-            "ios": "1:963212891501:ios:377fb29a2d1a3c22047664",
-            "web": "1:963212891501:web:2672d92465a1de1f047664"
+            "android": "1:714731543492:android:bd57746927fde862126291",
+            "ios": "1:714731543492:ios:311eebe5dac53089126291",
+            "web": "1:714731543492:web:25799ad4c1a9f453126291"
           }
         }
       }
     }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   },
   "functions": [
     {
@@ -41,30 +55,5 @@
         "*.local"
       ]
     }
-  ],
-  "hosting": {
-    "public": "build/web",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "**",
-        "headers": [
-          {
-            "key": "Cross-Origin-Opener-Policy",
-            "value": "same-origin-allow-popups"
-          }
-        ]
-      }
-    ]
-  }
+  ]
 }

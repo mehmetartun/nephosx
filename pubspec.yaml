@@ -1,5 +1,5 @@
-name: coach
-description: "A new Flutter project."
+name: nephosx
+description: "Nephos Exchange."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.2+2
+version: 1.0.0+1
 
 environment:
   sdk: ^3.9.2
@@ -77,11 +77,11 @@ dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/DrinkDiaryLogo/DrinkDiaryLogo.png"
+  image_path: "assets/images/nephosx2/nephosx.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
   web:
     generate: true
-    image_path:  "assets/images/DrinkDiaryLogo/DrinkDiaryLogo.png"
+    image_path:  "assets/images/nephosx2/nephosx.png"
     background_color: "#6B0606"
     theme_color: "#6B0606"
   # windows:
@@ -118,6 +118,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/nephosx2/
     - assets/images1/
     - assets/images2/
     - assets/images3/

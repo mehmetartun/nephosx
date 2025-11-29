@@ -1,4 +1,4 @@
-import 'package:coach/extensions/capitalize.dart';
+import 'package:nephosx/extensions/capitalize.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

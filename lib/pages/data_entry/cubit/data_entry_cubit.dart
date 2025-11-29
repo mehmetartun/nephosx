@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:coach/model/cocktail_recipe.dart';
-import 'package:coach/model/search_result_item.dart';
-import 'package:coach/repositories/database/database.dart';
+import 'package:nephosx/model/cocktail_recipe.dart';
+import 'package:nephosx/model/search_result_item.dart';
+import 'package:nephosx/repositories/database/database.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../model/drink.dart';

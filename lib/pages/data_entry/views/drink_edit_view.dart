@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:coach/model/drink.dart';
+import 'package:nephosx/model/drink.dart';
 import 'package:flutter/material.dart';
 
 import '../../../model/drink_image.dart';

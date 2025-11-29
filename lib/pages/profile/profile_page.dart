@@ -26,12 +26,12 @@ class ProfilePage extends StatelessWidget {
             case ProfileInitial _:
               return LoadingView(
                 title: 'Profile',
-                message: 'Profile loading successfully.',
+                message: 'Loading Profile...',
               );
             case ProfileLoading _:
               return LoadingView(
                 title: 'Profile',
-                message: 'Profile loading successfully.',
+                message: 'Loading Profile...',
               );
             case ProfileLoaded _:
               return ProfileView(

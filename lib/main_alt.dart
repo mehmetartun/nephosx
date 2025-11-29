@@ -1,19 +1,8 @@
-import 'package:coach/blocs/notifications/bloc/notifications_bloc.dart';
-import 'package:coach/firebase_options.dart';
-import 'package:coach/pages/generic_page.dart';
-import 'package:coach/repositories/authentication/authentication_repository.dart';
-import 'package:coach/theme/util.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:go_router/go_router.dart';
 
-import 'blocs/authentication/authentication_bloc.dart';
-import 'pages/data_entry/data_entry_page.dart';
 import 'pages/info_page.dart';
-import 'repositories/database/database.dart';
-import 'theme/theme.dart';
 
 void main() async {
   usePathUrlStrategy();

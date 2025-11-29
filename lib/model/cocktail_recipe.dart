@@ -1,5 +1,5 @@
-import 'package:coach/model/ingredient.dart';
-import 'package:coach/model/instruction.dart';
+import 'package:nephosx/model/ingredient.dart';
+import 'package:nephosx/model/instruction.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'cocktail_recipe.g.dart';

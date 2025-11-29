@@ -1,4 +1,4 @@
-import 'package:coach/model/consumption.dart';
+import 'package:nephosx/model/consumption.dart';
 
 enum SortOrder { ascending, descending }
 

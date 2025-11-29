@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../model/user.dart';
+import '../../model/company.dart';
+import '../../model/user.dart';
 import '../../repositories/authentication/authentication_repository.dart';
 
 part 'authentication_event.dart';
@@ -57,10 +60,13 @@ class AuthenticationBloc
   final AuthenticationRepository authenticationRepository;
   User? user;
 
+  // StreamSubscription<User?>? userStreamSubscription;
+
   void init() async {
     final bool isSignedIn = await authenticationRepository.isSignedIn;
     if (isSignedIn) {
       user = authenticationRepository.user;
+      // await userStreamSubscription?.cancel();
       add(AuthenticationEventSignedIn());
     } else {
       if (!kIsWeb) {
@@ -80,11 +86,15 @@ class AuthenticationBloc
     emit(AuthenticationStateWaiting());
     try {
       user = await authenticationRepository.signInWithIdToken(event.idToken);
-      await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
-        'uid': user?.uid,
-        'fcmToken': await getFcmToken() ?? '',
-        'action': 'add',
-      });
+      try {
+        await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
+          'uid': user?.uid,
+          'fcmToken': await getFcmToken() ?? '',
+          'action': 'add',
+        });
+      } catch (e) {
+        debugPrint('Failed to update user token: $e');
+      }
       emit(AuthenticationStateSignedIn());
       return;
     } catch (e) {
@@ -103,11 +113,15 @@ class AuthenticationBloc
     emit(AuthenticationStateWaiting());
     try {
       user = await authenticationRepository.signInWithGoogle();
-      await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
-        'uid': user?.uid,
-        'fcmToken': await getFcmToken() ?? '',
-        'action': 'add',
-      });
+      try {
+        await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
+          'uid': user?.uid,
+          'fcmToken': await getFcmToken() ?? '',
+          'action': 'add',
+        });
+      } catch (e) {
+        debugPrint('Failed to update user token: $e');
+      }
       emit(AuthenticationStateSignedIn());
       return;
     } on Exception catch (e) {
@@ -135,11 +149,15 @@ class AuthenticationBloc
     emit(AuthenticationStateWaiting());
     try {
       user = await authenticationRepository.signInWithApple();
-      await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
-        'uid': user?.uid,
-        'fcmToken': await getFcmToken() ?? '',
-        'action': 'add',
-      });
+      try {
+        await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
+          'uid': user?.uid,
+          'fcmToken': await getFcmToken() ?? '',
+          'action': 'add',
+        });
+      } catch (e) {
+        debugPrint('Failed to update user token: $e');
+      }
       emit(AuthenticationStateSignedIn());
       return;
     } catch (e) {
@@ -181,11 +199,15 @@ class AuthenticationBloc
         email: event.email,
         password: event.password,
       );
-      await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
-        'uid': user?.uid,
-        'fcmToken': await getFcmToken() ?? '',
-        'action': 'add',
-      });
+      try {
+        await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
+          'uid': user?.uid,
+          'fcmToken': await getFcmToken() ?? '',
+          'action': 'add',
+        });
+      } catch (e) {
+        debugPrint('Failed to update user token: $e');
+      }
 
       emit(AuthenticationStateSignedIn());
       return;
@@ -215,11 +237,15 @@ class AuthenticationBloc
         email: event.email,
         password: event.password,
       );
-      await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
-        'uid': user?.uid,
-        'fcmToken': await getFcmToken() ?? '',
-        'action': 'add',
-      });
+      try {
+        await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
+          'uid': user?.uid,
+          'fcmToken': await getFcmToken() ?? '',
+          'action': 'add',
+        });
+      } catch (e) {
+        debugPrint('Failed to update user token: $e');
+      }
 
       emit(AuthenticationStateSignedIn());
       return;

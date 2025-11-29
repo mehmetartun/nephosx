@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coach/model/enums.dart';
-import 'package:coach/repositories/database/database.dart';
+import 'package:nephosx/model/enums.dart';
+import 'package:nephosx/repositories/database/database.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';

@@ -1,4 +1,4 @@
-import 'package:coach/widgets/annotated_list_text.dart';
+import 'package:nephosx/widgets/annotated_list_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

@@ -1,4 +1,4 @@
-package dev.celera.coach
+package com.nephosx.dev
 
 import io.flutter.embedding.android.FlutterActivity
 

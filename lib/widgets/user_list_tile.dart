@@ -12,7 +12,9 @@ class UserListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: UserAvatar(user: user),
-      title: Text('${user.firstName} ${user.lastName}'),
+      title: Text(
+        '${user.firstName.isNotEmpty ? user.firstName : "<First Name>"} ${user.lastName.isNotEmpty ? user.lastName : "<Last Name>"}',
+      ),
       subtitle: Text(user.email),
       trailing: trailing,
     );

@@ -47,29 +47,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD3OAC6EjHRXJyuorkfQeh9zNv2kQMG730',
-    appId: '1:963212891501:web:2672d92465a1de1f047664',
-    messagingSenderId: '963212891501',
-    projectId: 'celera-coach',
-    authDomain: 'celera-coach.firebaseapp.com',
-    storageBucket: 'celera-coach.firebasestorage.app',
-    measurementId: 'G-7CHY7P66HR',
+    apiKey: 'AIzaSyAZ4t64hVJSvuOsKF71q2aSLngJ06g8rmM',
+    appId: '1:714731543492:web:25799ad4c1a9f453126291',
+    messagingSenderId: '714731543492',
+    projectId: 'nephosx-dev',
+    authDomain: 'nephosx-dev.firebaseapp.com',
+    storageBucket: 'nephosx-dev.firebasestorage.app',
+    measurementId: 'G-NZ78BH4B9S',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCF0NwViJq-1oz6Aj_L7zU4MtKe-_SiHfk',
-    appId: '1:963212891501:android:8023be47281e82fd047664',
-    messagingSenderId: '963212891501',
-    projectId: 'celera-coach',
-    storageBucket: 'celera-coach.firebasestorage.app',
+    apiKey: 'AIzaSyC2ojfJIQRfY0KEJiv-kAsozWzcCg0fwY4',
+    appId: '1:714731543492:android:bd57746927fde862126291',
+    messagingSenderId: '714731543492',
+    projectId: 'nephosx-dev',
+    storageBucket: 'nephosx-dev.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCPC4dl9xkDFEr90Y0LAH9vq1G9JuflKs0',
-    appId: '1:963212891501:ios:377fb29a2d1a3c22047664',
-    messagingSenderId: '963212891501',
-    projectId: 'celera-coach',
-    storageBucket: 'celera-coach.firebasestorage.app',
-    iosBundleId: 'dev.celera.coach',
+    apiKey: 'AIzaSyBGElZ6vsYIuk3ZRrMEbUkdDwiqZl7lSUg',
+    appId: '1:714731543492:ios:311eebe5dac53089126291',
+    messagingSenderId: '714731543492',
+    projectId: 'nephosx-dev',
+    storageBucket: 'nephosx-dev.firebasestorage.app',
+    iosBundleId: 'com.nephosx.dev',
   );
 }

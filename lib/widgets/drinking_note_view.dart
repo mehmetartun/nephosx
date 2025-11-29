@@ -1,4 +1,4 @@
-import 'package:coach/model/drinking_note.dart';
+import 'package:nephosx/model/drinking_note.dart';
 import 'package:flutter/material.dart';
 
 class DrinkingNoteView extends StatelessWidget {

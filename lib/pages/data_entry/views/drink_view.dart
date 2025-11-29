@@ -1,6 +1,6 @@
-import 'package:coach/extensions/capitalize.dart';
-import 'package:coach/pages/data_entry/cubit/data_entry_cubit.dart';
-import 'package:coach/widgets/drink_main_card.dart';
+import 'package:nephosx/extensions/capitalize.dart';
+import 'package:nephosx/pages/data_entry/cubit/data_entry_cubit.dart';
+import 'package:nephosx/widgets/drink_main_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';

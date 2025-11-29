@@ -1,9 +1,9 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:coach/blocs/consumption/consumption_bloc.dart';
-import 'package:coach/blocs/notifications/bloc/notifications_bloc.dart';
-import 'package:coach/firebase_options.dart';
-import 'package:coach/navigation/my_navigator_route.dart';
-import 'package:coach/repositories/authentication/authentication_repository.dart';
+import 'package:nephosx/blocs/consumption/consumption_bloc.dart';
+import 'package:nephosx/blocs/notifications/bloc/notifications_bloc.dart';
+import 'package:nephosx/firebase_options.dart';
+import 'package:nephosx/navigation/my_navigator_route.dart';
+import 'package:nephosx/repositories/authentication/authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -138,7 +138,7 @@ class _MyMaterialAppState extends State<MyMaterialApp>
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, themeState) {
         return MaterialApp.router(
-          title: 'Flutter Demo',
+          title: 'Nephos X',
           debugShowCheckedModeBanner: false,
           theme: materialTheme.light(),
           darkTheme: materialTheme.dark(),

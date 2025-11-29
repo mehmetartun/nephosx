@@ -1,9 +1,10 @@
-import 'package:coach/repositories/database/database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+
+import '../database/database.dart';
 
 enum AuthenticationExceptionCode {
   cancelled("Cancelled by User"),
@@ -266,16 +267,18 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
       if (userCredential?.user == null) {
         throw Exception("User creation failed");
       }
-      await databaseRepository.saveUserData({
-        'uid': userCredential!.user!.uid,
-        'email': email,
-      });
-      _user = User.fromMap({
-        'email': userCredential!.user!.email,
-        'uid': userCredential!.user!.uid,
-        'displayName': userCredential!.user!.displayName,
-        'photoUrl': userCredential!.user!.photoURL,
-      });
+      _user = await databaseRepository.getUserData(userCredential!.user!.uid);
+      // await databaseRepository.saveUserData({
+      //   'uid': userCredential!.user!.uid,
+      //   'email': email,
+      // });
+
+      // _user = User.fromMap({
+      //   'email': userCredential!.user!.email,
+      //   'uid': userCredential!.user!.uid,
+      //   'display_name': userCredential!.user!.displayName,
+      //   'photo_url': userCredential!.user!.photoURL,
+      // });
 
       return _user;
     } catch (e) {
@@ -289,7 +292,11 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
 
   @override
   Future<void> signOut() async {
-    await GoogleSignIn.instance.signOut();
+    try {
+      await GoogleSignIn.instance.signOut();
+    } catch (e) {
+      print(e.toString());
+    }
     await auth.FirebaseAuth.instance.signOut();
     _user = null;
     userCredential = null;

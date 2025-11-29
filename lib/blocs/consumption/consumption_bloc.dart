@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coach/repositories/database/database.dart';
+import 'package:nephosx/repositories/database/database.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 

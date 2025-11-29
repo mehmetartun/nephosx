@@ -10,7 +10,11 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return onTap == null
-        ? CircleAvatar(child: Text('${user.firstName[0]}${user.lastName[0]}'))
+        ? CircleAvatar(
+            child: Text(
+              '${user.firstName.isNotEmpty ? user.firstName[0] : ""}${user.lastName.isNotEmpty ? user.lastName[0] : ""}',
+            ),
+          )
         : GestureDetector(
             onTap: onTap,
             child: CircleAvatar(

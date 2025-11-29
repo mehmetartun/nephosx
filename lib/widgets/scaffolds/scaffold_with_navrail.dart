@@ -1,9 +1,11 @@
-import 'package:coach/blocs/authentication/authentication_bloc.dart';
+import 'package:nephosx/blocs/authentication/authentication_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../brightness_selector.dart';
+import '../top_bar.dart';
 import '../user_profile_card.dart';
 
 /// Builds the "shell" for the app by building a Scaffold with a
@@ -43,7 +45,8 @@ class ScaffoldWithNavRail extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        appBar: appBar,
+        // appBar: appBar,
+        appBar: TopBar(title: 'Drinks Diary'),
         primary: true,
         // The StatefulNavigationShell from the associated StatefulShellRoute is
         // directly passed as the body of the Scaffold.
@@ -63,16 +66,28 @@ class ScaffoldWithNavRail extends StatelessWidget {
                 // `navigationShell.route.branches`.
                 destinations: const <NavigationRailDestination>[
                   NavigationRailDestination(
-                    icon: Icon(Icons.stacked_bar_chart),
-                    label: Text('Stats'),
+                    icon: Icon(Icons.people),
+                    label: Text('Users'),
                   ),
                   NavigationRailDestination(
-                    icon: Icon(Icons.calendar_month),
-                    label: Text('Diary'),
+                    icon: Icon(Icons.domain),
+                    label: Text('Companies'),
                   ),
                   NavigationRailDestination(
-                    icon: Icon(Icons.person),
-                    label: Text('Profile'),
+                    icon: Icon(Icons.dns),
+                    label: Text('Datacenters'),
+                  ),
+                  // NavigationRailDestination(
+                  //   icon: Icon(Icons.stacked_bar_chart),
+                  //   label: Text('Stats'),
+                  // ),
+                  // NavigationRailDestination(
+                  //   icon: Icon(Icons.calendar_month),
+                  //   label: Text('Diary'),
+                  // ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.settings),
+                    label: Text('Settings'),
                   ),
                   // NavigationRailDestination(
                   //   icon: Icon(Icons.input),
@@ -89,6 +104,10 @@ class ScaffoldWithNavRail extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 0, 10),
+                        child: BrightnessSelector(shouldPop: false),
+                      ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
                         child: FilledButton.tonalIcon(
@@ -107,7 +126,7 @@ class ScaffoldWithNavRail extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                'Copyright 2025 Celera Coach',
+                                'Copyright 2025 NephosX',
                                 style: Theme.of(context).textTheme.bodySmall,
                                 textAlign: TextAlign.left,
                               ),

@@ -5,41 +5,53 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "coach",
+            "name": "nephosx",
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
-            "args": ["--web-port", "5500"],
+            "args": [
+                "--web-port",
+                "5500"
+            ],
         },
-           {
-            "name": "coach-widget",
+        {
+            "name": "nephosx-widget",
             "request": "launch",
             "type": "dart",
             "program": "lib/main_widget.dart",
-            "args": ["--web-port", "5500"],
+            "args": [
+                "--web-port",
+                "5500"
+            ],
         },
-           {
-            "name": "coach-alt",
+        {
+            "name": "nephosx-alt",
             "request": "launch",
             "type": "dart",
             "program": "lib/main_alt.dart",
-            "args": ["--web-port", "5500"],
+            "args": [
+                "--web-port",
+                "5500"
+            ],
         },
-               {
-            "name": "coach-shell",
+        {
+            "name": "nephosx-shell",
             "request": "launch",
             "type": "dart",
             "program": "lib/main_shell.dart",
-            "args": ["--web-port", "5500"],
+            "args": [
+                "--web-port",
+                "5500"
+            ],
         },
         {
-            "name": "coach (profile mode)",
+            "name": "nephosx (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "coach (release mode)",
+            "name": "nephosx (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

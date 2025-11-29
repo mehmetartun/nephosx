@@ -1,4 +1,4 @@
-import 'package:coach/model/app_instruction.dart';
+import 'package:nephosx/model/app_instruction.dart';
 import 'package:flutter/material.dart';
 
 class InstructionDisplayWidget extends StatelessWidget {

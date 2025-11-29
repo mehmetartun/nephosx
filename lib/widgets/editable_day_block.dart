@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:coach/pages/statistics/cubit/statistics_cubit.dart';
-import 'package:coach/widgets/formfields/drink_location_form_field.dart';
-import 'package:coach/widgets/formfields/drink_size_form_field.dart';
+import 'package:nephosx/pages/statistics/cubit/statistics_cubit.dart';
+import 'package:nephosx/widgets/formfields/drink_location_form_field.dart';
+import 'package:nephosx/widgets/formfields/drink_size_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

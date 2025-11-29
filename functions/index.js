@@ -8,9 +8,9 @@
  */
 
 const admin = require("firebase-admin");
-const {setGlobalOptions} = require("firebase-functions");
+const { setGlobalOptions } = require("firebase-functions");
 const { defineSecret } = require('firebase-functions/params');
-const {onCall, onRequest, HttpsError} = require("firebase-functions/v2/https");
+const { onCall, onRequest, HttpsError } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 const { onInit } = require('firebase-functions/v2/core');
 const { beforeUserCreated, beforeUserSignedIn } = require("firebase-functions/v2/identity");
@@ -63,22 +63,22 @@ setGlobalOptions({ maxInstances: 10 });
 // https://firebase.google.com/docs/functions/get-started
 
 
-exports.updateLog = onDocumentUpdated("drinks/{drinkId}",async  (event) => {
- await db.collection("update_logs").add({
-  'before': event.data.before.data(),
-  'document_path': event.data.before.ref.path,
-  'after': event.data.after.data(),
-  'timestamp': admin.firestore.FieldValue.serverTimestamp()
-});
+exports.updateLog = onDocumentUpdated("drinks/{drinkId}", async (event) => {
+  await db.collection("update_logs").add({
+    'before': event.data.before.data(),
+    'document_path': event.data.before.ref.path,
+    'after': event.data.after.data(),
+    'timestamp': admin.firestore.FieldValue.serverTimestamp()
+  });
 
 });
 
 exports.helloWorld = onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
+  logger.info("Hello logs!", { structuredData: true });
   response.send("Hello from Firebase!");
 });
 
-exports.hello = onCall((request)=>{
+exports.hello = onCall((request) => {
   return "Hello World";
 });
 
@@ -93,24 +93,24 @@ exports.hello = onCall((request)=>{
 exports.getProvidersForEmail = onCall(async (request) => {
   const email = request.data.email;
   if (!email) {
-    logger.error("Function called without an email.", {structuredData: true});
+    logger.error("Function called without an email.", { structuredData: true });
     throw new HttpsError(
-        "invalid-argument",
-        "The function must be called with one argument 'email' containing the user's email address.",
+      "invalid-argument",
+      "The function must be called with one argument 'email' containing the user's email address.",
     );
   }
 
-  logger.info(`Fetching providers for email: ${email}`, {structuredData: true});
+  logger.info(`Fetching providers for email: ${email}`, { structuredData: true });
 
   try {
     const userRecord = await admin.auth().getUserByEmail(email);
     const providers = userRecord.providerData.map((info) => info.providerId);
     logger.info(`Providers for ${email}: ${providers.join(", ")}`);
-    return {providers};
+    return { providers };
   } catch (error) {
     // 'auth/user-not-found' is a common error and means no providers exist.
-    logger.info(`No user found for email: ${email}`, {structuredData: true});
-    return {providers: []};
+    logger.info(`No user found for email: ${email}`, { structuredData: true });
+    return { providers: [] };
   }
 });
 
@@ -212,10 +212,10 @@ const recipeSchema = {
 // });
 
 
-exports.getRecipeNew = onCall( {
+exports.getRecipeNew = onCall({
   secrets: ['GOOGLE_API_KEY'],
   timeoutSeconds: 540,
-},async (request) => {
+}, async (request) => {
   const schema = request.data.schema;
   const languageModel = request.data.languageModel;
 
@@ -278,58 +278,72 @@ exports.getRecipeNew = onCall( {
       console.error('API Response Data:', error.response.data);
     }
     res.status(500).send(`Error processing request: ${error.message}.`);
-    return {'error': error.message};
+    return { 'error': error.message };
   }
 });
 
 
 exports.saveUser = beforeUserCreated(async (event) => {
-    const user = event.data;
-    const db = getFirestore();
-    const userRef = db.collection('users').doc(user.uid);
-    await userRef.set({
-        email: user.email ?? null,
-        displayName: user.displayName ?? null,
-        photoUrl: user.photoURL ?? null,
-        createdAt: Timestamp.now(),
-        uid: user.uid,
-        emailVerified: user.emailVerified,
-    }, { merge: true });
+  const user = event.data;
+  const db = getFirestore();
+  const userRef = db.collection('users').doc(user.uid);
+  await userRef.set({
+    email: user.email ?? null,
+    display_name: user.displayName ?? null,
+    photo_url: user.photoURL ?? null,
+    created_at: Timestamp.now(),
+    uid: user.uid,
+    email_verified: user.emailVerified,
+    type: 'public'
+  }, { merge: true });
 });
 
 exports.updateUser = beforeUserSignedIn(async (event) => {
-    const user = event.data;
-    const db = getFirestore();
-    const userRef = db.collection('users').doc(user.uid);
-    await userRef.update({
-        emailVerified: user.emailVerified,
-    });
+  const user = event.data;
+  const db = getFirestore();
+  const userRef = db.collection('users').doc(user.uid);
+  await userRef.update({
+    email_verified: user.emailVerified,
+  });
 });
 
 
 exports.updateUserToken = onCall(async (request) => {
-    if (!request.data.uid || !request.data.fcmToken) {
-        return { 'message': 'Invalid request' };
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+
+  if (!request.data.fcmToken) {
+    return { 'message': 'Invalid request: missing fcmToken' };
+  }
+
+  const uid = request.auth.uid; // Securely get UID from auth context
+  const fcmToken = request.data.fcmToken;
+  const action = request.data.action;
+  const db = getFirestore();
+  const userRef = db.doc(`users/${uid}`);
+
+  const qs = await userRef.get();
+  if (!qs.exists) {
+    return { 'message': 'User not found' };
+  }
+
+  var fcmTokens = qs.data().fcm_tokens;
+  if (!fcmTokens) {
+    fcmTokens = [];
+  }
+  if (action == 'delete') {
+    fcmTokens = fcmTokens.filter(token => token !== fcmToken);
+  } else if (action == 'add') {
+    if (!fcmTokens.includes(fcmToken)) {
+      fcmTokens.push(fcmToken);
     }
-    const uid = request.data.uid;
-    const fcmToken = request.data.fcmToken;
-    const action = request.data.action;
-    const db = getFirestore();
-    const userRef = db.doc(`users/${uid}`);
-    const qs = await userRef.get();
-    var fcmTokens = qs.data().fcmTokens;
-    if (!fcmTokens) {
-        fcmTokens = [];
-    }
-    if (action == 'delete') {
-        fcmTokens = fcmTokens.filter(token => token !== fcmToken);
-    } else if (action == 'add') {
-        if (!fcmTokens.includes(fcmToken)) {
-            fcmTokens.push(fcmToken);
-        }
-    }
-    await userRef.update({
-        fcmTokens: fcmTokens,
-    });
-    return { 'message': 'Success' };
+  }
+  await userRef.update({
+    fcm_tokens: fcmTokens,
+  });
+  return { 'message': 'Success' };
 });

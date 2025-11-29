@@ -1,5 +1,5 @@
-import 'package:coach/extensions/capitalize.dart';
-import 'package:coach/pages/consumption_entry/cubit/consumption_entry_cubit.dart';
+import 'package:nephosx/extensions/capitalize.dart';
+import 'package:nephosx/pages/consumption_entry/cubit/consumption_entry_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
