@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../model/consideration.dart';
+import '../../model/enums.dart';
+import '../../model/gpu_transaction.dart';
+import '../occupation_view_paint.dart';
+
 class ErrorView extends StatelessWidget {
   final String title;
   final String message;
@@ -37,6 +42,54 @@ class ErrorView extends StatelessWidget {
                 SizedBox(height: 20),
                 ElevatedButton(onPressed: onRetry, child: Text("Retry")),
               ],
+              OccupationView(
+                fromDate: DateTime.now(),
+                toDate: DateTime.now().add(Duration(days: 3650)),
+                transactions: [
+                  GpuTransaction(
+                    id: "1",
+                    buyerCompanyId: "1",
+                    gpuClusterId: "1",
+                    sellerCompanyId: "1",
+                    createdAt: DateTime.now(),
+                    startDate: DateTime.now().add(Duration(days: 100)),
+                    endDate: DateTime.now().add(Duration(days: 200)),
+                    consideration: Consideration(
+                      amount: 1,
+                      currency: Currency.usd,
+                    ),
+                    datacenterId: "1",
+                  ),
+                  GpuTransaction(
+                    id: "1",
+                    buyerCompanyId: "1",
+                    gpuClusterId: "1",
+                    sellerCompanyId: "1",
+                    createdAt: DateTime.now(),
+                    startDate: DateTime.now().add(Duration(days: 340)),
+                    endDate: DateTime.now().add(Duration(days: 442)),
+                    consideration: Consideration(
+                      amount: 1,
+                      currency: Currency.usd,
+                    ),
+                    datacenterId: "1",
+                  ),
+                  GpuTransaction(
+                    id: "1",
+                    buyerCompanyId: "1",
+                    gpuClusterId: "1",
+                    sellerCompanyId: "1",
+                    createdAt: DateTime.now(),
+                    startDate: DateTime.now().add(Duration(days: 500)),
+                    endDate: DateTime.now().add(Duration(days: 600)),
+                    consideration: Consideration(
+                      amount: 1,
+                      currency: Currency.usd,
+                    ),
+                    datacenterId: "1",
+                  ),
+                ],
+              ),
             ],
           ),
         ),

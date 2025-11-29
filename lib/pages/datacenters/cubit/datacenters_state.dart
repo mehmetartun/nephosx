@@ -6,7 +6,8 @@ final class DatacentersInitial extends DatacentersState {}
 
 final class DatacentersLoaded extends DatacentersState {
   final List<Datacenter> datacenters;
-  DatacentersLoaded({required this.datacenters});
+  final List<Company> companies;
+  DatacentersLoaded({required this.datacenters, required this.companies});
 }
 
 final class DatacentersErrorState extends DatacentersState {
@@ -14,8 +15,13 @@ final class DatacentersErrorState extends DatacentersState {
   DatacentersErrorState({required this.message});
 }
 
-final class DatacentersGpus extends DatacentersState {
-  final List<Gpu> gpus;
+final class DatacentersGpuClusters extends DatacentersState {
+  final List<GpuCluster> gpuClusters;
   final Datacenter datacenter;
-  DatacentersGpus({required this.gpus, required this.datacenter});
+  final List<Company> companies;
+  DatacentersGpuClusters({
+    required this.gpuClusters,
+    required this.datacenter,
+    required this.companies,
+  });
 }

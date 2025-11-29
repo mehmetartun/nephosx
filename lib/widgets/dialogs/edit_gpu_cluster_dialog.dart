@@ -2,20 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../model/datacenter.dart';
-import '../../model/gpu.dart';
+import '../../model/gpu_cluster.dart';
 
-class AddGpuDialog extends StatefulWidget {
-  const AddGpuDialog({Key? key, required this.onAddGpu}) : super(key: key);
-  final void Function(Map<String, dynamic>) onAddGpu;
+class EditGpuClusterDialog extends StatefulWidget {
+  const EditGpuClusterDialog({
+    Key? key,
+    required this.onUpdateGpuCluster,
+    required this.gpuCluster,
+  }) : super(key: key);
+  final void Function(GpuCluster) onUpdateGpuCluster;
+  final GpuCluster gpuCluster;
 
   @override
-  State<AddGpuDialog> createState() => _AddGpuDialogState();
+  State<EditGpuClusterDialog> createState() => _EditGpuClusterDialogState();
 }
 
-class _AddGpuDialogState extends State<AddGpuDialog> {
+class _EditGpuClusterDialogState extends State<EditGpuClusterDialog> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  GpuType? type;
-  int? quantity;
+
+  late int quantity;
+  late GpuType type;
+  @override
+  void initState() {
+    super.initState();
+    type = widget.gpuCluster.type;
+    quantity = widget.gpuCluster.quantity;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -28,7 +41,10 @@ class _AddGpuDialogState extends State<AddGpuDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Text("Update GPU"),
+                SizedBox(height: 20),
                 DropdownButtonFormField<GpuType>(
+                  initialValue: type,
                   onChanged: (value) {
                     setState(() {
                       type = value!;
@@ -49,9 +65,10 @@ class _AddGpuDialogState extends State<AddGpuDialog> {
                 ),
                 TextFormField(
                   autocorrect: false,
+                  initialValue: quantity.toString(),
                   decoration: InputDecoration(labelText: "Quantity"),
                   onSaved: (value) {
-                    quantity = int.tryParse(value!);
+                    quantity = int.tryParse(value!)!;
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -63,19 +80,23 @@ class _AddGpuDialogState extends State<AddGpuDialog> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState?.validate() ?? false) {
-                      formKey.currentState!.save();
-                      widget.onAddGpu({
-                        "type": type!.name,
-                        "quantity": quantity,
-                      });
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text("Add Gpu"),
+                Container(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState?.validate() ?? false) {
+                        formKey.currentState!.save();
+                        widget.onUpdateGpuCluster(
+                          widget.gpuCluster.copyWith(
+                            type: type,
+                            quantity: quantity,
+                          ),
+                        );
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Text("Update"),
+                  ),
                 ),
               ],
             ),

@@ -7,7 +7,7 @@ import '../../repositories/database/database.dart';
 import '../../widgets/views/error_view.dart';
 import '../../widgets/views/loading_view.dart';
 import 'cubit/datacenters_cubit.dart';
-import 'views/datacenters_gpus_view.dart';
+import 'views/datacenters_gpu_clusters_view.dart';
 import 'views/datacenters_view.dart';
 
 class DatacentersPage extends StatelessWidget {
@@ -26,13 +26,16 @@ class DatacentersPage extends StatelessWidget {
       child: BlocBuilder<DatacentersCubit, DatacentersState>(
         builder: (context, state) {
           switch (state) {
-            case DatacentersGpus _:
-              return DatacentersGpusView(
-                gpus: state.gpus,
-                addGpu: cubit.addGpu,
-                updateGpu: cubit.updateGpu,
+            case DatacentersGpuClusters _:
+              return DatacentersGpuClustersView(
+                gpuClusters: state.gpuClusters,
+                addGpuCluster: cubit.addGpuCluster,
+                updateGpuCluster: cubit.updateGpuCluster,
                 datacenter: state.datacenter,
                 backToDatacenters: cubit.backToDatacenters,
+                addTransaction: cubit.addTransaction,
+                buyers: state.companies,
+                validator: cubit.transactionValidator,
               );
             case DatacentersErrorState _:
               return ErrorView(
@@ -46,7 +49,7 @@ class DatacentersPage extends StatelessWidget {
                 datacenters: state.datacenters,
                 addDatacenter: cubit.addDatacenter,
                 updateDatacenter: cubit.updateDatacenter,
-                getGpus: cubit.getGpus,
+                getGpuClusters: cubit.getGpuClusters,
               );
           }
         },

@@ -1,26 +1,31 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'gpu.dart';
+part of 'gpu_cluster.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Gpu _$GpuFromJson(Map<String, dynamic> json) => Gpu(
+GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
   type: $enumDecode(_$GpuTypeEnumMap, json['type']),
   quantity: (json['quantity'] as num).toInt(),
   datacenterId: json['datacenter_id'] as String,
   companyId: json['company_id'] as String,
   id: json['id'] as String,
+  transactions: (json['transactions'] as List<dynamic>?)
+      ?.map((e) => GpuTransaction.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
-Map<String, dynamic> _$GpuToJson(Gpu instance) => <String, dynamic>{
-  'type': _$GpuTypeEnumMap[instance.type]!,
-  'quantity': instance.quantity,
-  'id': instance.id,
-  'datacenter_id': instance.datacenterId,
-  'company_id': instance.companyId,
-};
+Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
+    <String, dynamic>{
+      'type': _$GpuTypeEnumMap[instance.type]!,
+      'quantity': instance.quantity,
+      'id': instance.id,
+      'datacenter_id': instance.datacenterId,
+      'company_id': instance.companyId,
+      'transactions': instance.transactions?.map((e) => e.toJson()).toList(),
+    };
 
 const _$GpuTypeEnumMap = {
   GpuType.H100: 'H100',

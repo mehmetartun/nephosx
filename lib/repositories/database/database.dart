@@ -6,7 +6,7 @@ import '../../model/datacenter.dart';
 import '../../model/drink.dart';
 import '../../model/drink_image.dart';
 import '../../model/drinking_note.dart';
-import '../../model/gpu.dart';
+import '../../model/gpu_cluster.dart';
 import '../../model/user.dart';
 
 class DatabaseException implements Exception {
@@ -47,7 +47,7 @@ abstract class DatabaseRepository {
   Future<List<User>> getUsers();
   Future<List<Company>> getCompanies();
   Future<List<Datacenter>> getDatacenters({String? companyId});
-  Future<List<Gpu>> getGpus({String? datacenterId});
+  Future<List<GpuCluster>> getGpuClusters({String? datacenterId});
 }
 
 class FirestoreDatabaseRepository extends DatabaseRepository {
@@ -267,15 +267,15 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Future<List<Gpu>> getGpus({String? datacenterId}) async {
+  Future<List<GpuCluster>> getGpuClusters({String? datacenterId}) async {
     QuerySnapshot<Map<String, dynamic>> qs;
     if (datacenterId != null) {
-      qs = await db.collection("datacenters/$datacenterId/gpus").get();
+      qs = await db.collection("datacenters/$datacenterId/gpu_clusters").get();
     } else {
-      qs = await db.collectionGroup("gpus").get();
+      qs = await db.collectionGroup("gpu_clusters").get();
     }
     return qs.docs
-        .map((doc) => Gpu.fromJson({...doc.data(), 'id': doc.id}))
+        .map((doc) => GpuCluster.fromJson({...doc.data(), 'id': doc.id}))
         .toList();
   }
 }

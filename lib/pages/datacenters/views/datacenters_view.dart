@@ -16,12 +16,12 @@ class DatacentersView extends StatefulWidget {
     required this.datacenters,
     required this.addDatacenter,
     required this.updateDatacenter,
-    required this.getGpus,
+    required this.getGpuClusters,
   });
   final List<Datacenter> datacenters;
   final void Function(Map<String, dynamic>) addDatacenter;
   final void Function(Datacenter) updateDatacenter;
-  final void Function(Datacenter) getGpus;
+  final void Function(Datacenter) getGpuClusters;
 
   @override
   State<DatacentersView> createState() => _DatacentersViewState();
@@ -134,7 +134,7 @@ class _DatacentersViewState extends State<DatacentersView> {
                     final datacenter = widget.datacenters[index];
                     return DatacenterListTile(
                       onTap: () {
-                        widget.getGpus(datacenter);
+                        widget.getGpuClusters(datacenter);
                       },
                       datacenter: datacenter,
                       onUpdateDatacenter: widget.updateDatacenter,

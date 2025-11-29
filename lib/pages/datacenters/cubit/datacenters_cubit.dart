@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nephosx/pages/companies/cubit/companies_cubit.dart';
 
 import '../../../model/company.dart';
+import '../../../model/consideration.dart';
 import '../../../model/datacenter.dart';
-import '../../../model/gpu.dart';
+import '../../../model/gpu_cluster.dart';
+import '../../../model/gpu_transaction.dart';
 import '../../../model/user.dart';
 import '../../../repositories/database/database.dart';
 
@@ -17,7 +19,8 @@ class DatacentersCubit extends Cubit<DatacentersState> {
 
   List<Datacenter> datacenters = [];
   User? user;
-  List<Gpu> gpus = [];
+  List<GpuCluster> gpuClusters = [];
+  List<Company> companies = [];
 
   void init({User? user}) async {
     this.user = user;
@@ -28,10 +31,11 @@ class DatacentersCubit extends Cubit<DatacentersState> {
       emit(DatacentersErrorState(message: "User not assigned to a company"));
       return;
     }
+    companies = await databaseRepository.getCompanies();
     datacenters = await databaseRepository.getDatacenters(
       companyId: user.companyId!,
     );
-    emit(DatacentersLoaded(datacenters: datacenters));
+    emit(DatacentersLoaded(datacenters: datacenters, companies: companies));
   }
 
   void updateDatacenter(Datacenter datacenter) async {
@@ -43,16 +47,24 @@ class DatacentersCubit extends Cubit<DatacentersState> {
   }
 
   void backToDatacenters() {
-    emit(DatacentersLoaded(datacenters: datacenters));
+    emit(DatacentersLoaded(datacenters: datacenters, companies: companies));
   }
 
-  void getGpus(Datacenter datacenter) async {
+  void getGpuClusters(Datacenter datacenter) async {
     emit(DatacentersInitial());
     if (user == null) {
       return;
     }
-    gpus = await databaseRepository.getGpus(datacenterId: datacenter.id);
-    emit(DatacentersGpus(gpus: gpus, datacenter: datacenter));
+    gpuClusters = await databaseRepository.getGpuClusters(
+      datacenterId: datacenter.id,
+    );
+    emit(
+      DatacentersGpuClusters(
+        gpuClusters: gpuClusters,
+        datacenter: datacenter,
+        companies: companies,
+      ),
+    );
   }
 
   void addDatacenter(Map<String, dynamic> data) async {
@@ -66,26 +78,57 @@ class DatacentersCubit extends Cubit<DatacentersState> {
     init(user: user);
   }
 
-  void addGpu(Map<String, dynamic> data, Datacenter datacenter) async {
+  void addTransaction(GpuTransaction data) async {
     if (user == null) {
       return;
     }
     await databaseRepository.addDocument(
-      collectionPath: 'datacenters/${datacenter.id}/gpus',
+      collectionPath: 'transactions',
+      data: data.toJson(),
+    );
+    init(user: user);
+  }
+
+  String? transactionValidator(
+    GpuCluster gpuCluster,
+    DateTime fromDate,
+    DateTime toDate,
+  ) {
+    if (gpuCluster.transactions == null) {
+      return null;
+    }
+    String? errorText = null;
+    for (var transaction in gpuCluster.transactions!) {
+      if (fromDate.isAfter(transaction.endDate) ||
+          toDate.isBefore(transaction.startDate)) {
+      } else {
+        errorText = "Transaction date range overlaps with another transaction";
+        return errorText;
+      }
+    }
+    return errorText;
+  }
+
+  void addGpuCluster(Map<String, dynamic> data, Datacenter datacenter) async {
+    if (user == null) {
+      return;
+    }
+    await databaseRepository.addDocument(
+      collectionPath: 'datacenters/${datacenter.id}/gpu_clusters',
       data: {
         ...data,
         'datacenter_id': datacenter.id,
         'company_id': datacenter.companyId,
       },
     );
-    getGpus(datacenter);
+    getGpuClusters(datacenter);
   }
 
-  void updateGpu(Gpu gpu, Datacenter datacenter) async {
+  void updateGpuCluster(GpuCluster gpuCluster, Datacenter datacenter) async {
     await databaseRepository.updateDocument(
-      docPath: 'datacenters/${datacenter.id}/gpus/${gpu.id}',
-      data: gpu.toJson(),
+      docPath: 'datacenters/${datacenter.id}/gpu_clusters/${gpuCluster.id}',
+      data: gpuCluster.toJson(),
     );
-    getGpus(datacenter);
+    getGpuClusters(datacenter);
   }
 }

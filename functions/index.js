@@ -347,3 +347,33 @@ exports.updateUserToken = onCall(async (request) => {
   });
   return { 'message': 'Success' };
 });
+
+exports.copyTransaction = onDocumentWritten("transactions/{transactionId}", async (event) => {
+  const db = getFirestore();
+  const transactionId = event.params.transactionId;
+  const afterData = event.data.after.data();
+  const beforeData = event.data.before.data();
+
+  // Determine gpu_cluster_id
+  const gpuClusterId = afterData ? afterData.gpu_cluster_id : beforeData.gpu_cluster_id;
+  if (!gpuClusterId) return; // Should not happen if data is valid
+
+  const clusterRef = db.doc(`datacenters/${afterData.datacenter_id}/gpu_clusters/${gpuClusterId}`);
+
+  await db.runTransaction(async (t) => {
+    const clusterDoc = await t.get(clusterRef);
+    if (!clusterDoc.exists) return;
+
+    let transactions = clusterDoc.data().transactions || [];
+
+    // Remove existing entry for this transactionId
+    transactions = transactions.filter(tx => tx.id !== transactionId);
+
+    // If not a deletion, add the new data
+    if (afterData) {
+      transactions.push({ ...afterData, id: transactionId });
+    }
+
+    t.update(clusterRef, { transactions });
+  });
+});

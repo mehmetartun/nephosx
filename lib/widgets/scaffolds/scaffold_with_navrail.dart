@@ -77,10 +77,10 @@ class ScaffoldWithNavRail extends StatelessWidget {
                     icon: Icon(Icons.dns),
                     label: Text('Datacenters'),
                   ),
-                  // NavigationRailDestination(
-                  //   icon: Icon(Icons.stacked_bar_chart),
-                  //   label: Text('Stats'),
-                  // ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.money),
+                    label: Text('Market'),
+                  ),
                   // NavigationRailDestination(
                   //   icon: Icon(Icons.calendar_month),
                   //   label: Text('Diary'),

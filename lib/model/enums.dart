@@ -92,3 +92,14 @@ enum UserType {
   final String title;
   const UserType(this.title, this.description);
 }
+
+enum Currency {
+  usd("USD", "United States Dollar"),
+  eur("EUR", "Euro"),
+  gbp("GBP", "British Pound"),
+  jpy("JPY", "Japanese Yen");
+
+  final String description;
+  final String title;
+  const Currency(this.title, this.description);
+}

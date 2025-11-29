@@ -9,7 +9,7 @@ enum MyNavigatorRoute {
   companies("companies", "companies"),
   datacenters("datacenters", "datacenters"),
   gpus("gpus", "gpus"),
-
+  market("market", "market"),
   splash("/splash", "splash"),
   dataEntry("data_entry", "data_entry"),
   dataEntryTop("/data_entry_top", "data_entry_top"),

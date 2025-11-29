@@ -3,28 +3,35 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/company.dart';
 import '../../../model/datacenter.dart';
-import '../../../model/gpu.dart';
+import '../../../model/gpu_cluster.dart';
+import '../../../model/gpu_transaction.dart';
 import '../../../widgets/company_list_tile.dart';
 import '../../../widgets/datacenter_list_tile.dart';
 import '../../../widgets/dialogs/add_company_dialog.dart';
 import '../../../widgets/dialogs/add_datacenter_dialog.dart';
-import '../../../widgets/dialogs/add_gpu_dialog.dart';
-import '../../../widgets/gpu_list_tile.dart';
+import '../../../widgets/dialogs/add_gpu_cluster_dialog.dart';
+import '../../../widgets/gpu_cluster_list_tile.dart';
 
-class DatacentersGpusView extends StatelessWidget {
-  const DatacentersGpusView({
+class DatacentersGpuClustersView extends StatelessWidget {
+  const DatacentersGpuClustersView({
     super.key,
-    required this.gpus,
-    required this.addGpu,
-    required this.updateGpu,
+    required this.gpuClusters,
+    required this.addGpuCluster,
+    required this.updateGpuCluster,
     required this.datacenter,
     required this.backToDatacenters,
+    required this.buyers,
+    required this.addTransaction,
+    required this.validator,
   });
-  final List<Gpu> gpus;
-  final void Function(Map<String, dynamic>, Datacenter) addGpu;
-  final void Function(Gpu, Datacenter) updateGpu;
+  final List<GpuCluster> gpuClusters;
+  final void Function(Map<String, dynamic>, Datacenter) addGpuCluster;
+  final void Function(GpuCluster, Datacenter) updateGpuCluster;
   final Datacenter datacenter;
   final void Function() backToDatacenters;
+  final List<Company> buyers;
+  final void Function(GpuTransaction) addTransaction;
+  final String? Function(GpuCluster, DateTime, DateTime) validator;
 
   @override
   Widget build(BuildContext context) {
@@ -46,16 +53,18 @@ class DatacentersGpusView extends StatelessWidget {
                 datacenter.name,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
+
               Text(
                 "${datacenter.region}, ${datacenter.country}",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               SizedBox(height: 20),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Gpus",
+                    "Gpu Clusters",
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   FilledButton.tonalIcon(
@@ -65,9 +74,9 @@ class DatacentersGpusView extends StatelessWidget {
                       await showDialog(
                         context: context,
                         builder: (context) {
-                          return AddGpuDialog(
-                            onAddGpu: (Map<String, dynamic> data) {
-                              addGpu(data, datacenter);
+                          return AddGpuClusterDialog(
+                            onAddGpuCluster: (Map<String, dynamic> data) {
+                              addGpuCluster(data, datacenter);
                             },
                           );
                         },
@@ -76,18 +85,28 @@ class DatacentersGpusView extends StatelessWidget {
                   ),
                 ],
               ),
+              Text(
+                "Click on Cluster to add transactions",
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+              SizedBox(height: 20),
               Expanded(
-                child: ListView(
-                  children: gpus
-                      .map(
-                        (gpu) => GpuListTile(
-                          gpu: gpu,
-                          onUpdateGpu: (gpu) {
-                            updateGpu(gpu, datacenter);
-                          },
-                        ),
-                      )
-                      .toList(),
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => Divider(height: 10),
+                  itemCount: gpuClusters.length,
+                  itemBuilder: (context, index) {
+                    final gpuCluster = gpuClusters[index];
+                    return GpuClusterListTile(
+                      validator: validator,
+                      datacenter: datacenter,
+                      gpuCluster: gpuCluster,
+                      onUpdateGpuCluster: (gpuCluster) {
+                        updateGpuCluster(gpuCluster, datacenter);
+                      },
+                      buyers: buyers,
+                      addTransaction: addTransaction,
+                    );
+                  },
                 ),
               ),
             ],
