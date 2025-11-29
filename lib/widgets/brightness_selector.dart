@@ -31,19 +31,7 @@ class BrightnessSelector extends StatelessWidget {
                     icon: const Icon(Icons.light_mode),
                     onPressed: () {
                       cubit.changeThemeMode(ThemeMode.light);
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        RoundedRectangleSnackbar('Switched to light mode')
-                            as SnackBar,
-                        // SnackBar(
-                        //   behavior: SnackBarBehavior.floating,
-                        //   content: Text("Switched to light mode"),
-                        //   margin: EdgeInsets.all(10),
-                        //   shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
-                        // ),
-                      );
+
                       if (shouldPop) {
                         Navigator.of(context).pop();
                       }
@@ -61,20 +49,7 @@ class BrightnessSelector extends StatelessWidget {
                     icon: const Icon(Icons.dark_mode),
                     onPressed: () {
                       cubit.changeThemeMode(ThemeMode.dark);
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        RoundedRectangleSnackbar('Switched to dark mode')
-                            as SnackBar,
-                        //
-                        // SnackBar(
-                        //   behavior: SnackBarBehavior.floating,
-                        //   content: Text("Switched to dark mode"),
-                        //   margin: EdgeInsets.all(10),
-                        //   shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
-                        // ),
-                      );
+
                       if (shouldPop) {
                         Navigator.of(context).pop();
                       }
@@ -92,19 +67,6 @@ class BrightnessSelector extends StatelessWidget {
                     icon: const Icon(Icons.smartphone),
                     onPressed: () {
                       cubit.changeThemeMode(ThemeMode.system);
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        RoundedRectangleSnackbar('Switched to system mode')
-                            as SnackBar,
-                        // SnackBar(
-                        //   behavior: SnackBarBehavior.floating,
-                        //   content: Text("Switched to system mode"),
-                        //   margin: EdgeInsets.all(10),
-                        //   shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
-                        // ),
-                      );
                       if (shouldPop) {
                         Navigator.of(context).pop();
                       }

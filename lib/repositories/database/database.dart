@@ -182,11 +182,11 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
             'id': companyDocument.id,
           });
           final data = userDocument.data() as Map<String, dynamic>;
-          return User.fromMap(data)..company = company;
+          return User.fromJson(data).copyWith(company: company);
         }
       }
       final data = userDocument.data() as Map<String, dynamic>;
-      return User.fromMap(data);
+      return User.fromJson(data);
     } else {
       throw DatabaseException("User not found");
     }
@@ -212,7 +212,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   Stream<List<User>> getUsersStream() {
     return db.collection('users').snapshots().map<List<User>>((snapshot) {
       return snapshot.docs.map((doc) {
-        return User.fromMap(doc.data());
+        return User.fromJson(doc.data());
       }).toList();
     });
   }
@@ -220,7 +220,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   @override
   Future<List<User>> getUsers() async {
     var qs = await db.collection("users").get();
-    return qs.docs.map((doc) => User.fromMap(doc.data())).toList();
+    return qs.docs.map((doc) => User.fromJson(doc.data())).toList();
   }
 
   @override
@@ -259,7 +259,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .map<User?>((snapshot) {
           return snapshot.docs
               .map((doc) {
-                return User.fromMap(doc.data());
+                return User.fromJson(doc.data());
               })
               .toList()
               .firstOrNull;

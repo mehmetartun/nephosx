@@ -12,13 +12,13 @@ class UserAvatar extends StatelessWidget {
     return onTap == null
         ? CircleAvatar(
             child: Text(
-              '${user.firstName.isNotEmpty ? user.firstName[0] : ""}${user.lastName.isNotEmpty ? user.lastName[0] : ""}',
+              '${user.firstName?.isNotEmpty ?? false ? user.firstName![0] : ""}${user.lastName?.isNotEmpty ?? false ? user.lastName![0] : ""}',
             ),
           )
         : GestureDetector(
             onTap: onTap,
             child: CircleAvatar(
-              child: Text('${user.firstName[0]}${user.lastName[0]}'),
+              child: Text('${user.firstName?[0]}${user.lastName?[0]}'),
             ),
           );
   }

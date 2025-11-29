@@ -13,6 +13,8 @@ class AddCompanyDialog extends StatefulWidget {
 class _AddCompanyDialogState extends State<AddCompanyDialog> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String name = "";
+  String city = "";
+  String country = "";
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -27,7 +29,7 @@ class _AddCompanyDialogState extends State<AddCompanyDialog> {
               children: [
                 TextFormField(
                   autocorrect: false,
-                  decoration: InputDecoration(labelText: "Company Name"),
+                  decoration: InputDecoration(labelText: "Name"),
                   onSaved: (value) {
                     name = value!;
                   },
@@ -39,11 +41,43 @@ class _AddCompanyDialogState extends State<AddCompanyDialog> {
                   },
                 ),
                 SizedBox(height: 20),
+                TextFormField(
+                  autocorrect: false,
+                  decoration: InputDecoration(labelText: "City"),
+                  onSaved: (value) {
+                    city = value!;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a city";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  autocorrect: false,
+                  decoration: InputDecoration(labelText: "Country"),
+                  onSaved: (value) {
+                    country = value!;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a country";
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     if (formKey.currentState?.validate() ?? false) {
                       formKey.currentState!.save();
-                      widget.onAddCompany({"name": name});
+                      widget.onAddCompany({
+                        "name": name,
+                        "city": city,
+                        "country": country,
+                      });
                       Navigator.pop(context);
                     }
                   },

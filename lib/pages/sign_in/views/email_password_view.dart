@@ -175,6 +175,53 @@ class _EmailPasswordViewState extends State<EmailPasswordView> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 20),
+                        Divider(),
+                        Text(
+                          "Click any of the buttons below to login as a test user",
+                        ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FilledButton.tonal(
+                              onPressed: () {
+                                widget.signInWithEmail(
+                                  email: "mehmet+2@artun.com",
+                                  password: "Password",
+                                );
+                              },
+                              child: Text("Public"),
+                            ),
+                            FilledButton.tonal(
+                              onPressed: () {
+                                widget.signInWithEmail(
+                                  email: "mehmet+5@artun.com",
+                                  password: "Password",
+                                );
+                              },
+                              child: Text("Company 1"),
+                            ),
+                            FilledButton.tonal(
+                              onPressed: () {
+                                widget.signInWithEmail(
+                                  email: "mehmet+4@artun.com",
+                                  password: "Password",
+                                );
+                              },
+                              child: Text("Company 2"),
+                            ),
+                            FilledButton.tonal(
+                              onPressed: () {
+                                widget.signInWithEmail(
+                                  email: "mehmet+6@artun.com",
+                                  password: "Password",
+                                );
+                              },
+                              child: Text("Admin"),
+                            ),
+                          ],
+                        ),
 
                         // FilledButton.icon(
                         //   icon: GoogleIcon(),

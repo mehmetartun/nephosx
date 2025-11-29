@@ -48,53 +48,29 @@ class UserCard extends StatelessWidget {
         Container(
           decoration: ShapeDecoration(shape: CircleBorder()),
           clipBehavior: Clip.hardEdge,
-          child: Image.memory(
-            _parseBase64Image(user.photoBase64)!,
-            height: 140,
-            fit: BoxFit.cover,
-          ),
-        ),
-        SizedBox(height: 10),
-        Text(user.displayName, style: Theme.of(context).textTheme.titleLarge),
-        SizedBox(height: 10),
-        Text(user.email),
-      ],
-    );
-
-    return SizedBox(
-      // width: 200,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Profile"),
-              Container(
-                padding: EdgeInsets.all(20),
-                width: double.infinity,
-                alignment: Alignment.center,
-                child: CircleAvatar(
-                  minRadius: minRadius,
-
-                  foregroundImage: _parseBase64Image(user.photoBase64) != null
-                      ? MemoryImage(
-                          _parseBase64Image(user.photoBase64)!,
-                          scale: 3,
-                        )
-                      : null,
+          child: user.photoBase64 == null
+              ? Container(
+                  height: 140,
+                  width: 140,
+                  decoration: ShapeDecoration(
+                    shape: CircleBorder(),
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                )
+              : Image.memory(
+                  _parseBase64Image(user.photoBase64)!,
+                  height: 140,
+                  fit: BoxFit.cover,
                 ),
-              ),
-              Text(
-                '${user.firstName} ${user.lastName}',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              Text(user.email, style: Theme.of(context).textTheme.bodyLarge),
-            ],
-          ),
         ),
-      ),
+        SizedBox(height: 10),
+        Text(
+          user.displayName ?? "",
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        SizedBox(height: 10),
+        Text(user.email ?? ""),
+      ],
     );
   }
 }

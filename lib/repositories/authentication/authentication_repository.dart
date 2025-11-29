@@ -240,12 +240,14 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     if (userCredential?.user == null) {
       throw Exception("Sign in Failed");
     }
-    return User.fromMap({
-      'email': userCredential!.user!.email,
-      'uid': userCredential!.user!.uid,
-      'displayName': userCredential!.user!.displayName,
-      'photoUrl': userCredential!.user!.photoURL,
-    });
+
+    return await databaseRepository.getUserData(userCredential!.user!.uid);
+    // return User.fromMap({
+    //   'email': userCredential!.user!.email,
+    //   'uid': userCredential!.user!.uid,
+    //   'displayName': userCredential!.user!.displayName,
+    //   'photoUrl': userCredential!.user!.photoURL,
+    // });
 
     // User(
     //   email: userCredential!.user!.email,

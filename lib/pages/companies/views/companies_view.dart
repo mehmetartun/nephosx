@@ -46,11 +46,15 @@ class CompaniesView extends StatelessWidget {
                   ),
                 ],
               ),
+              SizedBox(height: 20),
               Expanded(
-                child: ListView(
-                  children: companies
-                      .map((company) => CompanyListTile(company: company))
-                      .toList(),
+                child: ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 20),
+                  itemCount: companies.length,
+                  itemBuilder: (context, index) {
+                    return CompanyListTile(company: companies[index]);
+                  },
                 ),
               ),
             ],

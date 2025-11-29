@@ -6,72 +6,61 @@ import 'package:collection/collection.dart';
 import '../services/conversions.dart';
 import '../services/mock.dart';
 import 'company.dart';
+import 'enums.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'user.g.dart';
+
+@JsonSerializable()
 class User {
-  String? _firstName;
-  String? _lastName;
-  String? _displayName;
-  String? _email;
-  String? _photoUrl;
-  String? _photoBase64;
-  String? _companyId;
-  String _uid;
-  Company? _company;
+  @JsonKey(name: 'first_name')
+  final String? firstName;
 
-  User._internal(
-    this._firstName,
-    this._lastName,
-    this._displayName,
-    this._email,
-    this._photoUrl,
-    this._photoBase64,
-    this._uid,
-    this._companyId,
-  );
+  @JsonKey(name: 'last_name')
+  final String? lastName;
 
-  set firstName(String value) {
-    _firstName = value;
-  }
+  @JsonKey(name: 'display_name')
+  final String? displayName;
 
-  set lastName(String value) {
-    _lastName = value;
-  }
+  @JsonKey(name: 'email')
+  final String? email;
 
-  set displayName(String value) {
-    _displayName = value;
-  }
+  @JsonKey(name: 'photo_url')
+  final String? photoUrl;
 
-  set email(String value) {
-    _email = value;
-  }
+  @JsonKey(name: 'photo_base64')
+  final String? photoBase64;
 
-  set photoUrl(String value) {
-    _photoUrl = value;
-  }
+  @JsonKey(name: 'company_id')
+  final String? companyId;
 
-  set photoBase64(String value) {
-    _photoBase64 = value;
-  }
+  @JsonKey(name: 'uid')
+  final String uid;
 
-  set companyId(String value) {
-    _companyId = value;
-  }
+  @JsonKey(name: 'company', includeToJson: false, includeFromJson: false)
+  final Company? company;
 
-  set company(Company value) {
-    _company = value;
-  }
+  @JsonKey(name: 'type')
+  final UserType? type;
 
-  String get firstName => _firstName ?? '';
-  String get lastName => _lastName ?? '';
-  String get displayName => _displayName ?? '';
-  String get email => _email ?? '';
-  String get photoUrl => _photoUrl ?? '';
-  String get photoBase64 => _photoBase64 ?? '';
-  String get uid => _uid;
-  String? get companyId => _companyId;
-  Company? get company => _company;
+  User({
+    this.firstName,
+    this.lastName,
+    this.displayName,
+    this.email,
+    this.photoUrl,
+    this.photoBase64,
+    this.companyId,
+    required this.uid,
+    this.company,
+    this.type,
+  });
 
-  String get initials => Conversions.getInitials(_displayName);
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+
+  String get initials => Conversions.getInitials(displayName);
 
   User copyWith({
     String? firstName,
@@ -83,66 +72,37 @@ class User {
     String? uid,
     String? companyId,
     Company? company,
+    UserType? type,
   }) {
-    return User._internal(
-      firstName ?? this.firstName,
-      lastName ?? this.lastName,
-      displayName ?? this.displayName,
-      email ?? this.email,
-      photoUrl ?? this.photoUrl,
-      photoBase64 ?? this.photoBase64,
-      uid ?? this.uid,
-      companyId ?? this.companyId,
-    ).._company = company ?? this.company;
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'first_name': firstName,
-      'last_name': lastName,
-      'display_name': displayName,
-      'email': email,
-      'photo_url': photoUrl,
-      'photo_base64': photoBase64,
-      'uid': uid,
-      'company_id': companyId,
-    };
-  }
-
-  factory User.fromMap(Map<String, dynamic> map) {
-    if (map['uid'] == null) {
-      throw Exception('UID is required to create a User');
-    }
-    return User._internal(
-      map['first_name'] == null ? null : map['first_name'] as String,
-      map['last_name'] == null ? null : map['last_name'] as String,
-      map['display_name'] == null ? null : map['display_name'] as String,
-      map['email'] == null ? null : map['email'] as String,
-      map['photo_url'] == null ? null : map['photo_url'] as String,
-      map['photo_base64'] == null ? null : map['photo_base64'] as String,
-      map['uid'] as String,
-      map['company_id'] == null ? null : map['company_id'] as String,
+    return User(
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      displayName: displayName ?? this.displayName,
+      email: email ?? this.email,
+      photoUrl: photoUrl ?? this.photoUrl,
+      photoBase64: photoBase64 ?? this.photoBase64,
+      uid: uid ?? this.uid,
+      companyId: companyId ?? this.companyId,
+      company: company ?? this.company,
+      type: type ?? this.type,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory User.fromJson(String source) =>
-      User.fromMap(json.decode(source) as Map<String, dynamic>);
 
   static User createMockUser() {
     String fN = Mock.firstName();
     String lN = Mock.lastName();
 
-    return User._internal(
-      fN,
-      lN,
-      "$fN $lN",
-      "$fN@$lN.com",
-      Mock.imageUrl(),
-      null, // TODO: Modify Mock to give a base64 image
-      Mock.uid(),
-      Mock.uid(),
+    return User(
+      firstName: fN,
+      lastName: lN,
+      displayName: "$fN $lN",
+      email: "$fN@$lN.com",
+      photoUrl: Mock.imageUrl(),
+      photoBase64: null, // TODO: Modify Mock to give a base64 image
+      uid: Mock.uid(),
+      companyId: Mock.uid(),
+      company: Company.createMockCompany(),
+      type: UserType.public,
     );
   }
 
@@ -150,30 +110,6 @@ class User {
   String toString() {
     return 'User(fN: $firstName, lN: $lastName, dN: $displayName,  uid: $uid\n'
         'email: $email\n photoUrl: $photoUrl)';
-  }
-
-  @override
-  bool operator ==(covariant User other) {
-    if (identical(this, other)) return true;
-
-    return other.firstName == firstName &&
-        other.lastName == lastName &&
-        other.displayName == displayName &&
-        other.email == email &&
-        other.photoUrl == photoUrl &&
-        other.uid == uid &&
-        other.companyId == companyId;
-  }
-
-  @override
-  int get hashCode {
-    return firstName.hashCode ^
-        lastName.hashCode ^
-        displayName.hashCode ^
-        email.hashCode ^
-        photoUrl.hashCode ^
-        uid.hashCode ^
-        companyId.hashCode;
   }
 
   Company? getCompany(List<Company> companies) {

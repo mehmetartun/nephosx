@@ -37,8 +37,9 @@ class DatacentersGpusView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextButton(
-                child: Text("Back to Datacenters"),
+              TextButton.icon(
+                icon: Icon(Icons.arrow_back),
+                label: Text("Back to Datacenters"),
                 onPressed: backToDatacenters,
               ),
               Text(

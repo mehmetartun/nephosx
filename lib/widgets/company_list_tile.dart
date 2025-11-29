@@ -7,6 +7,10 @@ class CompanyListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(title: Text(company.name));
+    return ListTile(
+      leading: Icon(Icons.domain),
+      title: Text(company.name),
+      subtitle: Text("${company.city}, ${company.country}"),
+    );
   }
 }

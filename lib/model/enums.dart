@@ -82,3 +82,13 @@ enum ErrorType {
   final String description;
   const ErrorType(this.description);
 }
+
+enum UserType {
+  public("Public", "User that doesn't belong to a company"),
+  admin("Admin", "NephosX admin user"),
+  corporate("Corporate", "A corporate user that belongs to a company");
+
+  final String description;
+  final String title;
+  const UserType(this.title, this.description);
+}

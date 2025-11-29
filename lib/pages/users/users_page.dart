@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/authentication/authentication_bloc.dart';
 import '../../repositories/database/database.dart';
+import '../../widgets/views/error_view.dart';
 import '../../widgets/views/loading_view.dart';
 import 'cubit/users_cubit.dart';
 import 'views/users_view.dart';
@@ -13,6 +15,7 @@ class UsersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final UsersCubit cubit = UsersCubit(
       RepositoryProvider.of<DatabaseRepository>(context),
+      BlocProvider.of<AuthenticationBloc>(context).user,
     )..init();
 
     return BlocProvider(
@@ -20,6 +23,8 @@ class UsersPage extends StatelessWidget {
       child: BlocBuilder<UsersCubit, UsersState>(
         builder: (context, state) {
           switch (state) {
+            case UsersError _:
+              return ErrorView(title: "Users Error", message: state.message);
             case UsersInitial _:
               return LoadingView(title: "Loading users");
             case UsersLoaded _:

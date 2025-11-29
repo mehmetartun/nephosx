@@ -10,3 +10,8 @@ final class UsersLoaded extends UsersState {
   final List<Company> companies;
   UsersLoaded({required this.users, required this.companies});
 }
+
+final class UsersError extends UsersState {
+  final String message;
+  UsersError({required this.message});
+}

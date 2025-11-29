@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/authentication/authentication_bloc.dart';
 import '../../repositories/database/database.dart';
+import '../../widgets/views/error_view.dart';
 import '../../widgets/views/loading_view.dart';
 import 'cubit/companies_cubit.dart';
 import 'views/companies_view.dart';
@@ -13,6 +15,7 @@ class CompaniesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final CompaniesCubit cubit = CompaniesCubit(
       RepositoryProvider.of<DatabaseRepository>(context),
+      BlocProvider.of<AuthenticationBloc>(context).user,
     )..init();
 
     return BlocProvider(
@@ -20,6 +23,11 @@ class CompaniesPage extends StatelessWidget {
       child: BlocBuilder<CompaniesCubit, CompaniesState>(
         builder: (context, state) {
           switch (state) {
+            case CompaniesError _:
+              return ErrorView(
+                title: "Companies Error",
+                message: state.message,
+              );
             case CompaniesInitial _:
               return LoadingView(title: "Loading companies");
             case CompaniesLoaded _:

@@ -46,7 +46,7 @@ class ScaffoldWithNavRail extends StatelessWidget {
       canPop: false,
       child: Scaffold(
         // appBar: appBar,
-        appBar: TopBar(title: 'Drinks Diary'),
+        appBar: TopBar(title: 'Nephos X'),
         primary: true,
         // The StatefulNavigationShell from the associated StatefulShellRoute is
         // directly passed as the body of the Scaffold.

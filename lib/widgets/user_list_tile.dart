@@ -13,9 +13,9 @@ class UserListTile extends StatelessWidget {
     return ListTile(
       leading: UserAvatar(user: user),
       title: Text(
-        '${user.firstName.isNotEmpty ? user.firstName : "<First Name>"} ${user.lastName.isNotEmpty ? user.lastName : "<Last Name>"}',
+        '${user.firstName?.isNotEmpty ?? false ? user.firstName! : "<First Name>"} ${user.lastName?.isNotEmpty ?? false ? user.lastName! : "<Last Name>"}',
       ),
-      subtitle: Text(user.email),
+      subtitle: Text(user.email ?? ""),
       trailing: trailing,
     );
   }
