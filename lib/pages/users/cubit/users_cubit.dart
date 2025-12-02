@@ -23,6 +23,10 @@ class UsersCubit extends Cubit<UsersState> {
       companies = await databaseRepository.getCompanies();
       users = await databaseRepository.getUsers();
       emit(UsersLoaded(users: users, companies: companies));
+    } else if (user?.type == UserType.corporate) {
+      companies = await databaseRepository.getCompanies();
+      users = await databaseRepository.getUsers(companyId: user!.companyId);
+      emit(UsersLoaded(users: users, companies: [user!.company!]));
     } else {
       emit(UsersError(message: "User is not admin"));
     }

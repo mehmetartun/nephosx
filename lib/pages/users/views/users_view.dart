@@ -3,6 +3,7 @@ import 'package:nephosx/widgets/dialogs/update_user_company_dialog.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/company.dart';
+import '../../../model/enums.dart';
 import '../../../model/user.dart';
 import '../../../widgets/user_list_tile.dart';
 
@@ -38,7 +39,9 @@ class UsersView extends StatelessWidget {
                       .map(
                         (user) => UserListTile(
                           user: user,
-                          trailing: user.getCompany(companies) == null
+                          trailing: user.type == UserType.admin
+                              ? null
+                              : user.getCompany(companies) == null
                               ? FilledButton(
                                   child: Text("Add"),
                                   onPressed: () async {
@@ -55,7 +58,14 @@ class UsersView extends StatelessWidget {
                                   },
                                 )
                               : Text(
-                                  user.getCompany(companies)?.name ?? "Company",
+                                  user
+                                          .getCompany(companies)
+                                          ?.name
+                                          .toUpperCase() ??
+                                      "COMPANY",
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.labelMedium,
                                 ),
                         ),
                       )

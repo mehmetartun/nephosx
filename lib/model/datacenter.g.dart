@@ -9,19 +9,15 @@ part of 'datacenter.dart';
 Datacenter _$DatacenterFromJson(Map<String, dynamic> json) => Datacenter(
   id: json['id'] as String,
   name: json['name'] as String,
-  companyId: json['company_id'] as String,
+  address: Address.fromJson(json['address'] as Map<String, dynamic>),
   tier: $enumDecode(_$DatacenterTierEnumMap, json['tier']),
-  country: json['country'] as String,
-  region: json['region'] as String,
 );
 
 Map<String, dynamic> _$DatacenterToJson(Datacenter instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'company_id': instance.companyId,
-      'country': instance.country,
-      'region': instance.region,
+      'address': instance.address.toJson(),
       'tier': _$DatacenterTierEnumMap[instance.tier]!,
     };
 

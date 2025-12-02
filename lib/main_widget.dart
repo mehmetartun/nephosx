@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
         FirebaseAuthenticationRepository.instance..init(databaseRepository);
     AuthenticationBloc authenticationBloc = AuthenticationBloc(
       authenticationRepository,
+      databaseRepository,
     );
 
     return RepositoryProvider<DatabaseRepository>(

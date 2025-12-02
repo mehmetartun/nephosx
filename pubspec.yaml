@@ -72,6 +72,9 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   fl_chart: ^1.1.1
   rxdart: ^0.28.0
+  flutter_multi_formatter: ^2.13.10
+  dlibphonenumber: ^1.1.52
+  postcode_checker: ^1.0.2
 
 
 flutter_launcher_icons:

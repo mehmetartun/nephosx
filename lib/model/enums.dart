@@ -1,5 +1,66 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'enums.dart';
+
+@JsonEnum(fieldRename: FieldRename.snake)
+enum EntityType { company, datacenter }
+
+@JsonEnum(fieldRename: FieldRename.snake)
+enum Country {
+  us(
+    "US",
+    "USA",
+    "United States of America",
+    true,
+    1,
+    AddressRegion.europeWest,
+  ),
+  ca("CA", "CAN", "Canada", true, 1, AddressRegion.europeWest),
+  uk("UK", "GBR", "United Kingdom", false, 1, AddressRegion.europeWest),
+  fr("FR", "FRA", "France", false, 1, AddressRegion.europeWest),
+  de("DE", "GER", "Germany", false, 1, AddressRegion.europeWest);
+
+  final String iso2;
+  final String iso3;
+  final String description;
+  final bool hasStates;
+  final int numLines;
+  final AddressRegion region;
+
+  const Country(
+    this.iso2,
+    this.iso3,
+    this.description,
+    this.hasStates,
+    this.numLines,
+    this.region,
+  );
+}
+
+@JsonEnum(fieldRename: FieldRename.snake)
+enum AddressRegion {
+  europeWest("europe-west", "Western Europe"),
+  europeCentral("europe-central", "Central Europe");
+
+  final String title;
+  final String description;
+
+  const AddressRegion(this.title, this.description);
+}
+
+@JsonEnum(fieldRename: FieldRename.snake)
+enum AddressState {
+  bcca("BC", Country.ca, "British Columbia"),
+  caus("CA", Country.us, "California"),
+  azus("AZ", Country.us, "Arizona");
+
+  final String title;
+  final Country country;
+  final String description;
+
+  const AddressState(this.title, this.country, this.description);
+}
+
 @JsonEnum(fieldRename: FieldRename.snake)
 enum ServingFormat {
   glass,
@@ -86,7 +147,8 @@ enum ErrorType {
 enum UserType {
   public("Public", "User that doesn't belong to a company"),
   admin("Admin", "NephosX admin user"),
-  corporate("Corporate", "A corporate user that belongs to a company");
+  corporate("Corporate", "A corporate user that belongs to a company"),
+  corporateAdmin("Corporate Admin", "A corporate user that has admin rights");
 
   final String description;
   final String title;
@@ -102,4 +164,24 @@ enum Currency {
   final String description;
   final String title;
   const Currency(this.title, this.description);
+}
+
+@JsonEnum(fieldRename: FieldRename.snake)
+enum RequestStatus { pending, inReview, accepted, rejected }
+
+@JsonEnum(fieldRename: FieldRename.snake)
+enum RequestType {
+  createCompany("Create Company", UserType.public, UserType.admin),
+  joinCompany("Join Company", UserType.public, UserType.corporateAdmin),
+  authorizeCompany(
+    "Authorize Company",
+    UserType.corporateAdmin,
+    UserType.admin,
+  );
+
+  final String description;
+  final UserType requestorType;
+  final UserType approverType;
+
+  const RequestType(this.description, this.requestorType, this.approverType);
 }

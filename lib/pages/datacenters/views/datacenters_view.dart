@@ -7,7 +7,7 @@ import '../../../model/company.dart';
 import '../../../model/datacenter.dart';
 import '../../../widgets/company_list_tile.dart';
 import '../../../widgets/datacenter_list_tile.dart';
-import '../../../widgets/dialogs/add_company_dialog.dart';
+import '../../../widgets/dialogs/add_edit_company_dialog.dart';
 import '../../../widgets/dialogs/add_datacenter_dialog.dart';
 
 class DatacentersView extends StatefulWidget {
@@ -27,7 +27,7 @@ class DatacentersView extends StatefulWidget {
   State<DatacentersView> createState() => _DatacentersViewState();
 }
 
-enum DatacenterSort { name, tier, country, region }
+enum DatacenterSort { name, tier, country }
 
 class _DatacentersViewState extends State<DatacentersView> {
   List<Datacenter> datacenters = [];
@@ -99,14 +99,16 @@ class _DatacentersViewState extends State<DatacentersView> {
                             break;
                           case DatacenterSort.country:
                             datacenters.sort(
-                              (a, b) => a.country.compareTo(b.country),
+                              (a, b) => a.address.country.description.compareTo(
+                                b.address.country.description,
+                              ),
                             );
                             break;
-                          case DatacenterSort.region:
-                            datacenters.sort(
-                              (a, b) => a.region.compareTo(b.region),
-                            );
-                            break;
+                          // case DatacenterSort.region:
+                          //   datacenters.sort(
+                          //     (a, b) => a.region.compareTo(b.region),
+                          //   );
+                          //   break;
                         }
                       });
                     },

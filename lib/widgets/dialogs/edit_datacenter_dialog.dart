@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../model/datacenter.dart';
+import '../../model/enums.dart';
 
 class EditDatacenterDialog extends StatefulWidget {
   const EditDatacenterDialog({
@@ -20,15 +21,15 @@ class _EditDatacenterDialogState extends State<EditDatacenterDialog> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late String name;
   late DatacenterTier tier;
-  late String country;
-  late String region;
+  late Country country;
+  // late String region;
   @override
   void initState() {
     super.initState();
     name = widget.datacenter.name;
     tier = widget.datacenter.tier;
-    country = widget.datacenter.country;
-    region = widget.datacenter.region;
+    country = widget.datacenter.address.country;
+    // region = widget.datacenter.region;
   }
 
   @override
@@ -59,36 +60,63 @@ class _EditDatacenterDialogState extends State<EditDatacenterDialog> {
                     return null;
                   },
                 ),
+                // DropdownButtonFormField<Country>(
+                //   initialValue: country,
+                //   onChanged: (val) {
+                //     setState(() {
+                //       if (val != null) {
+                //         country = val;
+                //       }
+
+                //       // if (addressIsValid()) {
+                //       //   widget.state.didChange(value);
+                //       // }
+                //     });
+                //   },
+
+                //   validator: (val) {
+                //     if (val == null) {
+                //       return "Please select a country";
+                //     }
+                //     return null;
+                //   },
+                //   items: Country.values.map((e) {
+                //     return DropdownMenuItem(
+                //       value: e,
+                //       child: Text(e.description),
+                //     );
+                //   }).toList(),
+                // ),
+                // SizedBox(height: 20),
+                // TextFormField(
+                //   autocorrect: false,
+                //   decoration: InputDecoration(labelText: "Region"),
+                //   initialValue: region,
+                //   onSaved: (value) {
+                //     region = value!;
+                //   },
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return "Please enter a datacenter region";
+                //     }
+                //     return null;
+                //   },
+                // ),
                 SizedBox(height: 20),
-                TextFormField(
-                  autocorrect: false,
-                  decoration: InputDecoration(labelText: "Region"),
-                  initialValue: region,
-                  onSaved: (value) {
-                    region = value!;
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter a datacenter region";
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  autocorrect: false,
-                  decoration: InputDecoration(labelText: "Country"),
-                  initialValue: country,
-                  onSaved: (value) {
-                    country = value!;
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter a datacenter country";
-                    }
-                    return null;
-                  },
-                ),
+                // TextFormField(
+                //   autocorrect: false,
+                //   decoration: InputDecoration(labelText: "Country"),
+                //   initialValue: country,
+                //   onSaved: (value) {
+                //     country = value!;
+                //   },
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return "Please enter a datacenter country";
+                //     }
+                //     return null;
+                //   },
+                // ),
                 SizedBox(height: 20),
                 DropdownButtonFormField<DatacenterTier>(
                   initialValue: tier,
@@ -112,8 +140,8 @@ class _EditDatacenterDialogState extends State<EditDatacenterDialog> {
                         widget.onUpdateDatacenter(
                           widget.datacenter.copyWith(
                             name: name,
-                            region: region,
-                            country: country,
+                            // region: region,
+                            // country: country,
                             tier: tier,
                           ),
                         );

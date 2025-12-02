@@ -15,6 +15,12 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
   transactions: (json['transactions'] as List<dynamic>?)
       ?.map((e) => GpuTransaction.fromJson(e as Map<String, dynamic>))
       .toList(),
+  datacenter: json['datacenter'] == null
+      ? null
+      : Datacenter.fromJson(json['datacenter'] as Map<String, dynamic>),
+  company: json['company'] == null
+      ? null
+      : Company.fromJson(json['company'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
@@ -24,7 +30,6 @@ Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
       'id': instance.id,
       'datacenter_id': instance.datacenterId,
       'company_id': instance.companyId,
-      'transactions': instance.transactions?.map((e) => e.toJson()).toList(),
     };
 
 const _$GpuTypeEnumMap = {

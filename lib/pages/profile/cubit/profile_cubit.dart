@@ -1,6 +1,7 @@
 import 'package:nephosx/repositories/database/database.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../model/address.dart';
 import '../../../model/user.dart';
 
 part 'profile_state.dart';
@@ -16,6 +17,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void init() async {
     emit(ProfileLoading());
+    print(uid);
     if (uid != null) {
       user = await databaseRepository.getUserData(uid!);
     } else {
@@ -48,6 +50,22 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     try {
       await databaseRepository.updateUserData(data);
+      // Re-fetch user to get the updated data and refresh the UI
+      init();
+    } catch (e) {
+      // Optionally, emit an error state to show in the UI
+      emit(ProfileError(errorMessage: 'Failed to update profile: $e'));
+    }
+  }
+
+  void updateUserAddress(User user, Address address) async {
+    emit(ProfileLoading());
+
+    try {
+      await databaseRepository.updateDocument(
+        docPath: 'users/${user.uid}',
+        data: {'address': address.toJson()},
+      );
       // Re-fetch user to get the updated data and refresh the UI
       init();
     } catch (e) {

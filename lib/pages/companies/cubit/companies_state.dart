@@ -13,3 +13,16 @@ final class CompaniesError extends CompaniesState {
   final String message;
   CompaniesError({required this.message});
 }
+
+final class CompaniesAssign extends CompaniesState {
+  final List<Company> companies;
+  final User user;
+  CompaniesAssign({required this.companies, required this.user});
+}
+
+final class CompaniesEditCompany extends CompaniesState {
+  final Company company;
+  final List<User> users;
+
+  CompaniesEditCompany({required this.company, required this.users});
+}

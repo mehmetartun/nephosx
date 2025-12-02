@@ -1,4 +1,3 @@
-import 'package:nephosx/pages/consumption_entry/consumption_entry_page.dart';
 import 'package:nephosx/pages/data_entry/data_entry_page.dart';
 import 'package:nephosx/pages/sign_in/sign_in_page.dart';
 import 'package:go_router/go_router.dart';
@@ -10,9 +9,9 @@ import '../pages/generic_page.dart';
 import '../pages/market/market_page.dart';
 import '../pages/profile/profile_page.dart';
 import '../pages/splash_page.dart';
-import '../pages/statistics/statistics_page.dart';
 import '../pages/users/users_page.dart';
 import '../widgets/scaffolds/responsive_scaffold.dart';
+import '../widgets/splash_screen.dart';
 import 'my_navigator_route.dart';
 
 import 'package:flutter/material.dart';
@@ -70,8 +69,13 @@ class NestedRouter {
   late final GoRouter _router = GoRouter(
     debugLogDiagnostics: true,
     // navigatorKey: _rootNavigatorKey,
-    initialLocation: "/users",
+    initialLocation: "/companies",
     redirect: (BuildContext context, GoRouterState state) {
+      print('Mathced Location ${state.matchedLocation}');
+      print('Uri ${state.uri.toString()}');
+      print('Path ${state.path}');
+      print('Full Path ${state.fullPath}');
+
       if (state.matchedLocation == MyNavigatorRoute.splash.path) {
         return null;
       }
@@ -81,12 +85,25 @@ class NestedRouter {
           if (state.matchedLocation.contains(MyNavigatorRoute.signIn.path)) {
             // return MyNavigatorRoute.dataEntryTop.path;
             // return MyNavigatorRoute.consumptionEntry.path;
-            return "/users";
+
+            return "/market";
             // return null;
           } else {
+            print(state.matchedLocation);
             return null;
           }
-
+        case AuthenticationStateUnkown _:
+          authenticationBloc.add(
+            AuthenticationDestinationAfterSignInEvent(
+              destination: state.matchedLocation,
+            ),
+          );
+          return "/splash";
+          if (state.matchedLocation.contains(MyNavigatorRoute.signIn.path)) {
+            return null;
+          } else {
+            return MyNavigatorRoute.signIn.path;
+          }
         default:
           if (state.matchedLocation.contains(MyNavigatorRoute.signIn.path)) {
             return null;
@@ -99,7 +116,7 @@ class NestedRouter {
       GoRoute(
         path: MyNavigatorRoute.splash.path,
         name: MyNavigatorRoute.splash.name,
-        builder: (BuildContext context, GoRouterState state) => SplashPage(),
+        builder: (BuildContext context, GoRouterState state) => SplashScreen(),
       ),
       GoRoute(
         path: MyNavigatorRoute.home.path,

@@ -10,7 +10,11 @@ class CompanyListTile extends StatelessWidget {
     return ListTile(
       leading: Icon(Icons.domain),
       title: Text(company.name),
-      subtitle: Text("${company.city}, ${company.country}"),
+      subtitle: company.hasAddress
+          ? Text(
+              "${company.addresses[0].city}, ${company.addresses[0].country.description}",
+            )
+          : null,
     );
   }
 }

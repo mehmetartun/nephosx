@@ -3,7 +3,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/company.dart';
 import '../../../widgets/company_list_tile.dart';
-import '../../../widgets/dialogs/add_company_dialog.dart';
+import '../../../widgets/dialogs/add_edit_company_dialog.dart';
 
 class CompaniesView extends StatelessWidget {
   const CompaniesView({
@@ -39,7 +39,7 @@ class CompaniesView extends StatelessWidget {
                       await showDialog(
                         context: context,
                         builder: (context) {
-                          return AddCompanyDialog(onAddCompany: addCompany);
+                          return AddEditCompanyDialog(onAddCompany: addCompany);
                         },
                       );
                     },

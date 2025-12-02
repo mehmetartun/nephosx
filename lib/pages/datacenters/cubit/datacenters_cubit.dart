@@ -118,7 +118,7 @@ class DatacentersCubit extends Cubit<DatacentersState> {
       data: {
         ...data,
         'datacenter_id': datacenter.id,
-        'company_id': datacenter.companyId,
+        'company_id': user!.companyId,
       },
     );
     getGpuClusters(datacenter);

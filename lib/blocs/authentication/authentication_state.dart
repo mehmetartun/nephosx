@@ -20,7 +20,11 @@ final class AuthenticationStateWaiting extends AuthenticationState {}
 
 final class AuthenticationStateNewUserRequest extends AuthenticationState {}
 
-final class AuthenticationStateSignedIn extends AuthenticationState {}
+final class AuthenticationStateSignedIn extends AuthenticationState {
+  String? destination;
+
+  AuthenticationStateSignedIn({this.destination});
+}
 
 final class AuthenticationStateSignedOut extends AuthenticationState {
   AuthenticationException? lastError;

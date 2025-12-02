@@ -65,61 +65,84 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Profile'),
-        actions: [
-          // IconButton(
-          //   icon: const Icon(Icons.save),
-          //   onPressed: _saveProfile,
-          //   tooltip: 'Save',
-          // ),
-          IconButton(icon: const Icon(Icons.close), onPressed: widget.onCancel),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: MaxWidthBox(
-            maxWidth: 500,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ImageFormfield(
-                  onSaved: (value) {
-                    _photoBase64 = value;
-                  },
-                  onValidate: (value) {
-                    return null;
-                  },
-                  initialValue: widget.user.photoBase64,
+      // appBar: AppBar(
+      //   title: const Text('Edit Profile'),
+      //   actions: [
+      //     // IconButton(
+      //     //   icon: const Icon(Icons.save),
+      //     //   onPressed: _saveProfile,
+      //     //   tooltip: 'Save',
+      //     // ),
+      //     IconButton(icon: const Icon(Icons.close), onPressed: widget.onCancel),
+      //   ],
+      // ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            title: const Text('Edit Profile'),
+            backgroundColor: Colors.transparent,
+
+            actions: [
+              // IconButton(
+              //   icon: const Icon(Icons.save),
+              //   onPressed: _saveProfile,
+              //   tooltip: 'Save',
+              // ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: widget.onCancel,
+              ),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: Form(
+              key: _formKey,
+              child: MaxWidthBox(
+                maxWidth: 500,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ImageFormfield(
+                      onSaved: (value) {
+                        _photoBase64 = value;
+                      },
+                      onValidate: (value) {
+                        return null;
+                      },
+                      initialValue: widget.user.photoBase64,
+                    ),
+                    TextFormField(
+                      controller: _firstNameController,
+                      decoration: const InputDecoration(
+                        labelText: 'First Name',
+                      ),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Please enter a first name' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _lastNameController,
+                      decoration: const InputDecoration(labelText: 'Last Name'),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Please enter a last name' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _displayNameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Display Name',
+                      ),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Please enter a display name' : null,
+                    ),
+                    const SizedBox(height: 16),
+                    FilledButton(child: Text("Save"), onPressed: _saveProfile),
+                  ],
                 ),
-                TextFormField(
-                  controller: _firstNameController,
-                  decoration: const InputDecoration(labelText: 'First Name'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter a first name' : null,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _lastNameController,
-                  decoration: const InputDecoration(labelText: 'Last Name'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter a last name' : null,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _displayNameController,
-                  decoration: const InputDecoration(labelText: 'Display Name'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter a display name' : null,
-                ),
-                const SizedBox(height: 16),
-                FilledButton(child: Text("Save"), onPressed: _saveProfile),
-              ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

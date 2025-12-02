@@ -50,6 +50,7 @@ class MyApp extends StatelessWidget {
         FirebaseAuthenticationRepository.instance..init(databaseRepository);
     AuthenticationBloc authenticationBloc = AuthenticationBloc(
       authenticationRepository,
+      databaseRepository,
     );
     ConsumptionBloc consumptionBloc = ConsumptionBloc(databaseRepository)
       ..init();
@@ -155,13 +156,24 @@ class _MyMaterialAppState extends State<MyMaterialApp>
               const Breakpoint(start: 801, end: 1920, name: DESKTOP),
               const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
             ],
-            child: BlocListener<NotificationsBloc, NotificationsState>(
+            child: BlocListener<AuthenticationBloc, AuthenticationState>(
               listener: (context, state) {
-                if (state is NotificationsShowSplashState) {
-                  goRouter.pushNamed(MyNavigatorRoute.splash.name);
+                if (state is AuthenticationStateSignedIn &&
+                    state.destination != null) {
+                  BlocProvider.of<AuthenticationBloc>(
+                    context,
+                  ).add(AuthenticationEventDestinationCleared());
+                  goRouter.go(state.destination!);
                 }
               },
-              child: child!,
+              child: BlocListener<NotificationsBloc, NotificationsState>(
+                listener: (context, state) {
+                  if (state is NotificationsShowSplashState) {
+                    goRouter.pushNamed(MyNavigatorRoute.splash.name);
+                  }
+                },
+                child: child!,
+              ),
             ),
           ),
         );

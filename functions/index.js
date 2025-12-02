@@ -16,6 +16,8 @@ const { onInit } = require('firebase-functions/v2/core');
 const { beforeUserCreated, beforeUserSignedIn } = require("firebase-functions/v2/identity");
 const { getMessaging } = require("firebase-admin/messaging");
 
+const { i18nPostalAddress } = require('i18n-postal-address');
+
 const {
   onDocumentWritten,
   onDocumentCreated,
@@ -304,9 +306,9 @@ exports.updateUser = beforeUserSignedIn(async (event) => {
   const userRef = db.collection('users').doc(user.uid);
   await userRef.update({
     email_verified: user.emailVerified,
+    last_sign_in_at: Timestamp.now(),
   });
 });
-
 
 exports.updateUserToken = onCall(async (request) => {
   if (!request.auth) {
@@ -348,6 +350,114 @@ exports.updateUserToken = onCall(async (request) => {
   return { 'message': 'Success' };
 });
 
+
+exports.datacenterUpdate = onDocumentUpdated("datacenters/{datacenterId}", async (event) => {
+  const db = getFirestore();
+  const datacenterId = event.params.datacenterId;
+  const afterData = event.data.after.data();
+  const beforeData = event.data.before.data();
+
+  if (afterData) {
+    await db.runTransaction(async (t) => {
+      const datacenterRef = db.doc(`datacenters/${datacenterId}`);
+      const datacenterDoc = await datacenterRef.get();
+      if (!datacenterDoc.exists) {
+        return;
+      }
+      const datacenterData = datacenterDoc.data();
+
+      const gpuClustersRef = db.collectionGroup(`gpu_clusters`).where('datacenter_id', '==', datacenterId);
+      const gpuClustersSnapshot = await gpuClustersRef.get();
+      gpuClustersSnapshot.forEach((gpuClusterDoc) => {
+        t.update(gpuClusterDoc.ref, { datacenter: datacenterData });
+      });
+    });
+  }
+});
+
+exports.companyUpdate = onDocumentUpdated("companies/{companyId}", async (event) => {
+  const db = getFirestore();
+  const companyId = event.params.companyId;
+  const afterData = event.data.after.data();
+  const beforeData = event.data.before.data();
+
+  if (afterData) {
+    await db.runTransaction(async (t) => {
+      const companyRef = db.doc(`companies/${companyId}`);
+      const companyDoc = await companyRef.get();
+      if (!companyDoc.exists) {
+        return;
+      }
+      const companyData = companyDoc.data();
+      const usersRef = db.collection(`users`).where('company_id', '==', companyId);
+      const usersSnapshot = await usersRef.get();
+      usersSnapshot.forEach((userDoc) => {
+        t.update(userDoc.ref, { company: companyData });
+      });
+      const gpuClustersRef = db.collectionGroup(`gpu_clusters`).where('company_id', '==', companyId);
+      const gpuClustersSnapshot = await gpuClustersRef.get();
+      gpuClustersSnapshot.forEach((gpuClusterDoc) => {
+        t.update(gpuClusterDoc.ref, { company: companyData });
+      });
+    });
+  }
+});
+
+exports.userUpdate = onDocumentUpdated("users/{userId}", async (event) => {
+  const db = getFirestore();
+  const userId = event.params.userId;
+  const afterData = event.data.after.data();
+  const beforeData = event.data.before.data();
+
+  if (afterData && afterData.company_id && afterData.company_id != beforeData.company_id) {
+    await db.runTransaction(async (t) => {
+      const companyRef = db.doc(`companies/${afterData.company_id}`);
+      const companyDoc = await companyRef.get();
+      if (!companyDoc.exists) {
+        return;
+      }
+      const companyData = companyDoc.data();
+      const userRef = db.doc(`users/${userId}`);
+      t.update(userRef, { company: companyData });
+    });
+  }
+  // const userRef = db.doc(`users/${userId}`);
+  // await userRef.update({
+  //   email: afterData.email,
+  //   display_name: afterData.display_name,
+  //   photo_url: afterData.photo_url,
+  //   email_verified: afterData.email_verified,
+  //   type: afterData.type,
+  // });
+});
+
+
+exports.gpuClusterWritten = onDocumentWritten("gpu_clusters/{gpuClusterId}", async (event) => {
+  const db = getFirestore();
+  const gpuClusterId = event.params.gpuClusterId;
+  const afterData = event.data.after.data();
+  const beforeData = event.data.before.data();
+
+  if (afterData && (!afterData.datacenter || !afterData.company_id)) {
+    await db.runTransaction(async (t) => {
+      const companyRef = db.doc(`companies/${afterData.company_id}`);
+      const companyDoc = await companyRef.get();
+      if (!companyDoc.exists) {
+        return;
+      }
+      const companyData = companyDoc.data();
+      const datacenterRef = db.doc(`datacenters/${afterData.datacenter_id}`);
+      const datacenterDoc = await datacenterRef.get();
+      if (!datacenterDoc.exists) {
+        return;
+      }
+      const datacenterData = datacenterDoc.data();
+      const gpuClusterRef = db.doc(`gpu_clusters/${gpuClusterId}`);
+      t.update(gpuClusterRef, { company: companyData, datacenter: datacenterData });
+    });
+  }
+});
+
 exports.copyTransaction = onDocumentWritten("transactions/{transactionId}", async (event) => {
   const db = getFirestore();
   const transactionId = event.params.transactionId;
@@ -376,4 +486,27 @@ exports.copyTransaction = onDocumentWritten("transactions/{transactionId}", asyn
 
     t.update(clusterRef, { transactions });
   });
+});
+
+exports.addressWritten = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+  if (!request.data.address) {
+    return { 'message': 'Invalid request: missing address' };
+  }
+  var postal = new PostalAddress();
+  postal.setAddress1(request.data.address.addressLine1);
+  postal.setAddress2(request.data.address.addressLine2);
+  postal.setCity(request.data.address.city);
+  postal.setState(request.data.address.state);
+  postal.setCountry(request.data.address.country);
+  postal.setPostalCode(request.data.address.zipCode);
+  postal.setFormat({ country: 'SE', type: 'personal' });
+  var result = postal.format();
+  console.log(result);
+  return result;
 });

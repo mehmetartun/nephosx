@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 
 import '../services/conversions.dart';
 import '../services/mock.dart';
+import 'address.dart';
 import 'company.dart';
 import 'enums.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -37,11 +38,14 @@ class User {
   @JsonKey(name: 'uid')
   final String uid;
 
-  @JsonKey(name: 'company', includeToJson: false, includeFromJson: false)
+  @JsonKey(name: 'company', includeToJson: false, includeFromJson: true)
   final Company? company;
 
   @JsonKey(name: 'type')
   final UserType? type;
+
+  @JsonKey(name: 'address', includeToJson: true, includeFromJson: true)
+  final Address? address;
 
   User({
     this.firstName,
@@ -54,6 +58,7 @@ class User {
     required this.uid,
     this.company,
     this.type,
+    this.address,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -73,6 +78,7 @@ class User {
     String? companyId,
     Company? company,
     UserType? type,
+    Address? address,
   }) {
     return User(
       firstName: firstName ?? this.firstName,

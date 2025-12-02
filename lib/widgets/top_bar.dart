@@ -50,12 +50,13 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
               Image.asset('assets/images/nephosx2/nephosx.png', height: 70),
               if (user != null)
                 SizedBox(
-                  width: 400,
+                  width: 300,
                   child: UserListTile(
                     user: user,
-                    trailing: user.company == null
-                        ? null
-                        : Chip(label: Text(user.company!.name)),
+                    alignment: UserListTileAlignment.right,
+                    // trailing: user.company == null
+                    //     ? null
+                    //     : Chip(label: Text(user.company!.name)),
                   ),
                 ),
               // BrightnessSelector(shouldPop: false),

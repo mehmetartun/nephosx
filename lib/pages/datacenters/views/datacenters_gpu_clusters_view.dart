@@ -7,7 +7,7 @@ import '../../../model/gpu_cluster.dart';
 import '../../../model/gpu_transaction.dart';
 import '../../../widgets/company_list_tile.dart';
 import '../../../widgets/datacenter_list_tile.dart';
-import '../../../widgets/dialogs/add_company_dialog.dart';
+import '../../../widgets/dialogs/add_edit_company_dialog.dart';
 import '../../../widgets/dialogs/add_datacenter_dialog.dart';
 import '../../../widgets/dialogs/add_gpu_cluster_dialog.dart';
 import '../../../widgets/gpu_cluster_list_tile.dart';
@@ -55,7 +55,7 @@ class DatacentersGpuClustersView extends StatelessWidget {
               ),
 
               Text(
-                "${datacenter.region}, ${datacenter.country}",
+                "${datacenter.address.country.description}",
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               SizedBox(height: 20),

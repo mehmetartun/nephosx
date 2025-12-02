@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nephosx/pages/companies/views/company_assign_view.dart';
 
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../repositories/database/database.dart';
@@ -7,6 +8,7 @@ import '../../widgets/views/error_view.dart';
 import '../../widgets/views/loading_view.dart';
 import 'cubit/companies_cubit.dart';
 import 'views/companies_view.dart';
+import 'views/edit_company_view.dart';
 
 class CompaniesPage extends StatelessWidget {
   const CompaniesPage({Key? key}) : super(key: key);
@@ -35,6 +37,24 @@ class CompaniesPage extends StatelessWidget {
                 companies: state.companies,
                 addCompany: cubit.addCompany,
               );
+
+            case CompaniesEditCompany _:
+              return EditCompanyView(
+                company: state.company,
+                onAddressAdd: cubit.addressAdd,
+                onAddressUpdate: cubit.addressUpdate,
+                onUpdateCompany: cubit.updateCompany,
+                users: state.users,
+                setPrimaryContact: cubit.setPrimaryContact,
+              );
+            case CompaniesAssign _:
+              return CompanyAssignView(
+                user: state.user,
+                onRequestCompany: cubit.onRequestCompany,
+                companies: state.companies,
+              );
+            default:
+              return LoadingView(title: "Loading Companies...");
           }
         },
       ),

@@ -37,6 +37,7 @@ class ProfilePage extends StatelessWidget {
               return ProfileView(
                 user: context.read<ProfileCubit>().user!,
                 editProfile: context.read<ProfileCubit>().editProfile,
+                onAddressUpdate: context.read<ProfileCubit>().updateUserAddress,
               );
             case ProfileEdit _:
               return ProfileEditView(

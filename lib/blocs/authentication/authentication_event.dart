@@ -12,6 +12,13 @@ class AuthenticationEventSignInWithEmailAndPassword
   });
 }
 
+class AuthenticationEventDestinationCleared extends AuthenticationEvent {}
+
+class AuthenticationDestinationAfterSignInEvent extends AuthenticationEvent {
+  final String destination;
+  AuthenticationDestinationAfterSignInEvent({required this.destination});
+}
+
 class AuthenticationEventCreateNewUserWithEmailAndPassword
     extends AuthenticationEvent {
   final String email;

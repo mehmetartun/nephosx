@@ -21,7 +21,7 @@ class DatacenterListTile extends StatelessWidget {
       onTap: onTap,
       leading: TierWidget(tier: datacenter.tier),
       title: Text(datacenter.name),
-      subtitle: Text("${datacenter.region}, ${datacenter.country}"),
+      subtitle: Text("${datacenter.address.country.description}"),
       trailing: onUpdateDatacenter == null
           ? null
           : IconButton(

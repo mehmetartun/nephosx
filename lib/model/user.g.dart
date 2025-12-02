@@ -15,7 +15,13 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
   photoBase64: json['photo_base64'] as String?,
   companyId: json['company_id'] as String?,
   uid: json['uid'] as String,
+  company: json['company'] == null
+      ? null
+      : Company.fromJson(json['company'] as Map<String, dynamic>),
   type: $enumDecodeNullable(_$UserTypeEnumMap, json['type']),
+  address: json['address'] == null
+      ? null
+      : Address.fromJson(json['address'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -28,10 +34,12 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'company_id': instance.companyId,
   'uid': instance.uid,
   'type': _$UserTypeEnumMap[instance.type],
+  'address': instance.address,
 };
 
 const _$UserTypeEnumMap = {
   UserType.public: 'public',
   UserType.admin: 'admin',
   UserType.corporate: 'corporate',
+  UserType.corporateAdmin: 'corporateAdmin',
 };

@@ -21,6 +21,7 @@ class ResponsiveScaffold extends StatelessWidget {
         Condition.equals(
           name: 'TABLET',
           value: ScaffoldWithNavRail(
+            narrow: true,
             navigationShell: navigationShell,
             width: 100,
           ),

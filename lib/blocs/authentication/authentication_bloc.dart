@@ -8,13 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../model/company.dart';
 import '../../model/user.dart';
 import '../../repositories/authentication/authentication_repository.dart';
+import '../../repositories/database/database.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  AuthenticationBloc(this.authenticationRepository)
+  AuthenticationBloc(this.authenticationRepository, this.databaseRepository)
     : super(AuthenticationStateUnkown()) {
     on<AuthenticationEventSignInWithEmailAndPassword>((event, emit) async {
       await _handleLogin(event, emit);
@@ -32,7 +33,9 @@ class AuthenticationBloc
     on<AuthenticationEventSignOut>((event, emit) async {
       await _handleSignOut(event, emit);
     });
-
+    on<AuthenticationEventDestinationCleared>((event, emit) {
+      destination = null;
+    });
     on<AuthenticationEventNewUserRequest>((event, emit) {
       _handleNewUserRequest(event, emit);
     });
@@ -56,16 +59,33 @@ class AuthenticationBloc
     on<AuthenticationSignInWithIdTokenEvent>((event, emit) async {
       await _handleSignInWithIdToken(event, emit);
     });
+    on<AuthenticationDestinationAfterSignInEvent>((event, emit) {
+      _handleSaveDestiontion(event, emit);
+    });
   }
   final AuthenticationRepository authenticationRepository;
+  final DatabaseRepository databaseRepository;
   User? user;
 
-  // StreamSubscription<User?>? userStreamSubscription;
+  StreamSubscription<User?>? userStreamSubscription;
+
+  String? destination;
+  void _handleSaveDestiontion(
+    AuthenticationDestinationAfterSignInEvent event,
+    emit,
+  ) {
+    destination = event.destination;
+  }
 
   void init() async {
     final bool isSignedIn = await authenticationRepository.isSignedIn;
     if (isSignedIn) {
       user = authenticationRepository.user;
+      // userStreamSubscription = databaseRepository
+      //     .getUserStream(user!.uid)
+      //     .listen((user) {
+      //       this.user = user;
+      //     });
       // await userStreamSubscription?.cancel();
       add(AuthenticationEventSignedIn());
     } else {
@@ -95,7 +115,7 @@ class AuthenticationBloc
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }
-      emit(AuthenticationStateSignedIn());
+      emit(AuthenticationStateSignedIn(destination: destination));
       return;
     } catch (e) {
       emit(
@@ -122,7 +142,7 @@ class AuthenticationBloc
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }
-      emit(AuthenticationStateSignedIn());
+      emit(AuthenticationStateSignedIn(destination: destination));
       return;
     } on Exception catch (e) {
       if (e is AuthenticationException) {
@@ -158,7 +178,7 @@ class AuthenticationBloc
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }
-      emit(AuthenticationStateSignedIn());
+      emit(AuthenticationStateSignedIn(destination: destination));
       return;
     } catch (e) {
       emit(AuthenticationStateError.fromMessage(e.toString()));
@@ -166,7 +186,7 @@ class AuthenticationBloc
   }
 
   void _handleSignedIn(event, emit) {
-    emit(AuthenticationStateSignedIn());
+    emit(AuthenticationStateSignedIn(destination: destination));
   }
 
   Future<void> _handleSignOut(event, emit) async {
@@ -209,7 +229,7 @@ class AuthenticationBloc
         debugPrint('Failed to update user token: $e');
       }
 
-      emit(AuthenticationStateSignedIn());
+      emit(AuthenticationStateSignedIn(destination: destination));
       return;
     } on Exception catch (e) {
       if (e is AuthenticationException) {
@@ -247,7 +267,7 @@ class AuthenticationBloc
         debugPrint('Failed to update user token: $e');
       }
 
-      emit(AuthenticationStateSignedIn());
+      emit(AuthenticationStateSignedIn(destination: destination));
       return;
     } catch (e) {
       emit(AuthenticationStateError.fromMessage(e.toString()));

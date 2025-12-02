@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'address.dart';
+
 part 'datacenter.g.dart';
 
 enum DatacenterTier {
@@ -19,36 +21,38 @@ enum DatacenterTier {
 class Datacenter {
   final String id;
   final String name;
-  @JsonKey(name: "company_id")
-  final String companyId;
-  final String country;
-  final String region;
+  // @JsonKey(name: "company_id")
+  // final String companyId;
+  final Address address;
   final DatacenterTier tier;
 
   Datacenter({
     required this.id,
     required this.name,
-    required this.companyId,
+    // required this.companyId,
+    required this.address,
     required this.tier,
-    required this.country,
-    required this.region,
+    // required this.country,
+    // required this.region,
   });
 
   Datacenter copyWith({
     String? id,
     String? name,
-    String? companyId,
+    // String? companyId,
     DatacenterTier? tier,
-    String? country,
-    String? region,
+    // String? country,
+    // String? region,
+    Address? address,
   }) {
     return Datacenter(
       id: id ?? this.id,
       name: name ?? this.name,
-      companyId: companyId ?? this.companyId,
+      // companyId: companyId ?? this.companyId,
       tier: tier ?? this.tier,
-      country: country ?? this.country,
-      region: region ?? this.region,
+      // country: country ?? this.country,
+      // region: region ?? this.region,
+      address: address ?? this.address,
     );
   }
 

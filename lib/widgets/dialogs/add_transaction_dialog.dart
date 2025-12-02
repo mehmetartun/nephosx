@@ -60,7 +60,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 Text(
-                  "${widget.datacenter.country}, ${widget.datacenter.region}",
+                  "${widget.datacenter.address.country.description}",
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 Text(

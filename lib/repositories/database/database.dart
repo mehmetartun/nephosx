@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nephosx/model/request.dart';
 
 import '../../model/company.dart';
 import '../../model/consumption.dart';
@@ -44,10 +45,13 @@ abstract class DatabaseRepository {
   Stream<User?> getUserStream(String uid);
 
   Stream<List<User>> getUsersStream();
-  Future<List<User>> getUsers();
+  Future<List<User>> getUsers({String? companyId});
   Future<List<Company>> getCompanies();
   Future<List<Datacenter>> getDatacenters({String? companyId});
   Future<List<GpuCluster>> getGpuClusters({String? datacenterId});
+  Future<Company> getCompany(String companyId);
+  Future<List<Request>> getRequestsByRequestorId(String requestorId);
+  Future<List<Request>> getRequestsByApproverId(String approverId);
 }
 
 class FirestoreDatabaseRepository extends DatabaseRepository {
@@ -171,22 +175,23 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .get();
 
     if (userDocument.exists) {
-      if ((userDocument.data() as Map<String, dynamic>)['company_id'] != null) {
-        var companyDocument = await db
-            .collection('companies')
-            .doc((userDocument.data() as Map<String, dynamic>)['company_id'])
-            .get();
-        if (companyDocument.exists) {
-          Company company = Company.fromJson({
-            ...companyDocument.data()!,
-            'id': companyDocument.id,
-          });
-          final data = userDocument.data() as Map<String, dynamic>;
-          return User.fromJson(data).copyWith(company: company);
-        }
-      }
+      // if ((userDocument.data() as Map<String, dynamic>)['company_id'] != null) {
+      //   var companyDocument = await db
+      //       .collection('companies')
+      //       .doc((userDocument.data() as Map<String, dynamic>)['company_id'])
+      //       .get();
+      //   if (companyDocument.exists) {
+      //     Company company = Company.fromJson({
+      //       ...companyDocument.data()!,
+      //       'id': companyDocument.id,
+      //     });
+      //     final data = userDocument.data() as Map<String, dynamic>;
+      //     return User.fromJson(data).copyWith(company: company);
+      //   }
+      // }
       final data = userDocument.data() as Map<String, dynamic>;
-      return User.fromJson(data);
+      print(data);
+      return User.fromJson(userDocument.data() as Map<String, dynamic>);
     } else {
       throw DatabaseException("User not found");
     }
@@ -218,9 +223,17 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Future<List<User>> getUsers() async {
-    var qs = await db.collection("users").get();
-    return qs.docs.map((doc) => User.fromJson(doc.data())).toList();
+  Future<List<User>> getUsers({String? companyId}) async {
+    if (companyId != null) {
+      var qs = await db
+          .collection("users")
+          .where("company_id", isEqualTo: companyId)
+          .get();
+      return qs.docs.map((doc) => User.fromJson(doc.data())).toList();
+    } else {
+      var qs = await db.collection("users").get();
+      return qs.docs.map((doc) => User.fromJson(doc.data())).toList();
+    }
   }
 
   @override
@@ -277,5 +290,29 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
     return qs.docs
         .map((doc) => GpuCluster.fromJson({...doc.data(), 'id': doc.id}))
         .toList();
+  }
+
+  @override
+  Future<Company> getCompany(String companyId) async {
+    var qs = await db.collection("companies").doc(companyId).get();
+    return Company.fromJson({...qs.data()!, 'id': companyId});
+  }
+
+  @override
+  Future<List<Request>> getRequestsByApproverId(String approverId) async {
+    var qs = await db
+        .collectionGroup("requests")
+        .where("approver_id", isEqualTo: approverId)
+        .get();
+    return qs.docs.map((doc) => Request.fromJson(doc.data())).toList();
+  }
+
+  @override
+  Future<List<Request>> getRequestsByRequestorId(String requestorId) async {
+    var qs = await db
+        .collectionGroup("requests")
+        .where("requestor_id", isEqualTo: requestorId)
+        .get();
+    return qs.docs.map((doc) => Request.fromJson({...doc.data()})).toList();
   }
 }

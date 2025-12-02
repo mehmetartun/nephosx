@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'company.dart';
+import 'datacenter.dart';
 import 'gpu_transaction.dart';
 
 part 'gpu_cluster.g.dart';
@@ -15,7 +17,12 @@ class GpuCluster {
   final String datacenterId;
   @JsonKey(name: "company_id")
   final String companyId;
+  @JsonKey(name: "transactions", includeToJson: false, includeFromJson: true)
   final List<GpuTransaction>? transactions;
+  @JsonKey(name: "datacenter", includeToJson: false, includeFromJson: true)
+  final Datacenter? datacenter;
+  @JsonKey(name: "company", includeToJson: false, includeFromJson: true)
+  final Company? company;
 
   GpuCluster({
     required this.type,
@@ -24,6 +31,8 @@ class GpuCluster {
     required this.companyId,
     required this.id,
     this.transactions,
+    this.datacenter,
+    this.company,
   });
   factory GpuCluster.fromJson(Map<String, dynamic> json) =>
       _$GpuClusterFromJson(json);

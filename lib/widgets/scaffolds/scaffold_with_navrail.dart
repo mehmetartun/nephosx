@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../model/enums.dart';
 import '../brightness_selector.dart';
 import '../top_bar.dart';
 import '../user_profile_card.dart';
@@ -16,11 +17,13 @@ class ScaffoldWithNavRail extends StatelessWidget {
     required this.navigationShell,
     Key? key,
     required this.width,
+    this.narrow = false,
   }) : super(key: key ?? const ValueKey<String>('ScaffoldWithNavRail'));
 
   /// The navigation shell and container for the branch Navigators.
   final StatefulNavigationShell navigationShell;
   final double width;
+  final bool narrow;
 
   // #docregion configuration-custom-shell
   @override
@@ -64,10 +67,15 @@ class ScaffoldWithNavRail extends StatelessWidget {
                 // world scenario, the items would most likely be generated from the
                 // branches of the shell route, which can be fetched using
                 // `navigationShell.route.branches`.
-                destinations: const <NavigationRailDestination>[
+                destinations: <NavigationRailDestination>[
                   NavigationRailDestination(
                     icon: Icon(Icons.people),
                     label: Text('Users'),
+                    disabled:
+                        BlocProvider.of<AuthenticationBloc>(
+                          context,
+                        ).user?.type ==
+                        UserType.public,
                   ),
                   NavigationRailDestination(
                     icon: Icon(Icons.domain),
@@ -76,6 +84,11 @@ class ScaffoldWithNavRail extends StatelessWidget {
                   NavigationRailDestination(
                     icon: Icon(Icons.dns),
                     label: Text('Datacenters'),
+                    disabled:
+                        BlocProvider.of<AuthenticationBloc>(
+                          context,
+                        ).user?.type ==
+                        UserType.public,
                   ),
                   NavigationRailDestination(
                     icon: Icon(Icons.money),
@@ -106,19 +119,37 @@ class ScaffoldWithNavRail extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 0, 0, 10),
-                        child: BrightnessSelector(shouldPop: false),
+                        child: Text(
+                          "${BlocProvider.of<AuthenticationBloc>(context).user?.type?.title} User",
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 0, 10),
+                        child: BrightnessSelector(
+                          shouldPop: false,
+                          narrow: narrow,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                        child: FilledButton.tonalIcon(
-                          icon: Icon(Icons.logout),
-                          label: Text("Sign Out"),
-                          onPressed: () {
-                            BlocProvider.of<AuthenticationBloc>(
-                              context,
-                            ).add(AuthenticationEventSignOut());
-                          },
-                        ),
+                        child: narrow
+                            ? IconButton(
+                                icon: Icon(Icons.logout),
+                                onPressed: () {
+                                  BlocProvider.of<AuthenticationBloc>(
+                                    context,
+                                  ).add(AuthenticationEventSignOut());
+                                },
+                              )
+                            : FilledButton.tonalIcon(
+                                icon: Icon(Icons.logout),
+                                label: Text("Sign Out"),
+                                onPressed: () {
+                                  BlocProvider.of<AuthenticationBloc>(
+                                    context,
+                                  ).add(AuthenticationEventSignOut());
+                                },
+                              ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
