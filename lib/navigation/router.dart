@@ -6,6 +6,7 @@ import '../blocs/authentication/authentication_bloc.dart';
 import '../pages/companies/companies_page.dart';
 import '../pages/datacenters/datacenters_page.dart';
 import '../pages/generic_page.dart';
+import '../pages/gpu_clusters/gpu_clusters_page.dart';
 import '../pages/market/market_page.dart';
 import '../pages/profile/profile_page.dart';
 import '../pages/splash_page.dart';
@@ -180,6 +181,22 @@ class NestedRouter {
                     name: MyNavigatorRoute.datacenters.name,
                     builder: (BuildContext context, GoRouterState state) =>
                         const DatacentersPage(),
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                // It's not necessary to provide a navigatorKey if it isn't also
+                // needed elsewhere. If not provided, a default key will be used.
+                // navigatorKey: _sectionANavigatorKey,
+                routes: <RouteBase>[
+                  GoRoute(
+                    // The screen to display as the root in the second tab of the
+                    // bottom navigation bar.
+                    // name: "convertPdf",
+                    path: MyNavigatorRoute.gpuClusters.path,
+                    name: MyNavigatorRoute.gpuClusters.name,
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const GpuClustersPage(),
                   ),
                 ],
               ),

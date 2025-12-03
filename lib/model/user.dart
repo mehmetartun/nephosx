@@ -1,12 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 
-import '../services/conversions.dart';
 import '../services/mock.dart';
 import 'address.dart';
 import 'company.dart';
+import 'conversions.dart';
 import 'enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -25,6 +26,17 @@ class User {
 
   @JsonKey(name: 'email')
   final String? email;
+
+  @JsonKey(name: 'email_verified')
+  final bool emailVerified;
+
+  @JsonKey(name: 'created_at', includeToJson: false, includeFromJson: true)
+  @TimestampConverter()
+  final DateTime? createdAt;
+
+  @JsonKey(name: 'last_login_at', includeToJson: false, includeFromJson: true)
+  @TimestampConverter()
+  final DateTime? lastLoginAt;
 
   @JsonKey(name: 'photo_url')
   final String? photoUrl;
@@ -59,6 +71,9 @@ class User {
     this.company,
     this.type,
     this.address,
+    this.emailVerified = false,
+    this.createdAt,
+    this.lastLoginAt,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -79,6 +94,9 @@ class User {
     Company? company,
     UserType? type,
     Address? address,
+    bool? emailVerified,
+    DateTime? createdAt,
+    DateTime? lastLoginAt,
   }) {
     return User(
       firstName: firstName ?? this.firstName,
@@ -91,6 +109,10 @@ class User {
       companyId: companyId ?? this.companyId,
       company: company ?? this.company,
       type: type ?? this.type,
+      address: address ?? this.address,
+      emailVerified: emailVerified ?? this.emailVerified,
+      createdAt: createdAt ?? this.createdAt,
+      lastLoginAt: lastLoginAt ?? this.lastLoginAt,
     );
   }
 

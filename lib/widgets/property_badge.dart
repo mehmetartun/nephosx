@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 
 class PropertyBadge extends StatelessWidget {
-  const PropertyBadge({super.key, required this.text});
+  const PropertyBadge({
+    super.key,
+    required this.text,
+    this.textStyle,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.icon,
+  });
   final String text;
+  final TextStyle? textStyle;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -10,14 +21,16 @@ class PropertyBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        color: Theme.of(context).colorScheme.primary,
+        color: backgroundColor ?? Theme.of(context).colorScheme.primary,
       ),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: Theme.of(context).colorScheme.onPrimary,
-          fontWeight: FontWeight.bold,
-        ),
+        style:
+            textStyle ??
+            Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: foregroundColor ?? Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+            ),
       ),
     );
   }

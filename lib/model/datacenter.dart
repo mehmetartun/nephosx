@@ -5,16 +5,17 @@ import 'address.dart';
 part 'datacenter.g.dart';
 
 enum DatacenterTier {
-  tier1("Tier 1", "Uptime > 99.99%", 1),
-  tier2("Tier 2", "Uptime > 99.90%", 2),
-  tier3("Tier 3", "Uptime > 99.00%", 3),
-  tier4("Tier 4", "Uptime > 95.00%", 4);
+  tier1("Tier 1", "Uptime > 99.99%", 1, "Tier I"),
+  tier2("Tier 2", "Uptime > 99.90%", 2, "Tier II"),
+  tier3("Tier 3", "Uptime > 99.00%", 3, "Tier III"),
+  tier4("Tier 4", "Uptime > 95.00%", 4, "Tier IV");
 
   final String title;
+  final String roman;
   final String description;
   final int rank;
 
-  const DatacenterTier(this.title, this.description, this.rank);
+  const DatacenterTier(this.title, this.description, this.rank, this.roman);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -60,4 +61,16 @@ class Datacenter {
       _$DatacenterFromJson(json);
 
   Map<String, dynamic> toJson() => _$DatacenterToJson(this);
+
+  @override
+  bool operator ==(Object other) {
+    // 1. Check for identical instances (same memory address)
+    if (identical(this, other)) return true;
+
+    // 2. Check if 'other' is of the same runtime type
+    if (other.runtimeType != runtimeType) return false;
+
+    // 3. Compare relevant properties for value equality
+    return other is Datacenter && id == other.id;
+  }
 }

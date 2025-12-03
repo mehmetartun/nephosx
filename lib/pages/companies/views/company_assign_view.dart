@@ -12,6 +12,7 @@ class CompanyAssignView extends StatefulWidget {
   final User user;
   final void Function(Company company) onRequestCompany;
   final Request? request;
+  final void Function(Request request) onWithdrawRequest;
 
   final List<Company> companies;
   const CompanyAssignView({
@@ -21,6 +22,7 @@ class CompanyAssignView extends StatefulWidget {
     required this.companies,
     required this.onRequestCompany,
     this.request,
+    required this.onWithdrawRequest,
   });
 
   @override
@@ -76,7 +78,7 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
                     ],
                     if (widget.request != null) ...[
                       Text(
-                        "Request Pending",
+                        "Authorization Request Pending",
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       SizedBox(height: 20),
@@ -92,6 +94,19 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
                       Text(
                         widget.request!.summary ?? "--",
                         style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 20),
+                      LightLabel(text: "Request Status"),
+                      Text(
+                        widget.request!.status.description,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      SizedBox(height: 20),
+                      FilledButton(
+                        child: Text("Withdraw Request"),
+                        onPressed: () {
+                          widget.onWithdrawRequest(widget.request!);
+                        },
                       ),
                     ],
                   ],

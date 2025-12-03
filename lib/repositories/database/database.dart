@@ -48,7 +48,7 @@ abstract class DatabaseRepository {
   Future<List<User>> getUsers({String? companyId});
   Future<List<Company>> getCompanies();
   Future<List<Datacenter>> getDatacenters({String? companyId});
-  Future<List<GpuCluster>> getGpuClusters({String? datacenterId});
+  Future<List<GpuCluster>> getGpuClusters({String? companyId});
   Future<Company> getCompany(String companyId);
   Future<List<Request>> getRequestsByRequestorId(String requestorId);
   Future<List<Request>> getRequestsByApproverId(String approverId);
@@ -280,10 +280,13 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Future<List<GpuCluster>> getGpuClusters({String? datacenterId}) async {
+  Future<List<GpuCluster>> getGpuClusters({String? companyId}) async {
     QuerySnapshot<Map<String, dynamic>> qs;
-    if (datacenterId != null) {
-      qs = await db.collection("datacenters/$datacenterId/gpu_clusters").get();
+    if (companyId != null) {
+      qs = await db
+          .collectionGroup("gpu_clusters")
+          .where('company_id', isEqualTo: companyId)
+          .get();
     } else {
       qs = await db.collectionGroup("gpu_clusters").get();
     }

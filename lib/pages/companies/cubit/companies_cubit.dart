@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../model/address.dart';
 import '../../../model/company.dart';
@@ -40,6 +41,10 @@ class CompaniesCubit extends Cubit<CompaniesState> {
         user!.uid,
       );
       companies = await databaseRepository.getCompanies();
+
+      requestsMade.removeWhere(
+        (request) => request.status == RequestStatus.withdrawn,
+      );
 
       if (requestsMade.isEmpty) {
         emit(CompaniesAssign(companies: companies, user: user!));
@@ -88,13 +93,30 @@ class CompaniesCubit extends Cubit<CompaniesState> {
       data: Request(
         id: Mock.uid(),
         requestorId: user!.uid,
+        targetCompanyId: company.id,
         requestDate: DateTime.now(),
         requestType: RequestType.joinCompany,
         status: RequestStatus.pending,
         summary:
             "Request to join company ${company.name}\n"
-            "by ${user!.email}\n${user!.firstName} ${user!.lastName}",
+            "Email: ${user!.email}\n"
+            "Name: ${user!.firstName} ${user!.lastName}\n"
+            "Requested at: ${DateFormat("dd MMM yyyy HH:mm").format(DateTime.now())}",
       ).toJson(),
+    );
+    init();
+  }
+
+  void onWithdrawRequestCompany(Request request) async {
+    emit(CompaniesInitial());
+
+    if (request.requestType != RequestType.joinCompany) {
+      emit(CompaniesError(message: "Invalid request type"));
+      return;
+    }
+    await databaseRepository.updateDocument(
+      docPath: 'companies/${request.targetCompanyId}/requests/${request.id}',
+      data: request.copyWith(status: RequestStatus.withdrawn).toJson(),
     );
     init();
   }
@@ -119,10 +141,11 @@ class CompaniesCubit extends Cubit<CompaniesState> {
   void addressAdd(Company company, Address address) {
     emit(CompaniesInitial());
 
-    company.addresses.add(address);
+    List<Address> ads = [...company.addresses, address];
+    // company.addresses.add(address);
     print(company.toJson());
     print(address.toJson());
-    updateCompany(company);
+    updateCompany(company.copyWith(addresses: ads));
   }
 
   void setPrimaryContact(User user) async {

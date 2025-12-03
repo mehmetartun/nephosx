@@ -62,6 +62,15 @@ class AuthenticationBloc
     on<AuthenticationDestinationAfterSignInEvent>((event, emit) {
       _handleSaveDestiontion(event, emit);
     });
+    on<AuthenticationEventSendPasswordResetEmail>((event, emit) async {
+      // emit(AuthenticationStateWaiting());
+      add(AuthenticationEventSignOut());
+      try {
+        await authenticationRepository.sendPasswordResetEmail(event.email);
+      } catch (e) {
+        emit(AuthenticationStateError.fromMessage(e.toString()));
+      }
+    });
   }
   final AuthenticationRepository authenticationRepository;
   final DatabaseRepository databaseRepository;

@@ -9,6 +9,8 @@ class Address {
   // final String id;
   // final String entityId;
   // final EntityType entityType;
+  final String? id;
+  final String? parentId;
   final String addressLine1;
   final String? addressLine2;
   final String? addressLine3;
@@ -20,6 +22,8 @@ class Address {
 
   Address({
     // required this.id,
+    this.id,
+    this.parentId,
     required this.addressLine1,
     this.addressLine2,
     required this.zipCode,
@@ -33,7 +37,8 @@ class Address {
   });
 
   Address copyWith(
-    // String? id,
+    String? id,
+    String? parentId,
     String? addressLine1,
     String? addressLine2,
     String? addressLine3,
@@ -46,7 +51,8 @@ class Address {
     // EntityType? entityType,
   ) {
     return Address(
-      // id: id ?? this.id,
+      id: id ?? this.id,
+      parentId: parentId ?? this.parentId,
       addressLine1: addressLine1 ?? this.addressLine1,
       addressLine2: addressLine2 ?? this.addressLine2,
       addressLine3: addressLine3 ?? this.addressLine3,

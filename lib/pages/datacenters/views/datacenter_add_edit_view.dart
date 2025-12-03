@@ -106,7 +106,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
                     items: DatacenterTier.values.map((tier) {
                       return DropdownMenuItem(
                         value: tier,
-                        child: Text(tier.name),
+                        child: Text(tier.roman),
                       );
                     }).toList(),
                     onSaved: (value) {

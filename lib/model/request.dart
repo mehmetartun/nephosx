@@ -50,6 +50,38 @@ class Request {
     this.summary,
   });
 
+  Request copyWith({
+    String? id,
+    String? requestorId,
+    String? approverId,
+    String? targetCompanyId,
+    String? targetUserId,
+    String? targetDatacenterId,
+    String? targetGpuClusterId,
+    DateTime? requestDate,
+    DateTime? decisionDate,
+    RequestStatus? status,
+    String? comment,
+    String? summary,
+    RequestType? requestType,
+  }) {
+    return Request(
+      id: id ?? this.id,
+      requestorId: requestorId ?? this.requestorId,
+      approverId: approverId ?? this.approverId,
+      targetCompanyId: targetCompanyId ?? this.targetCompanyId,
+      targetUserId: targetUserId ?? this.targetUserId,
+      targetDatacenterId: targetDatacenterId ?? this.targetDatacenterId,
+      targetGpuClusterId: targetGpuClusterId ?? this.targetGpuClusterId,
+      requestDate: requestDate ?? this.requestDate,
+      decisionDate: decisionDate ?? this.decisionDate,
+      status: status ?? this.status,
+      comment: comment ?? this.comment,
+      summary: summary ?? this.summary,
+      requestType: requestType ?? this.requestType,
+    );
+  }
+
   factory Request.fromJson(Map<String, dynamic> json) =>
       _$RequestFromJson(json);
 

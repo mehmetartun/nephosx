@@ -19,6 +19,11 @@ class AuthenticationDestinationAfterSignInEvent extends AuthenticationEvent {
   AuthenticationDestinationAfterSignInEvent({required this.destination});
 }
 
+class AuthenticationEventSendPasswordResetEmail extends AuthenticationEvent {
+  final String email;
+  AuthenticationEventSendPasswordResetEmail({required this.email});
+}
+
 class AuthenticationEventCreateNewUserWithEmailAndPassword
     extends AuthenticationEvent {
   final String email;

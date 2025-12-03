@@ -432,13 +432,14 @@ exports.userUpdate = onDocumentUpdated("users/{userId}", async (event) => {
 });
 
 
-exports.gpuClusterWritten = onDocumentWritten("gpu_clusters/{gpuClusterId}", async (event) => {
+exports.gpuClusterWritten = onDocumentWritten("datacenters/{datacenterId}/gpu_clusters/{gpuClusterId}", async (event) => {
   const db = getFirestore();
   const gpuClusterId = event.params.gpuClusterId;
+  const datacenterId = event.params.datacenterId;
   const afterData = event.data.after.data();
   const beforeData = event.data.before.data();
 
-  if (afterData && (!afterData.datacenter || !afterData.company_id)) {
+  if (afterData && (!afterData.datacenter || !afterData.company)) {
     await db.runTransaction(async (t) => {
       const companyRef = db.doc(`companies/${afterData.company_id}`);
       const companyDoc = await companyRef.get();
@@ -446,13 +447,13 @@ exports.gpuClusterWritten = onDocumentWritten("gpu_clusters/{gpuClusterId}", asy
         return;
       }
       const companyData = companyDoc.data();
-      const datacenterRef = db.doc(`datacenters/${afterData.datacenter_id}`);
+      const datacenterRef = db.doc(`datacenters/${datacenterId}`);
       const datacenterDoc = await datacenterRef.get();
       if (!datacenterDoc.exists) {
         return;
       }
       const datacenterData = datacenterDoc.data();
-      const gpuClusterRef = db.doc(`gpu_clusters/${gpuClusterId}`);
+      const gpuClusterRef = db.doc(`datacenters/${datacenterId}/gpu_clusters/${gpuClusterId}`);
       t.update(gpuClusterRef, { company: companyData, datacenter: datacenterData });
     });
   }

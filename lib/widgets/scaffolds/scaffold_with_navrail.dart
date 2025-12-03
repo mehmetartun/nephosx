@@ -91,6 +91,15 @@ class ScaffoldWithNavRail extends StatelessWidget {
                         UserType.public,
                   ),
                   NavigationRailDestination(
+                    icon: Icon(Icons.computer),
+                    label: Text('GPU Clusters'),
+                    disabled:
+                        BlocProvider.of<AuthenticationBloc>(
+                          context,
+                        ).user?.type ==
+                        UserType.public,
+                  ),
+                  NavigationRailDestination(
                     icon: Icon(Icons.money),
                     label: Text('Market'),
                   ),

@@ -9,6 +9,12 @@ part of 'company.dart';
 Company _$CompanyFromJson(Map<String, dynamic> json) => Company(
   id: json['id'] as String,
   name: json['name'] as String,
+  primaryAddressId: json['primary_address_id'] as String?,
+  addressIds:
+      (json['address_ids'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
   addresses:
       (json['addresses'] as List<dynamic>?)
           ?.map((e) => Address.fromJson(e as Map<String, dynamic>))
@@ -28,7 +34,9 @@ Company _$CompanyFromJson(Map<String, dynamic> json) => Company(
 Map<String, dynamic> _$CompanyToJson(Company instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
+  'primary_address_id': instance.primaryAddressId,
   'confirmation_email': instance.confirmationEmail,
+  'address_ids': instance.addressIds,
   'addresses': instance.addresses.map((e) => e.toJson()).toList(),
   'business_tax_id': instance.businessTaxId,
   'business_duns_number': instance.businessDunsNumber,

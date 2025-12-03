@@ -3,6 +3,7 @@ import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'occupation_view_paint.dart';
+import 'property_badge.dart';
 
 enum GpuClusterListTileViewType { listTile, compact }
 
@@ -48,14 +49,36 @@ class GpuClusterListTileView extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "${gpuCluster.type.name} ${gpuCluster.quantity}x",
-                        style: Theme.of(context).textTheme.titleSmall,
+                      Row(
+                        children: [
+                          PropertyBadge(
+                            text: gpuCluster.datacenter?.tier.roman ?? "",
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primaryContainer,
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.onPrimaryContainer,
+                            textStyle: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimaryContainer,
+                                ),
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            "${gpuCluster.type.name} ${gpuCluster.quantity}x",
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                        ],
                       ),
 
                       if (gpuCluster.datacenter != null)
                         Text(
-                          '${gpuCluster.datacenter!.name} ${gpuCluster.datacenter!.address.country.description}',
+                          '${gpuCluster.datacenter!.name} '
+                          '${gpuCluster.datacenter!.address.country.flagUnicode}'
+                          ' ${gpuCluster.datacenter!.address.country.description}',
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
                       if (gpuCluster.datacenter == null)

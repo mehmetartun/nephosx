@@ -22,6 +22,15 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
   address: json['address'] == null
       ? null
       : Address.fromJson(json['address'] as Map<String, dynamic>),
+  emailVerified: json['email_verified'] as bool? ?? false,
+  createdAt: _$JsonConverterFromJson<Timestamp, DateTime>(
+    json['created_at'],
+    const TimestampConverter().fromJson,
+  ),
+  lastLoginAt: _$JsonConverterFromJson<Timestamp, DateTime>(
+    json['last_login_at'],
+    const TimestampConverter().fromJson,
+  ),
 );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -29,6 +38,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'last_name': instance.lastName,
   'display_name': instance.displayName,
   'email': instance.email,
+  'email_verified': instance.emailVerified,
   'photo_url': instance.photoUrl,
   'photo_base64': instance.photoBase64,
   'company_id': instance.companyId,
@@ -43,3 +53,8 @@ const _$UserTypeEnumMap = {
   UserType.corporate: 'corporate',
   UserType.corporateAdmin: 'corporateAdmin',
 };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) => json == null ? null : fromJson(json as Json);

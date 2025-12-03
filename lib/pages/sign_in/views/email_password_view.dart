@@ -200,7 +200,7 @@ class _EmailPasswordViewState extends State<EmailPasswordView> {
                                   password: "Password",
                                 );
                               },
-                              child: Text("Company 1"),
+                              child: Text("BaseflightCo"),
                             ),
                             FilledButton.tonal(
                               onPressed: () {
@@ -209,7 +209,7 @@ class _EmailPasswordViewState extends State<EmailPasswordView> {
                                   password: "Password",
                                 );
                               },
-                              child: Text("Company 2"),
+                              child: Text("BytewiseCo"),
                             ),
                             FilledButton.tonal(
                               onPressed: () {
@@ -218,7 +218,7 @@ class _EmailPasswordViewState extends State<EmailPasswordView> {
                                   password: "Password",
                                 );
                               },
-                              child: Text("Admin"),
+                              child: Text("NephosX Admin"),
                             ),
                           ],
                         ),

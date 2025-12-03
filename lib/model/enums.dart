@@ -14,11 +14,40 @@ enum Country {
     true,
     1,
     AddressRegion.europeWest,
+    "🇺🇸",
   ),
-  ca("CA", "CAN", "Canada", true, 1, AddressRegion.europeWest),
-  uk("UK", "GBR", "United Kingdom", false, 1, AddressRegion.europeWest),
-  fr("FR", "FRA", "France", false, 1, AddressRegion.europeWest),
-  de("DE", "GER", "Germany", false, 1, AddressRegion.europeWest);
+  ca("CA", "CAN", "Canada", true, 1, AddressRegion.europeWest, "🇨🇦"),
+  au("AU", "AUS", "Australia", false, 1, AddressRegion.europeWest, "🇦🇺"),
+  nz("NZ", "NZL", "New Zealand", false, 1, AddressRegion.europeWest, "🇳🇿"),
+  uk("UK", "GBR", "United Kingdom", false, 1, AddressRegion.europeWest, "🇬🇧"),
+  fr("FR", "FRA", "France", false, 1, AddressRegion.europeWest, "🇫🇷"),
+  de("DE", "GER", "Germany", false, 1, AddressRegion.europeWest, "🇩🇪"),
+  se("SE", "SWE", "Sweden", false, 1, AddressRegion.europeCentral, "🇸🇪"),
+  no("NO", "NOR", "Norway", false, 1, AddressRegion.europeCentral, "🇳🇴"),
+  dk("DK", "DNK", "Denmark", false, 1, AddressRegion.europeCentral, "🇩🇰"),
+  fi("FI", "FIN", "Finland", false, 1, AddressRegion.europeCentral, "🇫🇮"),
+  be("BE", "BEL", "Belgium", false, 1, AddressRegion.europeCentral, "🇧🇪"),
+  nl("NL", "NLD", "Netherlands", false, 1, AddressRegion.europeCentral, "🇳🇱"),
+  at("AT", "AUT", "Austria", false, 1, AddressRegion.europeCentral, "🇦🇹"),
+  ch("CH", "CHE", "Switzerland", false, 1, AddressRegion.europeCentral, "🇨🇭"),
+  lu("LU", "LUX", "Luxembourg", false, 1, AddressRegion.europeCentral, "🇱🇺"),
+  hr("HR", "HRV", "Croatia", false, 1, AddressRegion.europeCentral, "🇭🇷"),
+  si("SI", "SVN", "Slovenia", false, 1, AddressRegion.europeCentral, "🇸🇮"),
+  sk("SK", "SVK", "Slovakia", false, 1, AddressRegion.europeCentral, "🇸🇰"),
+  hu("HU", "HUN", "Hungary", false, 1, AddressRegion.europeCentral, "🇭🇺"),
+  ro("RO", "ROU", "Romania", false, 1, AddressRegion.europeCentral, "🇷🇴"),
+  bg("BG", "BGR", "Bulgaria", false, 1, AddressRegion.europeCentral, "🇧🇬"),
+  pl("PL", "POL", "Poland", false, 1, AddressRegion.europeCentral, "🇵🇱"),
+  rs("RS", "SRB", "Serbia", false, 1, AddressRegion.europeCentral, "🇷🇸"),
+  cz("CZ", "CZE", "Czechia", false, 1, AddressRegion.europeCentral, "🇨🇿"),
+  ee("EE", "EST", "Estonia", false, 1, AddressRegion.europeCentral, "🇪🇪"),
+  lv("LV", "LVA", "Latvia", false, 1, AddressRegion.europeCentral, "🇱🇻"),
+  lt("LT", "LTU", "Lithuania", false, 1, AddressRegion.europeCentral, "🇱🇹"),
+  by("BY", "BLR", "Belarus", false, 1, AddressRegion.europeCentral, "🇧🇾"),
+  md("MD", "MDA", "Moldova", false, 1, AddressRegion.europeCentral, "🇲🇩"),
+  it("IT", "ITA", "Italy", false, 1, AddressRegion.europeCentral, "🇮🇹"),
+  es("ES", "ESP", "Spain", false, 1, AddressRegion.europeCentral, "🇪🇸"),
+  pt("PT", "PRT", "Portugal", false, 1, AddressRegion.europeCentral, "🇵🇹");
 
   final String iso2;
   final String iso3;
@@ -26,6 +55,7 @@ enum Country {
   final bool hasStates;
   final int numLines;
   final AddressRegion region;
+  final String flagUnicode;
 
   const Country(
     this.iso2,
@@ -34,13 +64,22 @@ enum Country {
     this.hasStates,
     this.numLines,
     this.region,
+    this.flagUnicode,
   );
 }
 
 @JsonEnum(fieldRename: FieldRename.snake)
 enum AddressRegion {
   europeWest("europe-west", "Western Europe"),
-  europeCentral("europe-central", "Central Europe");
+  europeCentral("europe-central", "Central Europe"),
+  europeEast("europe-east", "Eastern Europe"),
+  europeNorth("europe-north", "Northern Europe"),
+  northAmerica("north-america", "North America"),
+  southAmerica("south-america", "South America"),
+  asia("asia", "Asia"),
+  africa("africa", "Africa"),
+  oceania("oceania", "Oceania"),
+  antarctica("antarctica", "Antarctica");
 
   final String title;
   final String description;
@@ -167,7 +206,16 @@ enum Currency {
 }
 
 @JsonEnum(fieldRename: FieldRename.snake)
-enum RequestStatus { pending, inReview, accepted, rejected }
+enum RequestStatus {
+  pending("Pending"),
+  inReview("In Review"),
+  accepted("Accepted"),
+  rejected("Rejected"),
+  withdrawn("Withdrawn");
+
+  final String description;
+  const RequestStatus(this.description);
+}
 
 @JsonEnum(fieldRename: FieldRename.snake)
 enum RequestType {

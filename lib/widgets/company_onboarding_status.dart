@@ -39,6 +39,7 @@ class CompanyOnboardingStatus extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -55,10 +56,13 @@ class CompanyOnboardingStatus extends StatelessWidget {
                 ),
               ],
             ),
-            Text(
-              company.onBoardingStatus,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onErrorContainer,
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                company.onBoardingStatus,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onErrorContainer,
+                ),
               ),
             ),
           ],

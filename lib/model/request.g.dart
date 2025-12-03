@@ -58,6 +58,7 @@ const _$RequestStatusEnumMap = {
   RequestStatus.inReview: 'in_review',
   RequestStatus.accepted: 'accepted',
   RequestStatus.rejected: 'rejected',
+  RequestStatus.withdrawn: 'withdrawn',
 };
 
 const _$RequestTypeEnumMap = {

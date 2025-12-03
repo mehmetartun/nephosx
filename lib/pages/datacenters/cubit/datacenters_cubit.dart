@@ -80,7 +80,7 @@ class DatacentersCubit extends Cubit<DatacentersState> {
       return;
     }
     gpuClusters = await databaseRepository.getGpuClusters(
-      datacenterId: datacenter.id,
+      companyId: companyId!,
     );
     emit(
       DatacentersGpuClusters(
@@ -99,6 +99,7 @@ class DatacentersCubit extends Cubit<DatacentersState> {
       collectionPath: 'datacenters',
       data: {...datacenter.toJson(), 'company_id': user!.companyId!},
     );
+
     init(user: user);
   }
 

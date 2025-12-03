@@ -10,10 +10,12 @@ part 'company.g.dart';
 class Company {
   final String id;
   final String name;
+  @JsonKey(name: "primary_address_id")
+  final String? primaryAddressId;
   @JsonKey(name: "confirmation_email")
   final String? confirmationEmail;
-  // @JsonKey(name: "address_ids", includeFromJson: true, includeToJson: false)
-  // final List<String> addressIds;
+  @JsonKey(name: "address_ids", includeFromJson: true, includeToJson: true)
+  final List<String> addressIds;
   @JsonKey(name: "addresses", includeFromJson: true, includeToJson: true)
   final List<Address> addresses;
   @JsonKey(name: "business_tax_id")
@@ -32,7 +34,8 @@ class Company {
   Company({
     required this.id,
     required this.name,
-
+    this.primaryAddressId,
+    this.addressIds = const [],
     this.addresses = const [],
     this.businessTaxId,
     this.primaryContact,
@@ -60,31 +63,32 @@ class Company {
   String get onBoardingStatus {
     List<String> rets = [];
     if (primaryContactId == null) {
-      rets.add("Primary contact not set");
+      rets.add("- Primary contact not set");
     }
     if (!hasAddress) {
-      rets.add("Address not set");
+      rets.add("- Address not set");
     }
     if (businessTaxId == null) {
-      rets.add("Business tax id not set");
+      rets.add("- Business tax id not set");
     }
     if (isBuyer == null) {
-      rets.add("Buyer status not set");
+      rets.add("- Buyer status not set");
     }
     if (isSeller == null) {
-      rets.add("Seller status not set");
+      rets.add("- Seller status not set");
     }
     if (confirmationEmail == null) {
-      rets.add("Confirmation email not set");
+      rets.add("- Confirmation email not set");
     }
-    return rets.join(", ");
+    return rets.join("\n");
   }
 
   Company copyWith({
     String? id,
     String? name,
     List<Address>? addresses,
-    // List<String>? addressIds,
+    String? primaryAddressId,
+    List<String>? addressIds,
     String? businessTaxId,
     User? primaryContact,
     String? primaryContactId,
@@ -96,8 +100,9 @@ class Company {
     return Company(
       id: id ?? this.id,
       name: name ?? this.name,
+      primaryAddressId: primaryAddressId ?? this.primaryAddressId,
       addresses: addresses ?? this.addresses,
-      // addressIds: addressIds ?? this.addressIds,
+      addressIds: addressIds ?? this.addressIds,
       businessTaxId: businessTaxId ?? this.businessTaxId,
       primaryContact: primaryContact ?? this.primaryContact,
       primaryContactId: primaryContactId ?? this.primaryContactId,

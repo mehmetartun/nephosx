@@ -33,6 +33,7 @@ abstract class AuthenticationRepository {
   Future<User?> signInWithGoogle();
   Future<User?> signInWithApple();
   Future<User?> signInWithIdToken(String idToken);
+  Future<void> sendPasswordResetEmail(String email);
   Future<bool> get isSignedIn;
 
   User? get user {
@@ -302,5 +303,12 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     await auth.FirebaseAuth.instance.signOut();
     _user = null;
     userCredential = null;
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    return await auth.FirebaseAuth.instance.sendPasswordResetEmail(
+      email: email,
+    );
   }
 }
