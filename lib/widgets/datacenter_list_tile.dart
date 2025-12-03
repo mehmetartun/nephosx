@@ -26,16 +26,8 @@ class DatacenterListTile extends StatelessWidget {
           ? null
           : IconButton(
               icon: Icon(Icons.edit),
-              onPressed: () async {
-                await showDialog(
-                  context: context,
-                  builder: (context) {
-                    return EditDatacenterDialog(
-                      datacenter: datacenter,
-                      onUpdateDatacenter: onUpdateDatacenter!,
-                    );
-                  },
-                );
+              onPressed: () {
+                onUpdateDatacenter!(datacenter);
               },
             ),
     );

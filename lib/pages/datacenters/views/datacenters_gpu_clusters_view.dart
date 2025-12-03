@@ -8,7 +8,7 @@ import '../../../model/gpu_transaction.dart';
 import '../../../widgets/company_list_tile.dart';
 import '../../../widgets/datacenter_list_tile.dart';
 import '../../../widgets/dialogs/add_edit_company_dialog.dart';
-import '../../../widgets/dialogs/add_datacenter_dialog.dart';
+import '../../../widgets/dialogs/add_edit_datacenter_dialog.dart';
 import '../../../widgets/dialogs/add_gpu_cluster_dialog.dart';
 import '../../../widgets/gpu_cluster_list_tile.dart';
 

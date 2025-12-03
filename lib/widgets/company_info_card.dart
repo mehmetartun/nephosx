@@ -3,6 +3,7 @@ import 'package:nephosx/model/company.dart';
 import 'package:nephosx/widgets/company_onboarding_status.dart';
 import 'package:nephosx/widgets/dialogs/add_edit_company_dialog.dart';
 
+import '../model/light_label.dart';
 import 'dialogs/edit_company_dialog.dart';
 
 class CompanyInfoCard extends StatelessWidget {
@@ -21,34 +22,28 @@ class CompanyInfoCard extends StatelessWidget {
       children: [
         // if (onUpdateCompany != null)
         //
-        Text("Name*", style: Theme.of(context).textTheme.labelSmall),
+        LightLabel(text: "Name*"),
         Text(company.name, style: Theme.of(context).textTheme.titleMedium),
         SizedBox(height: 10),
-        Text("Business Tax ID*", style: Theme.of(context).textTheme.labelSmall),
+        LightLabel(text: "Business Tax ID*"),
         Text(
           company.businessTaxId ?? "--",
           style: Theme.of(context).textTheme.titleSmall,
         ),
         SizedBox(height: 10),
-        Text(
-          "Business DUNS Number*",
-          style: Theme.of(context).textTheme.labelSmall,
-        ),
+        LightLabel(text: "Business DUNS Number*"),
         Text(
           company.businessTaxId ?? "--",
           style: Theme.of(context).textTheme.titleSmall,
         ),
         SizedBox(height: 10),
-        Text(
-          "Confirmation Email*",
-          style: Theme.of(context).textTheme.labelSmall,
-        ),
+        LightLabel(text: "Confirmation Email*"),
         Text(
           company.confirmationEmail ?? "--",
           style: Theme.of(context).textTheme.titleSmall,
         ),
         SizedBox(height: 10),
-        Text("Status", style: Theme.of(context).textTheme.labelSmall),
+        LightLabel(text: "Status"),
         Row(
           children: [
             Text(

@@ -111,9 +111,11 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       },
                       initialValue: widget.user.photoBase64,
                     ),
+                    SizedBox(height: 20),
                     TextFormField(
                       controller: _firstNameController,
                       decoration: const InputDecoration(
+                        filled: true,
                         labelText: 'First Name',
                       ),
                       validator: (value) =>
@@ -122,7 +124,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _lastNameController,
-                      decoration: const InputDecoration(labelText: 'Last Name'),
+                      decoration: const InputDecoration(
+                        labelText: 'Last Name',
+                        filled: true,
+                      ),
                       validator: (value) =>
                           value!.isEmpty ? 'Please enter a last name' : null,
                     ),
@@ -131,6 +136,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       controller: _displayNameController,
                       decoration: const InputDecoration(
                         labelText: 'Display Name',
+                        filled: true,
                       ),
                       validator: (value) =>
                           value!.isEmpty ? 'Please enter a display name' : null,

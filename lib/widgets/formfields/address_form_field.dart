@@ -10,20 +10,22 @@ import '../../services/responsive_utils.dart';
 class AddressFormField extends FormField<Address> {
   AddressFormField({
     super.key,
-    // super.validator,
+    super.validator,
     super.onSaved,
     super.initialValue,
+    this.onChanged,
   }) : super(
-         validator: (value) {
-           if (value == null) {
-             return "Address cannot be empty";
-           }
-           return null;
-         },
+         //  validator: (value) {
+         //    if (value == null) {
+         //      return "Address cannot be empty";
+         //    }
+         //    return null;
+         //  },
          builder: (state) {
            return _AddressFormField(state: state);
          },
        );
+  final void Function(Address?)? onChanged;
 }
 
 class _AddressFormField extends StatefulWidget {
@@ -176,6 +178,7 @@ class __AddressFormFieldState extends State<_AddressFormField> {
       children: [
         TextField(
           decoration: InputDecoration(
+            filled: true,
             labelText: "Address Line 1",
             errorText: widget.state.hasError ? line1Error : null,
           ),
@@ -188,8 +191,10 @@ class __AddressFormFieldState extends State<_AddressFormField> {
             });
           },
         ),
+        SizedBox(height: 10),
         TextField(
           decoration: InputDecoration(
+            filled: true,
             labelText: "Address Line 2",
             errorText: widget.state.hasError ? line2Error : null,
           ),
@@ -202,8 +207,10 @@ class __AddressFormFieldState extends State<_AddressFormField> {
             });
           },
         ),
+        SizedBox(height: 10),
         TextField(
           decoration: InputDecoration(
+            filled: true,
             labelText: "Address Line 3",
             errorText: widget.state.hasError ? line3Error : null,
           ),
@@ -216,8 +223,10 @@ class __AddressFormFieldState extends State<_AddressFormField> {
             });
           },
         ),
+        SizedBox(height: 10),
         TextField(
           decoration: InputDecoration(
+            filled: true,
             labelText: "City",
             errorText: widget.state.hasError ? cityError : null,
           ),
@@ -230,9 +239,11 @@ class __AddressFormFieldState extends State<_AddressFormField> {
             });
           },
         ),
+        SizedBox(height: 10),
 
         TextField(
           decoration: InputDecoration(
+            filled: true,
             labelText: "ZipCode",
             errorText: widget.state.hasError ? zipCodeError : null,
           ),
@@ -247,9 +258,13 @@ class __AddressFormFieldState extends State<_AddressFormField> {
         ),
         SizedBox(height: 10),
         if (country?.hasStates ?? false) ...[
-          Text("State for ${country!.description}"),
           DropdownButtonFormField<AddressState>(
-            disabledHint: Text("Select State"),
+            decoration: InputDecoration(
+              filled: true,
+              labelText: "${country!.description} State",
+              errorText: widget.state.hasError ? countryError : null,
+              hintText: "Select ${country!.description} State",
+            ),
             initialValue: state,
             onChanged: (val) {
               setState(() {
@@ -277,9 +292,17 @@ class __AddressFormFieldState extends State<_AddressFormField> {
                 .toList(),
           ),
         ],
-        Text("Country"),
+        SizedBox(height: 10),
+
         DropdownButtonFormField<Country>(
+          decoration: InputDecoration(
+            filled: true,
+            labelText: "Country",
+            errorText: widget.state.hasError ? countryError : null,
+            hintText: "Select Country",
+          ),
           initialValue: country,
+
           onChanged: (val) {
             setState(() {
               country = val;

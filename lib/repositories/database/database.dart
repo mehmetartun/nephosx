@@ -255,7 +255,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
     } else {
       qs = await db.collection("datacenters").get();
     }
-
+    print("Getting Datacenters");
     return qs.docs
         .map<Datacenter>(
           (doc) => Datacenter.fromJson({...doc.data(), 'id': doc.id}),

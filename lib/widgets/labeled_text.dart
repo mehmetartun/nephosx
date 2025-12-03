@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../model/light_label.dart';
+
 @JsonEnum(fieldRename: FieldRename.snake)
 enum LabelPosition { left, right }
 
@@ -34,7 +36,7 @@ class LabeledText<T> extends StatelessWidget {
           : CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(label, style: Theme.of(context).textTheme.labelSmall),
+        LightLabel(text: label),
         Text(text, style: Theme.of(context).textTheme.titleMedium),
       ],
     );

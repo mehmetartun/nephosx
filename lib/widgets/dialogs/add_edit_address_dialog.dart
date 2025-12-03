@@ -61,19 +61,22 @@ class _AddEditAddressDialogState extends State<AddEditAddressDialog> {
                   },
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState?.validate() ?? false) {
-                      formKey.currentState!.save();
-                      if (widget.address == null) {
-                        widget.onAddAddress!(_address!);
-                      } else {
-                        widget.onUpdateAddress!(_address!);
+                Container(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () {
+                      if (formKey.currentState?.validate() ?? false) {
+                        formKey.currentState!.save();
+                        if (widget.address == null) {
+                          widget.onAddAddress!(_address!);
+                        } else {
+                          widget.onUpdateAddress!(_address!);
+                        }
+                        Navigator.pop(context);
                       }
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text("Save"),
+                    },
+                    child: Text("Save"),
+                  ),
                 ),
               ],
             ),

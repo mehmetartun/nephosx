@@ -25,6 +25,8 @@ Request _$RequestFromJson(Map<String, dynamic> json) => Request(
   targetDatacenterId: json['target_datacenter_id'] as String?,
   targetGpuClusterId: json['target_gpu_cluster_id'] as String?,
   requestType: $enumDecode(_$RequestTypeEnumMap, json['request_type']),
+  comment: json['comment'] as String?,
+  summary: json['summary'] as String?,
 );
 
 Map<String, dynamic> _$RequestToJson(Request instance) => <String, dynamic>{
@@ -42,6 +44,8 @@ Map<String, dynamic> _$RequestToJson(Request instance) => <String, dynamic>{
     const TimestampConverter().toJson,
   ),
   'status': _$RequestStatusEnumMap[instance.status]!,
+  'comment': instance.comment,
+  'summary': instance.summary,
 };
 
 Value? _$JsonConverterFromJson<Json, Value>(

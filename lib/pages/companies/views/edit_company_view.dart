@@ -75,7 +75,7 @@ class _EditCompanyViewState extends State<EditCompanyView> {
                       ],
                     ),
                     CompanyInfoCard(company: widget.company),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -150,8 +150,17 @@ class _EditCompanyViewState extends State<EditCompanyView> {
                       itemCount: widget.users.length,
                       itemBuilder: (context, index) {
                         return ListTile(
-                          title: Text(widget.users[index].displayName ?? "--"),
+                          leading: Icon(Icons.person),
+                          title: Text(
+                            widget.users[index].displayName ?? "--",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           subtitle: Text(widget.users[index].email ?? "--"),
+                          selected:
+                              widget.users[index].uid ==
+                                  widget.company.primaryContactId
+                              ? true
+                              : false,
                           trailing:
                               widget.users[index].uid ==
                                   widget.company.primaryContactId

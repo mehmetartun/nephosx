@@ -31,6 +31,8 @@ class Request {
   final DateTime? decisionDate;
   @JsonKey(name: 'status')
   final RequestStatus status;
+  final String? comment;
+  final String? summary;
 
   Request({
     required this.id,
@@ -44,6 +46,8 @@ class Request {
     this.targetDatacenterId,
     this.targetGpuClusterId,
     required this.requestType,
+    this.comment,
+    this.summary,
   });
 
   factory Request.fromJson(Map<String, dynamic> json) =>

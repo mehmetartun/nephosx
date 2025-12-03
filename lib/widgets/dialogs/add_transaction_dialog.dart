@@ -7,6 +7,7 @@ import '../../model/consideration.dart';
 import '../../model/datacenter.dart';
 import '../../model/gpu_cluster.dart';
 import '../../model/gpu_transaction.dart';
+import '../../model/light_label.dart';
 import '../formfields/consideration_form_field.dart';
 import '../occupation_view_paint.dart';
 
@@ -67,10 +68,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   "${widget.gpuCluster.type.name} ${widget.gpuCluster.quantity}x",
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                Text(
-                  "Current Availability",
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
+                LightLabel(text: "Current Availability"),
                 OccupationView(
                   transactions: widget.gpuCluster.transactions ?? [],
                   fromDate: DateTime.now(),
@@ -78,10 +76,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 ),
                 if (overlapErrorText != null) ...[
                   SizedBox(height: 10),
-                  Text(
-                    "Proposed Transaction",
-                    style: Theme.of(context).textTheme.labelSmall,
-                  ),
+                  LightLabel(text: "Proposed Transaction"),
                   OccupationView(
                     transactions: [
                       GpuTransaction(

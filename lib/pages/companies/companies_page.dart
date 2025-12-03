@@ -52,6 +52,7 @@ class CompaniesPage extends StatelessWidget {
                 user: state.user,
                 onRequestCompany: cubit.onRequestCompany,
                 companies: state.companies,
+                request: state.request,
               );
             default:
               return LoadingView(title: "Loading Companies...");

@@ -15,12 +15,13 @@ class CompanyOnboardingStatus extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(
               Icons.check_circle,
               color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
-            Spacer(),
+            SizedBox(width: 20),
             Text(
               "Onboarding Complete",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(

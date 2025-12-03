@@ -17,7 +17,8 @@ final class CompaniesError extends CompaniesState {
 final class CompaniesAssign extends CompaniesState {
   final List<Company> companies;
   final User user;
-  CompaniesAssign({required this.companies, required this.user});
+  final Request? request;
+  CompaniesAssign({required this.companies, required this.user, this.request});
 }
 
 final class CompaniesEditCompany extends CompaniesState {

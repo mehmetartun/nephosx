@@ -107,19 +107,13 @@ class _ImageFormFieldState extends State<_ImageFormField> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FilledButton.tonal(
+            FilledButton.tonalIcon(
               onPressed: () {
                 _pickImage(context);
               },
-              child: const Text('Change Image'),
+              icon: const Icon(Icons.add_photo_alternate),
+              label: const Text('Change Image'),
             ),
-            // if (imageBytes != null) ...[
-            //   const SizedBox(width: 8),
-            //   FilledButton.tonal(
-            //     onPressed: _cropAndSave,
-            //     child: const Text('Crop'),
-            //   ),
-            // ],
           ],
         ),
       ],

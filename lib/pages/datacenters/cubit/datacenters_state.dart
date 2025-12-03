@@ -7,7 +7,18 @@ final class DatacentersInitial extends DatacentersState {}
 final class DatacentersLoaded extends DatacentersState {
   final List<Datacenter> datacenters;
   final List<Company> companies;
-  DatacentersLoaded({required this.datacenters, required this.companies});
+  final String companyId;
+  DatacentersLoaded({
+    required this.datacenters,
+    required this.companies,
+    required this.companyId,
+  });
+}
+
+final class DatacenterAddEdit extends DatacentersState {
+  final Datacenter? datacenter;
+  final String companyId;
+  DatacenterAddEdit({this.datacenter, required this.companyId});
 }
 
 final class DatacentersErrorState extends DatacentersState {

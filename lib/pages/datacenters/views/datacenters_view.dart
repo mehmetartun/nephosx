@@ -8,20 +8,24 @@ import '../../../model/datacenter.dart';
 import '../../../widgets/company_list_tile.dart';
 import '../../../widgets/datacenter_list_tile.dart';
 import '../../../widgets/dialogs/add_edit_company_dialog.dart';
-import '../../../widgets/dialogs/add_datacenter_dialog.dart';
+import '../../../widgets/dialogs/add_edit_datacenter_dialog.dart';
 
 class DatacentersView extends StatefulWidget {
   const DatacentersView({
     super.key,
     required this.datacenters,
-    required this.addDatacenter,
     required this.updateDatacenter,
     required this.getGpuClusters,
+    required this.companyId,
+    required this.addDatacenterRequest,
+    required this.editDatacenterRequest,
   });
   final List<Datacenter> datacenters;
-  final void Function(Map<String, dynamic>) addDatacenter;
   final void Function(Datacenter) updateDatacenter;
   final void Function(Datacenter) getGpuClusters;
+  final void Function() addDatacenterRequest;
+  final void Function(Datacenter) editDatacenterRequest;
+  final String companyId;
 
   @override
   State<DatacentersView> createState() => _DatacentersViewState();
@@ -61,15 +65,9 @@ class _DatacentersViewState extends State<DatacentersView> {
                   FilledButton.tonalIcon(
                     icon: Icon(Icons.add),
                     label: Text("Add"),
-                    onPressed: () async {
-                      await showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AddDatacenterDialog(
-                            onAddDatacenter: widget.addDatacenter,
-                          );
-                        },
-                      );
+
+                    onPressed: () {
+                      widget.addDatacenterRequest();
                     },
                   ),
                 ],
@@ -135,11 +133,11 @@ class _DatacentersViewState extends State<DatacentersView> {
                   itemBuilder: (context, index) {
                     final datacenter = widget.datacenters[index];
                     return DatacenterListTile(
-                      onTap: () {
-                        widget.getGpuClusters(datacenter);
-                      },
+                      // onTap: () {
+                      //   widget.getGpuClusters(datacenter);
+                      // },
                       datacenter: datacenter,
-                      onUpdateDatacenter: widget.updateDatacenter,
+                      onUpdateDatacenter: widget.editDatacenterRequest,
                     );
                   },
                 ),

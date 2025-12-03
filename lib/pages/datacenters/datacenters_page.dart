@@ -7,6 +7,7 @@ import '../../repositories/database/database.dart';
 import '../../widgets/views/error_view.dart';
 import '../../widgets/views/loading_view.dart';
 import 'cubit/datacenters_cubit.dart';
+import 'views/datacenter_add_edit_view.dart';
 import 'views/datacenters_gpu_clusters_view.dart';
 import 'views/datacenters_view.dart';
 
@@ -26,6 +27,14 @@ class DatacentersPage extends StatelessWidget {
       child: BlocBuilder<DatacentersCubit, DatacentersState>(
         builder: (context, state) {
           switch (state) {
+            case DatacenterAddEdit _:
+              return DatacenterAddEditView(
+                companyId: state.companyId,
+                addDatacenter: cubit.addDatacenter,
+                updateDatacenter: cubit.updateDatacenter,
+                backToDatacenters: cubit.backToDatacenters,
+                datacenter: state.datacenter,
+              );
             case DatacentersGpuClusters _:
               return DatacentersGpuClustersView(
                 gpuClusters: state.gpuClusters,
@@ -46,10 +55,12 @@ class DatacentersPage extends StatelessWidget {
               return LoadingView(title: "Loading datacenters");
             case DatacentersLoaded _:
               return DatacentersView(
-                datacenters: state.datacenters,
-                addDatacenter: cubit.addDatacenter,
                 updateDatacenter: cubit.updateDatacenter,
+                datacenters: state.datacenters,
+                addDatacenterRequest: cubit.addDatacenterRequest,
+                editDatacenterRequest: cubit.editDatacenterRequest,
                 getGpuClusters: cubit.getGpuClusters,
+                companyId: state.companyId,
               );
           }
         },

@@ -48,6 +48,15 @@ class CompaniesCubit extends Cubit<CompaniesState> {
         for (var request in requestsMade) {
           if (request.status == RequestStatus.pending &&
               request.requestType == RequestType.joinCompany) {
+            emit(
+              CompaniesAssign(
+                companies: companies,
+                user: user!,
+                request: request,
+              ),
+            );
+            return;
+          } else {
             emit(CompaniesError(message: "You have a pending request"));
             return;
           }
@@ -82,6 +91,9 @@ class CompaniesCubit extends Cubit<CompaniesState> {
         requestDate: DateTime.now(),
         requestType: RequestType.joinCompany,
         status: RequestStatus.pending,
+        summary:
+            "Request to join company ${company.name}\n"
+            "by ${user!.email}\n${user!.firstName} ${user!.lastName}",
       ).toJson(),
     );
     init();

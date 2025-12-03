@@ -21,6 +21,7 @@ class DatacentersCubit extends Cubit<DatacentersState> {
   User? user;
   List<GpuCluster> gpuClusters = [];
   List<Company> companies = [];
+  String? companyId;
 
   void init({User? user}) async {
     this.user = user;
@@ -30,12 +31,21 @@ class DatacentersCubit extends Cubit<DatacentersState> {
     if (user!.companyId == null) {
       emit(DatacentersErrorState(message: "User not assigned to a company"));
       return;
+    } else {
+      companyId = user.companyId!;
     }
+
     companies = await databaseRepository.getCompanies();
     datacenters = await databaseRepository.getDatacenters(
-      companyId: user.companyId!,
+      companyId: companyId!,
     );
-    emit(DatacentersLoaded(datacenters: datacenters, companies: companies));
+    emit(
+      DatacentersLoaded(
+        datacenters: datacenters,
+        companies: companies,
+        companyId: companyId!,
+      ),
+    );
   }
 
   void updateDatacenter(Datacenter datacenter) async {
@@ -47,7 +57,21 @@ class DatacentersCubit extends Cubit<DatacentersState> {
   }
 
   void backToDatacenters() {
-    emit(DatacentersLoaded(datacenters: datacenters, companies: companies));
+    emit(
+      DatacentersLoaded(
+        datacenters: datacenters,
+        companies: companies,
+        companyId: companyId!,
+      ),
+    );
+  }
+
+  void addDatacenterRequest() {
+    emit(DatacenterAddEdit(companyId: companyId!));
+  }
+
+  void editDatacenterRequest(Datacenter datacenter) {
+    emit(DatacenterAddEdit(datacenter: datacenter, companyId: companyId!));
   }
 
   void getGpuClusters(Datacenter datacenter) async {
@@ -67,13 +91,13 @@ class DatacentersCubit extends Cubit<DatacentersState> {
     );
   }
 
-  void addDatacenter(Map<String, dynamic> data) async {
+  void addDatacenter(Datacenter datacenter) async {
     if (user == null) {
       return;
     }
     await databaseRepository.addDocument(
       collectionPath: 'datacenters',
-      data: {...data, 'company_id': user!.companyId!},
+      data: {...datacenter.toJson(), 'company_id': user!.companyId!},
     );
     init(user: user);
   }
