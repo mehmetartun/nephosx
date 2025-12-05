@@ -20,7 +20,7 @@ class CompaniesView extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: MaxWidthBox(
-          alignment: Alignment.topLeft,
+          alignment: Alignment.topCenter,
           maxWidth: 500,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

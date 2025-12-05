@@ -37,6 +37,8 @@ class GpuClustersPage extends StatelessWidget {
                 gpuCluster: state.gpuCluster,
                 datacenters: state.datacenters,
                 onAddGpuCluster: cubit.addGpuCluster,
+                onUpdateGpuCluster: cubit.updateGpuCluster,
+                onCancel: cubit.cancelAddGpuCluster,
               );
             default:
               return Container(child: null);

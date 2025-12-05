@@ -12,6 +12,7 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
   datacenterId: json['datacenter_id'] as String,
   companyId: json['company_id'] as String,
   id: json['id'] as String,
+  perGpuVramInGb: (json['per_gpu_ram_in_gb'] as num?)?.toDouble(),
   transactions: (json['transactions'] as List<dynamic>?)
       ?.map((e) => GpuTransaction.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -21,6 +22,12 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
   company: json['company'] == null
       ? null
       : Company.fromJson(json['company'] as Map<String, dynamic>),
+  teraFlops: (json['tera_flops'] as num?)?.toDouble(),
+  rentalPrices:
+      (json['rental_prices'] as List<dynamic>?)
+          ?.map((e) => RentalPrice.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
@@ -30,6 +37,9 @@ Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
       'id': instance.id,
       'datacenter_id': instance.datacenterId,
       'company_id': instance.companyId,
+      'per_gpu_ram_in_gb': instance.perGpuVramInGb,
+      'tera_flops': instance.teraFlops,
+      'rental_prices': instance.rentalPrices.map((e) => e.toJson()).toList(),
     };
 
 const _$GpuTypeEnumMap = {

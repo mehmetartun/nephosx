@@ -47,13 +47,14 @@ class _ComputerGridAnimationState extends State<ComputerGridAnimation>
     //     _textController.forward();
     //   }
     // });
-    _textController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        // _textController.reset();
-        // _textController.forward();
-        _progressController.forward();
-      }
-    });
+    _progressController.forward();
+    // _textController.addStatusListener((status) {
+    //   if (status == AnimationStatus.completed) {
+    //     // _textController.reset();
+    //     // _textController.forward();
+
+    //   }
+    // });
     // _progressController.forward();
   }
 

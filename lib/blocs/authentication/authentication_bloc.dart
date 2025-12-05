@@ -80,6 +80,7 @@ class AuthenticationBloc
   final AuthenticationRepository authenticationRepository;
   final DatabaseRepository databaseRepository;
   User? user;
+  String? userIp;
 
   StreamSubscription<User?>? userStreamSubscription;
 

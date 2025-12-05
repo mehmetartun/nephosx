@@ -54,34 +54,44 @@ class _EmailPasswordViewState extends State<EmailPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Login Page"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              BlocProvider.of<AuthenticationBloc>(
-                context,
-              ).add(AuthenticationEventSignOut());
-            },
-            icon: Icon(Icons.logout),
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: Text("Login Page"),
+      //   actions: [
+      //     IconButton(
+      //       onPressed: () {
+      //         BlocProvider.of<AuthenticationBloc>(
+      //           context,
+      //         ).add(AuthenticationEventSignOut());
+      //       },
+      //       icon: Icon(Icons.logout),
+      //     ),
+      //   ],
+      // ),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            // title: Text("Sign In"),
+            title: Text(
+              "NephosX",
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+                fontSize: 60,
+              ),
+            ),
+            centerTitle: true,
+            toolbarHeight: 100,
             pinned: true,
             snap: true,
             floating: true,
-            backgroundColor: Colors.transparent,
-            expandedHeight: 200,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                "assets/images/nephosx2/nephosx.png",
-                fit: BoxFit.fitHeight,
-              ),
-            ),
+            // backgroundColor: Colors.transparent,
+            // expandedHeight: 200,
+            // flexibleSpace: FlexibleSpaceBar(
+            //   background: Image.asset(
+            //     "assets/images/nephosx2/nephosx.png",
+            //     fit: BoxFit.fitHeight,
+            //   ),
+            //   title: Text("Sign In"),
+            // ),
           ),
           SliverToBoxAdapter(
             child: MaxWidthBox(

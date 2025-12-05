@@ -44,6 +44,7 @@ abstract class DatabaseRepository {
   Stream<List<DrinkingNote>> getDrinkingNoteStream(String uid);
   Stream<User?> getUserStream(String uid);
 
+  Stream<List<GpuCluster>> getGpuClusterStream({String? companyId});
   Stream<List<User>> getUsersStream();
   Future<List<User>> getUsers({String? companyId});
   Future<List<Company>> getCompanies();
@@ -343,6 +344,19 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .map((snapshot) {
           return snapshot.docs
               .map((doc) => Request.fromJson(doc.data()))
+              .toList();
+        });
+  }
+
+  @override
+  Stream<List<GpuCluster>> getGpuClusterStream({String? companyId}) {
+    return db
+        .collectionGroup("gpu_clusters")
+        .where("company_id", isEqualTo: companyId)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => GpuCluster.fromJson({...doc.data(), 'id': doc.id}))
               .toList();
         });
   }

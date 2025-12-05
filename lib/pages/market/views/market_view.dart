@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../model/gpu_cluster.dart';
+import '../../../model/user.dart';
 import '../../../widgets/filter_container.dart';
 import '../../../widgets/filter_range_slider.dart';
 import '../../../widgets/gpu_cluster_list_tile_view.dart';
@@ -15,6 +19,7 @@ class MarketView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User? user = context.read<AuthenticationBloc>().user;
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -279,23 +284,52 @@ class MarketView extends StatelessWidget {
                                     ),
                                   ),
 
-                                  DataCell(Text('15,200')),
-                                  DataCell(Text('80 GB')),
-                                  DataCell(Text('2025-12-01')),
-                                  DataCell(Text('12 months / \$9.99/hr')),
                                   DataCell(
-                                    Row(
-                                      children: [
-                                        FilledButton(
-                                          onPressed: () {},
-                                          child: Text("Buy"),
-                                        ),
-                                        OutlinedButton(
-                                          onPressed: () {},
-                                          child: Text("Bid"),
-                                        ),
-                                      ],
+                                    Text(
+                                      gpuCluster.teraFlops?.toString() ??
+                                          "15200",
                                     ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      "${gpuCluster.perGpuVramInGb?.toString() ?? "80"} GB",
+                                    ),
+                                  ),
+                                  DataCell(Text('2025-12-01')),
+                                  DataCell(
+                                    gpuCluster.rentalPrices.length == 0
+                                        ? Text('12 months / \$9.99/hr')
+                                        : DropdownButton(
+                                            value:
+                                                gpuCluster.rentalPrices.first,
+                                            items: gpuCluster.rentalPrices
+                                                .map(
+                                                  (e) => DropdownMenuItem(
+                                                    value: e,
+                                                    child: Text(
+                                                      "${e.numberOfMonths} mo @ ${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(e.priceInUsdPerHour)}/hr",
+                                                    ),
+                                                  ),
+                                                )
+                                                .toList(),
+                                            onChanged: (value) {},
+                                          ),
+                                  ),
+                                  DataCell(
+                                    gpuCluster.companyId == user?.companyId
+                                        ? Text("Own GPU")
+                                        : Row(
+                                            children: [
+                                              FilledButton(
+                                                onPressed: () {},
+                                                child: Text("Buy"),
+                                              ),
+                                              OutlinedButton(
+                                                onPressed: () {},
+                                                child: Text("Bid"),
+                                              ),
+                                            ],
+                                          ),
                                   ),
                                   DataCell(
                                     TextButton(

@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'company.dart';
 import 'datacenter.dart';
 import 'gpu_transaction.dart';
+import 'rental_price.dart';
 
 part 'gpu_cluster.g.dart';
 
@@ -23,6 +24,12 @@ class GpuCluster {
   final Datacenter? datacenter;
   @JsonKey(name: "company", includeToJson: false, includeFromJson: true)
   final Company? company;
+  @JsonKey(name: "per_gpu_ram_in_gb")
+  final double? perGpuVramInGb;
+  @JsonKey(name: "tera_flops")
+  final double? teraFlops;
+  @JsonKey(name: "rental_prices")
+  final List<RentalPrice> rentalPrices;
 
   GpuCluster({
     required this.type,
@@ -30,9 +37,12 @@ class GpuCluster {
     required this.datacenterId,
     required this.companyId,
     required this.id,
+    this.perGpuVramInGb,
     this.transactions,
     this.datacenter,
     this.company,
+    this.teraFlops,
+    this.rentalPrices = const [],
   });
   factory GpuCluster.fromJson(Map<String, dynamic> json) =>
       _$GpuClusterFromJson(json);
@@ -43,8 +53,14 @@ class GpuCluster {
     GpuType? type,
     int? quantity,
     String? datacenterId,
+    Datacenter? datacenter,
+    Company? company,
     String? companyId,
     String? id,
+    double? perGpuVramInGb,
+    List<GpuTransaction>? transactions,
+    double? teraFlops,
+    List<RentalPrice>? rentalPrices,
   }) {
     return GpuCluster(
       type: type ?? this.type,
@@ -52,6 +68,12 @@ class GpuCluster {
       datacenterId: datacenterId ?? this.datacenterId,
       companyId: companyId ?? this.companyId,
       id: id ?? this.id,
+      perGpuVramInGb: perGpuVramInGb ?? this.perGpuVramInGb,
+      transactions: transactions ?? this.transactions,
+      datacenter: datacenter ?? this.datacenter,
+      company: company ?? this.company,
+      teraFlops: teraFlops ?? this.teraFlops,
+      rentalPrices: rentalPrices ?? this.rentalPrices,
     );
   }
 }
