@@ -53,12 +53,12 @@ class GpuClusterListTileView extends StatelessWidget {
                         children: [
                           PropertyBadge(
                             text: gpuCluster.datacenter?.tier.roman ?? "",
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer,
-                            foregroundColor: Theme.of(
-                              context,
-                            ).colorScheme.onPrimaryContainer,
+                            // backgroundColor: Theme.of(
+                            //   context,
+                            // ).colorScheme.primaryContainer,
+                            // foregroundColor: Theme.of(
+                            //   context,
+                            // ).colorScheme.onPrimaryContainer,
                             textStyle: Theme.of(context).textTheme.labelSmall
                                 ?.copyWith(
                                   color: Theme.of(

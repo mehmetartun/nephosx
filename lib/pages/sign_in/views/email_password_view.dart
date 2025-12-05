@@ -54,19 +54,19 @@ class _EmailPasswordViewState extends State<EmailPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text("Login Page"),
-      //   actions: [
-      //     IconButton(
-      //       onPressed: () {
-      //         BlocProvider.of<AuthenticationBloc>(
-      //           context,
-      //         ).add(AuthenticationEventSignOut());
-      //       },
-      //       icon: Icon(Icons.logout),
-      //     ),
-      //   ],
-      // ),
+      appBar: AppBar(
+        title: Text("Login Page"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              BlocProvider.of<AuthenticationBloc>(
+                context,
+              ).add(AuthenticationEventSignOut());
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
+      ),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -176,13 +176,24 @@ class _EmailPasswordViewState extends State<EmailPasswordView> {
                           ],
                         ),
                         SizedBox(height: 20),
+                        FilledButton(
+                          child: Text("Sign up Later"),
+                          onPressed: () {
+                            BlocProvider.of<AuthenticationBloc>(
+                              context,
+                            ).add(AuthenticationEventSignInAnonymously());
+                          },
+                        ),
+                        SizedBox(height: 20),
                         Divider(),
                         Text(
                           "Click any of the buttons below to login as a test user",
                         ),
                         SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Wrap(
+                          spacing: 20,
+                          runSpacing: 20,
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             FilledButton.tonal(
                               onPressed: () {

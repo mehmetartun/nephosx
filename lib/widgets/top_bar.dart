@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nephosx/widgets/brightness_selector.dart';
 
 import '../blocs/authentication/authentication_bloc.dart';
@@ -8,11 +9,15 @@ import 'user_list_tile.dart';
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final double height;
+  final StatefulNavigationShell? navigationShell;
+  final bool hasLogout;
 
   const TopBar({
     super.key,
     required this.title,
-    this.height = 80.0, // Default custom height
+    this.height = 80.0,
+    this.navigationShell,
+    this.hasLogout = false, // Default custom height
   });
 
   // 2. Override the preferredSize getter
@@ -26,7 +31,10 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
     return Container(
       height: preferredSize.height,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainer,
+        border: Border(
+          bottom: BorderSide(color: Theme.of(context).colorScheme.outline),
+        ),
+        // color: Theme.of(context).colorScheme.surfaceContainer,
         // Example: A nice gradient background
         // gradient: LinearGradient(
         //   colors: [Colors.indigo, Colors.black],
@@ -47,18 +55,136 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset('assets/images/nephosx2/nephosx.png', height: 70),
-              if (user != null)
-                SizedBox(
-                  width: 300,
-                  child: UserListTile(
-                    user: user,
-                    alignment: UserListTileAlignment.right,
-                    // trailing: user.company == null
-                    //     ? null
-                    //     : Chip(label: Text(user.company!.name)),
-                  ),
+              // Image.asset('assets/images/nephosx2/nephosx.png', height: 70),
+              Text(
+                "NephosX",
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
                 ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (user!.canSeeUsers) ...[
+                    navigationShell?.currentIndex == 0
+                        ? FilledButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(0);
+                            },
+                            child: const Text("Users"),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(0);
+                            },
+                            child: const Text("Users"),
+                          ),
+                  ],
+
+                  if (user!.canSeeCompanies) ...[
+                    navigationShell?.currentIndex == 1
+                        ? FilledButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(1);
+                            },
+                            child: const Text("Companies"),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(1);
+                            },
+                            child: const Text("Companies"),
+                          ),
+                  ],
+                  if (user!.canSeeDatacenters) ...[
+                    navigationShell?.currentIndex == 2
+                        ? FilledButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(2);
+                            },
+                            child: const Text("Datacenters"),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(2);
+                            },
+                            child: const Text("Datacenters"),
+                          ),
+                  ],
+                  if (user!.canSeeGpuClusters) ...[
+                    navigationShell?.currentIndex == 3
+                        ? FilledButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(3);
+                            },
+                            child: const Text("GPU Clusters"),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(3);
+                            },
+                            child: const Text("GPU Clusters"),
+                          ),
+                  ],
+                  if (user!.canSeeMarketplace) ...[
+                    navigationShell?.currentIndex == 4
+                        ? FilledButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(4);
+                            },
+                            child: const Text("Market"),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(4);
+                            },
+                            child: const Text("Market"),
+                          ),
+                  ],
+                  if (user!.canSeeSettings) ...[
+                    navigationShell?.currentIndex == 5
+                        ? FilledButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(5);
+                            },
+                            child: const Text("Settings"),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(5);
+                            },
+                            child: const Text("Settings"),
+                          ),
+                  ],
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  BrightnessSelector(shouldPop: false, narrow: true),
+                  if (hasLogout)
+                    IconButton(
+                      icon: const Icon(Icons.logout),
+                      onPressed: () {
+                        BlocProvider.of<AuthenticationBloc>(
+                          context,
+                        ).add(AuthenticationEventSignOut());
+                      },
+                    ),
+                ],
+              ),
+              // if (user != null)
+              //   SizedBox(
+              //     width: 300,
+              //     child: UserListTile(
+              //       user: user,
+              //       alignment: UserListTileAlignment.right,
+              //       // trailing: user.company == null
+              //       //     ? null
+              //       //     : Chip(label: Text(user.company!.name)),
+              //     ),
+              //   ),
               // BrightnessSelector(shouldPop: false),
               // IconButton(
               //   icon: const Icon(Icons.menu, color: Colors.white),

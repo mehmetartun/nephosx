@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
 import '../../model/company.dart';
 import '../../model/user.dart';
@@ -71,6 +73,9 @@ class AuthenticationBloc
         emit(AuthenticationStateError.fromMessage(e.toString()));
       }
     });
+    on<AuthenticationEventSignInAnonymously>((event, emit) async {
+      await _handleSignInAnonymously(event, emit);
+    });
   }
   final AuthenticationRepository authenticationRepository;
   final DatabaseRepository databaseRepository;
@@ -79,11 +84,35 @@ class AuthenticationBloc
   StreamSubscription<User?>? userStreamSubscription;
 
   String? destination;
+
+  void _recordIp() async {
+    final response = await http.get(
+      Uri.parse('https://api.ipify.org?format=json'),
+    );
+    final data = jsonDecode(response.body);
+    final ip = data['ip'];
+    print(ip);
+  }
+
   void _handleSaveDestiontion(
     AuthenticationDestinationAfterSignInEvent event,
     emit,
   ) {
     destination = event.destination;
+  }
+
+  Future<void> _handleSignInAnonymously(
+    AuthenticationEventSignInAnonymously event,
+    emit,
+  ) async {
+    emit(AuthenticationStateWaiting());
+    try {
+      user = await authenticationRepository.signInAnonymously();
+      emit(AuthenticationStateSignedIn(destination: destination, user: user!));
+      return;
+    } catch (e) {
+      emit(AuthenticationStateError.fromMessage(e.toString()));
+    }
   }
 
   void init() async {
@@ -124,7 +153,7 @@ class AuthenticationBloc
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }
-      emit(AuthenticationStateSignedIn(destination: destination));
+      emit(AuthenticationStateSignedIn(destination: destination, user: user!));
       return;
     } catch (e) {
       emit(
@@ -151,7 +180,7 @@ class AuthenticationBloc
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }
-      emit(AuthenticationStateSignedIn(destination: destination));
+      emit(AuthenticationStateSignedIn(destination: destination, user: user!));
       return;
     } on Exception catch (e) {
       if (e is AuthenticationException) {
@@ -187,7 +216,7 @@ class AuthenticationBloc
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }
-      emit(AuthenticationStateSignedIn(destination: destination));
+      emit(AuthenticationStateSignedIn(destination: destination, user: user!));
       return;
     } catch (e) {
       emit(AuthenticationStateError.fromMessage(e.toString()));
@@ -195,7 +224,7 @@ class AuthenticationBloc
   }
 
   void _handleSignedIn(event, emit) {
-    emit(AuthenticationStateSignedIn(destination: destination));
+    emit(AuthenticationStateSignedIn(destination: destination, user: user!));
   }
 
   Future<void> _handleSignOut(event, emit) async {
@@ -223,6 +252,7 @@ class AuthenticationBloc
 
   Future<void> _handleLogin(event, emit) async {
     emit(AuthenticationStateWaiting());
+    _recordIp();
     try {
       user = await authenticationRepository.signIn(
         email: event.email,
@@ -238,7 +268,7 @@ class AuthenticationBloc
         debugPrint('Failed to update user token: $e');
       }
 
-      emit(AuthenticationStateSignedIn(destination: destination));
+      emit(AuthenticationStateSignedIn(destination: destination, user: user!));
       return;
     } on Exception catch (e) {
       if (e is AuthenticationException) {
@@ -276,7 +306,7 @@ class AuthenticationBloc
         debugPrint('Failed to update user token: $e');
       }
 
-      emit(AuthenticationStateSignedIn(destination: destination));
+      emit(AuthenticationStateSignedIn(destination: destination, user: user!));
       return;
     } catch (e) {
       emit(AuthenticationStateError.fromMessage(e.toString()));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nephosx/pages/users/views/users_loading_view.dart';
 
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../repositories/database/database.dart';
@@ -26,7 +27,7 @@ class UsersPage extends StatelessWidget {
             case UsersError _:
               return ErrorView(title: "Users Error", message: state.message);
             case UsersInitial _:
-              return LoadingView(title: "Loading users");
+              return UsersLoadingView();
             case UsersLoaded _:
               return UsersView(
                 users: state.users,

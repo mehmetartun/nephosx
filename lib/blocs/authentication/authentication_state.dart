@@ -22,8 +22,9 @@ final class AuthenticationStateNewUserRequest extends AuthenticationState {}
 
 final class AuthenticationStateSignedIn extends AuthenticationState {
   String? destination;
+  User user;
 
-  AuthenticationStateSignedIn({this.destination});
+  AuthenticationStateSignedIn({this.destination, required this.user});
 }
 
 final class AuthenticationStateSignedOut extends AuthenticationState {

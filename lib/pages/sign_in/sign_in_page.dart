@@ -3,6 +3,7 @@ import 'package:nephosx/widgets/views/loading_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../widgets/splash_screen_new.dart';
 import '../../widgets/views/error_view.dart';
 import 'views/email_password_view.dart';
 import 'views/new_user_view.dart';
@@ -53,10 +54,11 @@ class SignInPage extends StatelessWidget {
             );
 
           case AuthenticationStateWaiting _:
-            return LoadingView(
-              title: "Authentication",
-              message: "Authentication is in progress.",
-            );
+            // return LoadingView(
+            //   title: "Authentication",
+            //   message: "Authentication is in progress.",
+            // );
+            return SpashScreenNew();
           case AuthenticationStateSignedOut _:
             return EmailPasswordView(
               lastError: state.lastError,

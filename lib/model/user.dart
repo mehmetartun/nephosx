@@ -59,6 +59,9 @@ class User {
   @JsonKey(name: 'address', includeToJson: true, includeFromJson: true)
   final Address? address;
 
+  @JsonKey(name: 'is_anonymous')
+  final bool isAnonymous;
+
   User({
     this.firstName,
     this.lastName,
@@ -74,6 +77,7 @@ class User {
     this.emailVerified = false,
     this.createdAt,
     this.lastLoginAt,
+    this.isAnonymous = false,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -97,6 +101,7 @@ class User {
     bool? emailVerified,
     DateTime? createdAt,
     DateTime? lastLoginAt,
+    bool? isAnonymous,
   }) {
     return User(
       firstName: firstName ?? this.firstName,
@@ -113,6 +118,7 @@ class User {
       emailVerified: emailVerified ?? this.emailVerified,
       createdAt: createdAt ?? this.createdAt,
       lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+      isAnonymous: isAnonymous ?? this.isAnonymous,
     );
   }
 
@@ -133,6 +139,17 @@ class User {
       type: UserType.public,
     );
   }
+
+  bool get canSeeMarketplace => true;
+
+  bool get canSeeCompanies => type != UserType.anonymous;
+  bool get canSeeDatacenters =>
+      (type != UserType.anonymous && type != UserType.public);
+  bool get canSeeGpuClusters =>
+      (type != UserType.anonymous && type != UserType.public);
+  bool get canSeeSettings => (type != UserType.anonymous);
+  bool get canSeeUsers =>
+      (type != UserType.anonymous && type != UserType.public);
 
   @override
   String toString() {

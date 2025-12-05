@@ -289,14 +289,16 @@ exports.saveUser = beforeUserCreated(async (event) => {
   const user = event.data;
   const db = getFirestore();
   const userRef = db.collection('users').doc(user.uid);
+  logger.info(user);
   await userRef.set({
     email: user.email ?? null,
     display_name: user.displayName ?? null,
     photo_url: user.photoURL ?? null,
     created_at: Timestamp.now(),
     uid: user.uid,
-    email_verified: user.emailVerified,
-    type: 'public'
+    email_verified: user.emailVerified ?? false,
+    type: (user.isAnonymous ?? false) ? 'anonymous' : 'public',
+    is_anonymous: user.isAnonymous ?? false,
   }, { merge: true });
 });
 
@@ -304,9 +306,11 @@ exports.updateUser = beforeUserSignedIn(async (event) => {
   const user = event.data;
   const db = getFirestore();
   const userRef = db.collection('users').doc(user.uid);
+  logger.info(user);
   await userRef.update({
-    email_verified: user.emailVerified,
-    last_sign_in_at: Timestamp.now(),
+    email_verified: user.emailVerified ?? false,
+    last_login_at: Timestamp.now(),
+    is_anonymous: user.isAnonymous ?? false,
   });
 });
 

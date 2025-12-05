@@ -70,12 +70,12 @@ enum Country {
 
 @JsonEnum(fieldRename: FieldRename.snake)
 enum AddressRegion {
-  europeWest("europe-west", "Western Europe"),
-  europeCentral("europe-central", "Central Europe"),
-  europeEast("europe-east", "Eastern Europe"),
-  europeNorth("europe-north", "Northern Europe"),
-  northAmerica("north-america", "North America"),
-  southAmerica("south-america", "South America"),
+  europeWest("europe-west", "W. Eur"),
+  europeCentral("europe-central", "C. Eur"),
+  europeEast("europe-east", "E. Eur"),
+  europeNorth("europe-north", "N. Eur"),
+  northAmerica("north-america", "N. Am"),
+  southAmerica("south-america", "S. Am"),
   asia("asia", "Asia"),
   africa("africa", "Africa"),
   oceania("oceania", "Oceania"),
@@ -187,7 +187,8 @@ enum UserType {
   public("Public", "User that doesn't belong to a company"),
   admin("Admin", "NephosX admin user"),
   corporate("Corporate", "A corporate user that belongs to a company"),
-  corporateAdmin("Corporate Admin", "A corporate user that has admin rights");
+  corporateAdmin("Corporate Admin", "A corporate user that has admin rights"),
+  anonymous("Anonymous User", "A user that hasn't created an account");
 
   final String description;
   final String title;

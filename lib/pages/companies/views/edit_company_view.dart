@@ -42,7 +42,7 @@ class _EditCompanyViewState extends State<EditCompanyView> {
             padding: const EdgeInsets.all(20.0),
             sliver: SliverToBoxAdapter(
               child: MaxWidthBox(
-                alignment: Alignment.topLeft,
+                alignment: Alignment.topCenter,
                 maxWidth: 500,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

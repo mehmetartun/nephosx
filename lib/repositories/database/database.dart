@@ -51,7 +51,9 @@ abstract class DatabaseRepository {
   Future<List<GpuCluster>> getGpuClusters({String? companyId});
   Future<Company> getCompany(String companyId);
   Future<List<Request>> getRequestsByRequestorId(String requestorId);
-  Future<List<Request>> getRequestsByApproverId(String approverId);
+  Future<List<Request>> getRequestsByCompanyId(String companyId);
+  Stream<List<Request>> getRequestsByCompanyIdStream(String companyId);
+  Stream<List<Request>> getRequestsByRequestorIdStream(String requestorId);
 }
 
 class FirestoreDatabaseRepository extends DatabaseRepository {
@@ -193,7 +195,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
       print(data);
       return User.fromJson(userDocument.data() as Map<String, dynamic>);
     } else {
-      throw DatabaseException("User not found");
+      throw DatabaseException("User has not been found");
     }
   }
 
@@ -302,10 +304,10 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Future<List<Request>> getRequestsByApproverId(String approverId) async {
+  Future<List<Request>> getRequestsByCompanyId(String companyId) async {
     var qs = await db
         .collectionGroup("requests")
-        .where("approver_id", isEqualTo: approverId)
+        .where("company_id", isEqualTo: companyId)
         .get();
     return qs.docs.map((doc) => Request.fromJson(doc.data())).toList();
   }
@@ -317,5 +319,31 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .where("requestor_id", isEqualTo: requestorId)
         .get();
     return qs.docs.map((doc) => Request.fromJson({...doc.data()})).toList();
+  }
+
+  @override
+  Stream<List<Request>> getRequestsByCompanyIdStream(String companyId) {
+    return db
+        .collectionGroup("requests")
+        .where("target_company_id", isEqualTo: companyId)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => Request.fromJson(doc.data()))
+              .toList();
+        });
+  }
+
+  @override
+  Stream<List<Request>> getRequestsByRequestorIdStream(String requestorId) {
+    return db
+        .collectionGroup("requests")
+        .where("requestor_id", isEqualTo: requestorId)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => Request.fromJson(doc.data()))
+              .toList();
+        });
   }
 }

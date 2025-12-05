@@ -1,23 +1,19 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:nephosx/blocs/consumption/consumption_bloc.dart';
 import 'package:nephosx/blocs/notifications/bloc/notifications_bloc.dart';
+import 'package:nephosx/blocs/requests/bloc/requests_bloc.dart';
 import 'package:nephosx/firebase_options.dart';
 import 'package:nephosx/navigation/my_navigator_route.dart';
 import 'package:nephosx/repositories/authentication/authentication_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'blocs/authentication/authentication_bloc.dart';
 import 'navigation/router.dart';
 import 'repositories/database/database.dart';
-import 'services/local_storage/local_storage.dart';
 import 'theme/cubit/theme_cubit.dart';
-import 'theme/theme.dart';
+import 'theme/theme_black.dart';
 import 'theme/util.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
@@ -72,6 +68,10 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider<ThemeCubit>(create: (context) => themeCubit),
             BlocProvider<ConsumptionBloc>(create: (context) => consumptionBloc),
+            BlocProvider<RequestsBloc>(
+              create: (context) =>
+                  RequestsBloc(databaseRepository: databaseRepository),
+            ),
           ],
 
           child: MyMaterialApp(),
@@ -134,7 +134,7 @@ class _MyMaterialAppState extends State<MyMaterialApp>
     // ).simpleRouter;
 
     MaterialTheme materialTheme = MaterialTheme(
-      createTextTheme(context, "Roboto", "Roboto"),
+      createTextTheme(context, "Noto Sans", "Noto Sans Display"),
     );
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, themeState) {
@@ -164,6 +164,11 @@ class _MyMaterialAppState extends State<MyMaterialApp>
                     context,
                   ).add(AuthenticationEventDestinationCleared());
                   goRouter.go(state.destination!);
+                }
+                if (state is AuthenticationStateSignedIn) {
+                  BlocProvider.of<RequestsBloc>(
+                    context,
+                  ).add(RequestsEventUserChanged(state.user));
                 }
               },
               child: BlocListener<NotificationsBloc, NotificationsState>(

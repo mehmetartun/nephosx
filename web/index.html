@@ -37,9 +37,36 @@
     content="963212891501-bjtlbml09h1v7f2vkkbo07ikicq6rlqs.apps.googleusercontent.com">
   <title>nephosx</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    /* Add your CSS for the loading screen here */
+    #loading-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      /* Example background */
+    }
+
+    .spinner {
+      border: 8px solid rgba(0, 0, 0, 0.1);
+      border-left-color: #333;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </head>
 
 <body>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 

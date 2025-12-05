@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -35,6 +36,7 @@ abstract class AuthenticationRepository {
   Future<User?> signInWithIdToken(String idToken);
   Future<void> sendPasswordResetEmail(String email);
   Future<bool> get isSignedIn;
+  Future<User> signInAnonymously();
 
   User? get user {
     return _user;
@@ -57,6 +59,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
 
   Future<bool> get isSignedIn async {
     final currentUser = auth.FirebaseAuth.instance.currentUser;
+
     if (currentUser != null) {
       _user = await databaseRepository.getUserData(currentUser.uid);
     }
@@ -310,5 +313,29 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     return await auth.FirebaseAuth.instance.sendPasswordResetEmail(
       email: email,
     );
+  }
+
+  @override
+  Future<User> signInAnonymously() async {
+    // await auth.FirebaseAuth.instance.signOut();
+    userCredential = await auth.FirebaseAuth.instance.signInAnonymously();
+    // _user = await databaseRepository.getUserData(userCredential!.user!.uid);
+    if (userCredential?.user == null) {
+      throw Exception("User creation failed");
+    }
+    await databaseRepository.saveUserData({
+      'uid': userCredential!.user!.uid,
+      'email': null,
+      'display_name': "Anonymous User",
+      'first_name': "Anonymous",
+      'last_name': "User",
+      'photo_url': null,
+      'is_anonymous': true,
+      'type': 'anonymous',
+      'created_at': Timestamp.now(),
+      'last_login_at': Timestamp.now(),
+    });
+    _user = await databaseRepository.getUserData(userCredential!.user!.uid);
+    return _user!;
   }
 }

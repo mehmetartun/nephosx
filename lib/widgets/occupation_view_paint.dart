@@ -26,9 +26,9 @@ class OccupationView extends StatelessWidget {
               transactions: transactions,
               fromDate: fromDate,
               toDate: DateTime(toDate.year, 12, 31),
-              foregroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              textColor: Theme.of(context).colorScheme.onSurface,
+              textColor: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
           );
         },

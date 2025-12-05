@@ -6,6 +6,7 @@ enum MyNavigatorRoute {
   day("day", "day"),
   profile("profile", "profile"),
   users("users", "users"),
+  theme("/theme", "theme"),
   companies("companies", "companies"),
   datacenters("datacenters", "datacenters"),
   gpus("gpus", "gpus"),

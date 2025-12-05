@@ -59,7 +59,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: MaxWidthBox(
-          alignment: Alignment.topLeft,
+          alignment: Alignment.topCenter,
           maxWidth: 500,
           child: Form(
             key: formKey,

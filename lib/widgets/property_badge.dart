@@ -21,14 +21,17 @@ class PropertyBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        color: backgroundColor ?? Theme.of(context).colorScheme.primary,
+        color:
+            backgroundColor ?? Theme.of(context).colorScheme.primaryContainer,
       ),
       child: Text(
         text,
         style:
             textStyle ??
             Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: foregroundColor ?? Theme.of(context).colorScheme.onPrimary,
+              color:
+                  foregroundColor ??
+                  Theme.of(context).colorScheme.onPrimaryContainer,
               fontWeight: FontWeight.bold,
             ),
       ),

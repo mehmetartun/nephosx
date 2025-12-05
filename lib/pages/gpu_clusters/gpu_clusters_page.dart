@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nephosx/pages/gpu_clusters/views/gpu_clusters_loading_view.dart';
 
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../repositories/database/database.dart';
@@ -24,7 +25,7 @@ class GpuClustersPage extends StatelessWidget {
           switch (state) {
             case GpuClustersInitial _:
             case GpuClustersLoading _:
-              return LoadingView(title: "Loading GPU Clusters...");
+              return GpuClustersLoadingView();
             case GpuClustersLoaded _:
               return GpuClustersView(
                 gpuClusters: state.gpuClusters,

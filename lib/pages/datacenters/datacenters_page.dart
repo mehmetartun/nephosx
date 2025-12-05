@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nephosx/pages/datacenters/views/datacenters_loading_view.dart';
 
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../model/user.dart';
@@ -52,7 +53,7 @@ class DatacentersPage extends StatelessWidget {
                 message: state.message,
               );
             case DatacentersInitial _:
-              return LoadingView(title: "Loading datacenters");
+              return DatacentersLoadingView();
             case DatacentersLoaded _:
               return DatacentersView(
                 updateDatacenter: cubit.updateDatacenter,

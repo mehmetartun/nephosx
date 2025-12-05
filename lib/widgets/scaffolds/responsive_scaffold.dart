@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nephosx/widgets/scaffolds/scaffold_with_navtopbar.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'scaffold_with_navbar.dart';
@@ -20,7 +21,7 @@ class ResponsiveScaffold extends StatelessWidget {
         ),
         Condition.equals(
           name: 'TABLET',
-          value: ScaffoldWithNavRail(
+          value: ScaffoldWithNavTopbBar(
             narrow: true,
             navigationShell: navigationShell,
             width: 100,
@@ -28,13 +29,13 @@ class ResponsiveScaffold extends StatelessWidget {
         ),
         Condition.equals(
           name: 'DESKTOP',
-          value: ScaffoldWithNavRail(
+          value: ScaffoldWithNavTopbBar(
             navigationShell: navigationShell,
             width: 250,
           ),
         ),
       ],
-      defaultValue: ScaffoldWithNavRail(
+      defaultValue: ScaffoldWithNavTopbBar(
         navigationShell: navigationShell,
         width: 250,
       ),

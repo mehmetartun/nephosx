@@ -31,6 +31,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
     json['last_login_at'],
     const TimestampConverter().fromJson,
   ),
+  isAnonymous: json['is_anonymous'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -45,6 +46,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'uid': instance.uid,
   'type': _$UserTypeEnumMap[instance.type],
   'address': instance.address,
+  'is_anonymous': instance.isAnonymous,
 };
 
 const _$UserTypeEnumMap = {
@@ -52,6 +54,7 @@ const _$UserTypeEnumMap = {
   UserType.admin: 'admin',
   UserType.corporate: 'corporate',
   UserType.corporateAdmin: 'corporateAdmin',
+  UserType.anonymous: 'anonymous',
 };
 
 Value? _$JsonConverterFromJson<Json, Value>(

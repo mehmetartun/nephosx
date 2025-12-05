@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nephosx/pages/companies/views/companies_loading_view.dart';
 import 'package:nephosx/pages/companies/views/company_assign_view.dart';
 
 import '../../blocs/authentication/authentication_bloc.dart';
@@ -31,7 +32,7 @@ class CompaniesPage extends StatelessWidget {
                 message: state.message,
               );
             case CompaniesInitial _:
-              return LoadingView(title: "Loading companies");
+              return CompaniesLoadingView();
             case CompaniesLoaded _:
               return CompaniesView(
                 companies: state.companies,
@@ -56,7 +57,7 @@ class CompaniesPage extends StatelessWidget {
                 onWithdrawRequest: cubit.onWithdrawRequestCompany,
               );
             default:
-              return LoadingView(title: "Loading Companies...");
+              return CompaniesLoadingView();
           }
         },
       ),

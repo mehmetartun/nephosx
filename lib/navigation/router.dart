@@ -11,8 +11,11 @@ import '../pages/market/market_page.dart';
 import '../pages/profile/profile_page.dart';
 import '../pages/splash_page.dart';
 import '../pages/users/users_page.dart';
+import '../theme/theme_page.dart';
+import '../widgets/animation_widget.dart';
 import '../widgets/scaffolds/responsive_scaffold.dart';
 import '../widgets/splash_screen.dart';
+import '../widgets/splash_screen_new.dart';
 import 'my_navigator_route.dart';
 
 import 'package:flutter/material.dart';
@@ -70,7 +73,7 @@ class NestedRouter {
   late final GoRouter _router = GoRouter(
     debugLogDiagnostics: true,
     // navigatorKey: _rootNavigatorKey,
-    initialLocation: "/companies",
+    initialLocation: "/market",
     redirect: (BuildContext context, GoRouterState state) {
       print('Mathced Location ${state.matchedLocation}');
       print('Uri ${state.uri.toString()}');
@@ -99,7 +102,7 @@ class NestedRouter {
               destination: state.matchedLocation,
             ),
           );
-          return "/splash";
+          // return "/splash";
           if (state.matchedLocation.contains(MyNavigatorRoute.signIn.path)) {
             return null;
           } else {
@@ -117,7 +120,13 @@ class NestedRouter {
       GoRoute(
         path: MyNavigatorRoute.splash.path,
         name: MyNavigatorRoute.splash.name,
-        builder: (BuildContext context, GoRouterState state) => SplashScreen(),
+        builder: (BuildContext context, GoRouterState state) =>
+            ComputerGridAnimation(),
+      ),
+      GoRoute(
+        path: MyNavigatorRoute.theme.path,
+        name: MyNavigatorRoute.theme.name,
+        builder: (BuildContext context, GoRouterState state) => ThemePage(),
       ),
       GoRoute(
         path: MyNavigatorRoute.home.path,
