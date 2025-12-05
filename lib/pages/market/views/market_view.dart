@@ -8,6 +8,7 @@ import '../../../model/gpu_cluster.dart';
 import '../../../model/user.dart';
 import '../../../widgets/filter_container.dart';
 import '../../../widgets/filter_range_slider.dart';
+import '../../../widgets/gpu_cluster_info.dart';
 import '../../../widgets/gpu_cluster_list_tile_view.dart';
 import '../../../widgets/gpu_cluster_row_view.dart';
 
@@ -334,7 +335,29 @@ class MarketView extends StatelessWidget {
                                   DataCell(
                                     TextButton(
                                       child: Text("More Info"),
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return SingleChildScrollView(
+                                              child: MaxWidthBox(
+                                                maxWidth: 600,
+                                                child: Dialog(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          20.0,
+                                                        ),
+                                                    child: GpuClusterInfo(
+                                                      gpuCluster: gpuCluster,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],

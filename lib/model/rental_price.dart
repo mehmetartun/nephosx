@@ -4,7 +4,9 @@ part 'rental_price.g.dart';
 
 @JsonSerializable()
 class RentalPrice {
+  @JsonKey(name: "number_of_months")
   final int numberOfMonths;
+  @JsonKey(name: "price_in_usd_per_hour")
   final double priceInUsdPerHour;
 
   RentalPrice({required this.numberOfMonths, required this.priceInUsdPerHour});

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../widgets/gpu_cluster_list_tile.dart';
 import '../../../widgets/property_badge.dart';
@@ -34,11 +37,15 @@ class GpuClustersView extends StatelessWidget {
                     "GPU Clusters",
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  FilledButton.tonalIcon(
-                    icon: Icon(Icons.add),
-                    label: Text("Add"),
-                    onPressed: addGpuClusterRequest,
-                  ),
+                  if (BlocProvider.of<AuthenticationBloc>(context).user?.type ==
+                          UserType.corporate ||
+                      BlocProvider.of<AuthenticationBloc>(context).user?.type ==
+                          UserType.corporateAdmin)
+                    FilledButton.tonalIcon(
+                      icon: Icon(Icons.add),
+                      label: Text("Add"),
+                      onPressed: addGpuClusterRequest,
+                    ),
                 ],
               ),
               SizedBox(height: 20),
@@ -93,10 +100,21 @@ class GpuClustersView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      trailing: IconButton(
-                        onPressed: () => updateGpuClusterRequest(gpuCluster),
-                        icon: Icon(Icons.edit),
-                      ),
+                      trailing:
+                          (BlocProvider.of<AuthenticationBloc>(
+                                    context,
+                                  ).user?.type ==
+                                  UserType.corporate ||
+                              BlocProvider.of<AuthenticationBloc>(
+                                    context,
+                                  ).user?.type ==
+                                  UserType.corporateAdmin)
+                          ? IconButton(
+                              onPressed: () =>
+                                  updateGpuClusterRequest(gpuCluster),
+                              icon: Icon(Icons.edit),
+                            )
+                          : SizedBox.shrink(),
                     );
                   },
                 ),

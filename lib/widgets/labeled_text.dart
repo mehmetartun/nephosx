@@ -36,7 +36,7 @@ class LabeledText<T> extends StatelessWidget {
           : CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        LightLabel(text: label),
+        LightLabel(text: label, position: position!),
         Text(text, style: Theme.of(context).textTheme.titleMedium),
       ],
     );

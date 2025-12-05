@@ -7,12 +7,25 @@ part of 'gpu_cluster.dart';
 // **************************************************************************
 
 GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
+  pcieGeneration: $enumDecodeNullable(
+    _$PcieGenerationEnumMap,
+    json['pcie_generation'],
+  ),
+  pcieLanes: (json['pcie_lanes'] as num?)?.toInt(),
+  perGpuPcieBandwidthInGbPerSec:
+      (json['per_gpu_pcie_bandwidth_in_gb_per_sec'] as num?)?.toDouble(),
+  maximumCudaVersionSupported:
+      json['maximum_cuda_version_supported'] as String?,
   type: $enumDecode(_$GpuTypeEnumMap, json['type']),
+  perGpuMemoryBandwidthInGbPerSec:
+      (json['per_gpu_memory_bandwidth_in_gb_per_sec'] as num?)?.toDouble(),
+  perGpuNvLinkBandwidthInGbPerSec:
+      (json['per_gpu_nv_link_bandwidth_in_gb_per_sec'] as num?)?.toDouble(),
   quantity: (json['quantity'] as num).toInt(),
   datacenterId: json['datacenter_id'] as String,
   companyId: json['company_id'] as String,
   id: json['id'] as String,
-  perGpuVramInGb: (json['per_gpu_ram_in_gb'] as num?)?.toDouble(),
+  perGpuVramInGb: (json['per_gpu_vram_in_gb'] as num?)?.toDouble(),
   transactions: (json['transactions'] as List<dynamic>?)
       ?.map((e) => GpuTransaction.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -28,6 +41,21 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
           ?.map((e) => RentalPrice.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
+  effectiveRam: (json['effective_ram'] as num?)?.toDouble(),
+  totalRam: (json['total_ram'] as num?)?.toDouble(),
+  totalCpuCoreCount: (json['total_cpu_core_count'] as num?)?.toInt(),
+  effectiveCpuCoreCount: (json['effective_cpu_core_count'] as num?)?.toInt(),
+  internetUploadSpeedInMbps: (json['internet_upload_speed_in_mbps'] as num?)
+      ?.toDouble(),
+  internetDownloadSpeedInMbps: (json['internet_download_speed_in_mbps'] as num?)
+      ?.toDouble(),
+  numberOfOpenPorts: (json['number_of_open_ports'] as num?)?.toInt(),
+  diskBandwidthInMbPerSec: (json['disk_bandwidth_in_mb_per_sec'] as num?)
+      ?.toDouble(),
+  diskStorageAvailableInGb: (json['disk_storage_available_in_gb'] as num?)
+      ?.toDouble(),
+  deepLearningPerformanceScore:
+      (json['deep_learning_performance_score'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
@@ -37,10 +65,39 @@ Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
       'id': instance.id,
       'datacenter_id': instance.datacenterId,
       'company_id': instance.companyId,
-      'per_gpu_ram_in_gb': instance.perGpuVramInGb,
+      'per_gpu_vram_in_gb': instance.perGpuVramInGb,
+      'per_gpu_memory_bandwidth_in_gb_per_sec':
+          instance.perGpuMemoryBandwidthInGbPerSec,
+      'per_gpu_nv_link_bandwidth_in_gb_per_sec':
+          instance.perGpuNvLinkBandwidthInGbPerSec,
       'tera_flops': instance.teraFlops,
       'rental_prices': instance.rentalPrices.map((e) => e.toJson()).toList(),
+      'pcie_generation': _$PcieGenerationEnumMap[instance.pcieGeneration],
+      'pcie_lanes': instance.pcieLanes,
+      'per_gpu_pcie_bandwidth_in_gb_per_sec':
+          instance.perGpuPcieBandwidthInGbPerSec,
+      'maximum_cuda_version_supported': instance.maximumCudaVersionSupported,
+      'effective_ram': instance.effectiveRam,
+      'total_ram': instance.totalRam,
+      'total_cpu_core_count': instance.totalCpuCoreCount,
+      'effective_cpu_core_count': instance.effectiveCpuCoreCount,
+      'internet_upload_speed_in_mbps': instance.internetUploadSpeedInMbps,
+      'internet_download_speed_in_mbps': instance.internetDownloadSpeedInMbps,
+      'number_of_open_ports': instance.numberOfOpenPorts,
+      'disk_bandwidth_in_mb_per_sec': instance.diskBandwidthInMbPerSec,
+      'disk_storage_available_in_gb': instance.diskStorageAvailableInGb,
+      'deep_learning_performance_score': instance.deepLearningPerformanceScore,
     };
+
+const _$PcieGenerationEnumMap = {
+  PcieGeneration.x1: 'x1',
+  PcieGeneration.x2: 'x2',
+  PcieGeneration.x3: 'x3',
+  PcieGeneration.x4: 'x4',
+  PcieGeneration.x5: 'x5',
+  PcieGeneration.x6: 'x6',
+  PcieGeneration.x7: 'x7',
+};
 
 const _$GpuTypeEnumMap = {
   GpuType.H100: 'H100',
