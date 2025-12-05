@@ -302,6 +302,11 @@ class __AddressFormFieldState extends State<_AddressFormField> {
             hintText: "Select Country",
           ),
           initialValue: country,
+          selectedItemBuilder: (context) {
+            return Address.sortedCountries.map((e) {
+              return Text("${e.flagUnicode} ${e.description}");
+            }).toList();
+          },
 
           onChanged: (val) {
             setState(() {
@@ -324,8 +329,14 @@ class __AddressFormFieldState extends State<_AddressFormField> {
             }
             return null;
           },
-          items: Country.values.map((e) {
-            return DropdownMenuItem(value: e, child: Text(e.description));
+          items: Address.sortedCountries.map((e) {
+            return DropdownMenuItem(
+              value: e,
+              child: Text(
+                "${e.flagUnicode} ${e.description}",
+                overflow: TextOverflow.ellipsis,
+              ),
+            );
           }).toList(),
         ),
         // FilledButton(

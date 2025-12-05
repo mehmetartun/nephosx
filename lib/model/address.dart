@@ -88,4 +88,20 @@ class Address {
     text += "\n${country.description}";
     return text;
   }
+
+  static List<Country> get sortedCountries {
+    final favorites = [
+      Country.us,
+      Country.gb,
+      Country.ca,
+      Country.de,
+      Country.fr,
+      Country.se,
+      Country.ch,
+    ];
+    final rest = Country.values
+        .where((element) => !favorites.contains(element))
+        .toList();
+    return favorites + rest;
+  }
 }

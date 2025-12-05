@@ -36,7 +36,7 @@ class _AddEditAddressDialogState extends State<AddEditAddressDialog> {
     return Form(
       key: formKey,
       child: MaxWidthBox(
-        maxWidth: 500,
+        maxWidth: 700,
         child: Dialog(
           child: Padding(
             padding: const EdgeInsets.all(20.0),

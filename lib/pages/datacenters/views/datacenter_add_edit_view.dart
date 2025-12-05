@@ -137,7 +137,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
                             await showDialog(
                               context: context,
                               builder: (context) => MaxWidthBox(
-                                maxWidth: 500,
+                                maxWidth: 700,
                                 child: AddEditAddressDialog(
                                   onUpdateAddress: (address) {
                                     setState(() {
@@ -165,7 +165,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
                                 await showDialog(
                                   context: context,
                                   builder: (context) => MaxWidthBox(
-                                    maxWidth: 500,
+                                    maxWidth: 700,
                                     child: AddEditAddressDialog(
                                       onUpdateAddress: (address) {
                                         setState(() {

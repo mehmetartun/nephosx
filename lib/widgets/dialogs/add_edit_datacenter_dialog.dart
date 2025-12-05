@@ -111,7 +111,7 @@ class _AddEditDatacenterDialogState extends State<AddEditDatacenterDialog> {
                           address: Address(
                             addressLine1: "Street",
                             city: "Istanbul",
-                            country: Country.uk,
+                            country: Country.gb,
                             zipCode: "12345",
                           ),
                           tier: DatacenterTier.tier1,
