@@ -121,4 +121,8 @@ class Company {
       _$CompanyFromJson(json);
 
   Map<String, dynamic> toJson() => _$CompanyToJson(this);
+
+  static Company getCompanyFromId(List<Company> companies, String id) {
+    return companies.firstWhere((company) => company.id == id);
+  }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
+import 'package:nephosx/pages/market/cubit/market_cubit.dart';
 
 import '../model/company.dart';
 import '../model/datacenter.dart';
@@ -45,6 +47,11 @@ class GpuClusterListTile extends StatelessWidget {
                     onAddTransaction: addTransaction,
                     buyers: buyers,
                     validator: validator,
+                    priceCalculator: (gpuCluster, fromDate, toDate) {
+                      return BlocProvider.of<MarketCubit>(
+                        context,
+                      ).priceCalculator(gpuCluster, fromDate, toDate);
+                    },
                     datacenter: datacenter,
                   );
                 },

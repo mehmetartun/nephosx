@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'blocs/authentication/authentication_bloc.dart';
 import 'navigation/router.dart';
@@ -16,6 +17,8 @@ import 'theme/cubit/theme_cubit.dart';
 import 'theme/theme_black.dart';
 import 'theme/util.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+
+import 'widgets/views/password_secreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +33,29 @@ void main() async {
   // HttpsCallableResult res;
   // res = await FirebaseFunctions.instance.httpsCallable('helloWorld').call();
   usePathUrlStrategy();
-  runApp(const MyApp());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // prefs.setString("password", "123");
+  var password = prefs.getString("password");
+  // print(password);
+  if (password == "TopSecret123") {
+    runApp(const MyApp());
+  } else {
+    runApp(const PasswordApp());
+  }
+}
+
+class PasswordApp extends StatelessWidget {
+  const PasswordApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'Nephos X',
+      debugShowCheckedModeBanner: false,
+      home: PasswordScreen(),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {

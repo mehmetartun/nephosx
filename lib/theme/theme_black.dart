@@ -378,6 +378,10 @@ class MaterialTheme {
             ),
           ),
         ),
+        // dataTableTheme: DataTableThemeData(
+        //   columnSpacing: 10,
+        //   horizontalMargin: 10,
+        // ),
       );
 
   List<ExtendedColor> get extendedColors => [];

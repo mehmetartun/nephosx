@@ -157,6 +157,21 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                             child: const Text("Settings"),
                           ),
                   ],
+                  if (user.canSeeTransactions) ...[
+                    navigationShell?.currentIndex == 6
+                        ? FilledButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(6);
+                            },
+                            child: const Text("Transactions"),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(6);
+                            },
+                            child: const Text("Transactions"),
+                          ),
+                  ],
                 ],
               ),
               Row(

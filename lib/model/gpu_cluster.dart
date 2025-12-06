@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'company.dart';
@@ -198,5 +199,14 @@ class GpuCluster {
       deepLearningPerformanceScore:
           deepLearningPerformanceScore ?? this.deepLearningPerformanceScore,
     );
+  }
+
+  static GpuCluster? getGpuClusterById(
+    List<GpuCluster> gpuClusters,
+    String gpuClusterId,
+  ) {
+    return gpuClusters.firstWhereOrNull((e) {
+      return e.id == gpuClusterId;
+    });
   }
 }

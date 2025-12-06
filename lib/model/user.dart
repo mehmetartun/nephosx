@@ -151,6 +151,9 @@ class User {
   bool get canSeeUsers =>
       (type != UserType.anonymous && type != UserType.public);
 
+  bool get canSeeTransactions =>
+      (type != UserType.anonymous || type != UserType.public);
+
   @override
   String toString() {
     return 'User(fN: $firstName, lN: $lastName, dN: $displayName,  uid: $uid\n'

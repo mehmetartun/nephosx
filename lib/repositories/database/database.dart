@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nephosx/model/gpu_transaction.dart';
 import 'package:nephosx/model/request.dart';
 
 import '../../model/company.dart';
@@ -7,6 +8,7 @@ import '../../model/datacenter.dart';
 import '../../model/drink.dart';
 import '../../model/drink_image.dart';
 import '../../model/drinking_note.dart';
+import '../../model/enums.dart';
 import '../../model/gpu_cluster.dart';
 import '../../model/user.dart';
 
@@ -55,6 +57,10 @@ abstract class DatabaseRepository {
   Future<List<Request>> getRequestsByCompanyId(String companyId);
   Stream<List<Request>> getRequestsByCompanyIdStream(String companyId);
   Stream<List<Request>> getRequestsByRequestorIdStream(String requestorId);
+  Stream<List<GpuTransaction>> getGpuTransactionStream({
+    String? companyId,
+    TransactionType? type,
+  });
 }
 
 class FirestoreDatabaseRepository extends DatabaseRepository {
@@ -359,5 +365,17 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
               .map((doc) => GpuCluster.fromJson({...doc.data(), 'id': doc.id}))
               .toList();
         });
+  }
+
+  @override
+  Stream<List<GpuTransaction>> getGpuTransactionStream({
+    String? companyId,
+    TransactionType? type,
+  }) {
+    return db.collection("transactions").snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => GpuTransaction.fromJson({...doc.data(), 'id': doc.id}))
+          .toList();
+    });
   }
 }
