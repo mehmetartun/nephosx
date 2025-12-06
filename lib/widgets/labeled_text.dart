@@ -26,6 +26,8 @@ class LabeledText<T> extends StatelessWidget {
     if ((value is double || value is int) && format != null) {
       // The value is a number and a format is provided.
       text = NumberFormat(format).format(value);
+    } else if (value is DateTime && format != null) {
+      text = DateFormat(format).format(value as DateTime);
     } else {
       text = value.toString();
     }

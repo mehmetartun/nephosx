@@ -6,6 +6,9 @@ import 'enums.dart';
 enum EntityType { company, datacenter }
 
 @JsonEnum(fieldRename: FieldRename.snake)
+enum TransactionType { buy, sell }
+
+@JsonEnum(fieldRename: FieldRename.snake)
 enum Country {
   us(
     "US",

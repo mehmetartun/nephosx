@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:nephosx/pages/market/cubit/market_cubit.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../model/gpu_cluster.dart';
+import '../../../model/gpu_transaction.dart';
 import '../../../model/user.dart';
+import '../../../widgets/dialogs/add_transaction_dialog.dart';
 import '../../../widgets/filter_container.dart';
 import '../../../widgets/filter_range_slider.dart';
 import '../../../widgets/gpu_cluster_info.dart';
-import '../../../widgets/gpu_cluster_list_tile_view.dart';
-import '../../../widgets/gpu_cluster_row_view.dart';
 
 class MarketView extends StatelessWidget {
-  const MarketView({Key? key, required this.gpuClusters, this.ownCompanyId})
-    : super(key: key);
+  const MarketView({
+    required this.onAddTransaction,
+    Key? key,
+    required this.gpuClusters,
+    this.ownCompanyId,
+    required this.priceCalculator,
+    required this.validator,
+  }) : super(key: key);
   final List<GpuCluster> gpuClusters;
   final String? ownCompanyId;
+  final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
+  final String? Function(GpuCluster, DateTime, DateTime) validator;
+  final void Function(GpuTransaction) onAddTransaction;
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +332,26 @@ class MarketView extends StatelessWidget {
                                         : Row(
                                             children: [
                                               FilledButton(
-                                                onPressed: () {},
+                                                onPressed: () async {
+                                                  await showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AddTransactionDialog(
+                                                        gpuCluster: gpuCluster,
+                                                        priceCalculator:
+                                                            priceCalculator,
+                                                        validator: validator,
+                                                        buyers: [
+                                                          user!.company!,
+                                                        ],
+                                                        datacenter: gpuCluster
+                                                            .datacenter!,
+                                                        onAddTransaction:
+                                                            onAddTransaction,
+                                                      );
+                                                    },
+                                                  );
+                                                },
                                                 child: Text("Buy"),
                                               ),
                                               OutlinedButton(

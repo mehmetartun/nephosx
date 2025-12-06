@@ -28,6 +28,9 @@ class MarketPage extends StatelessWidget {
               return MarketView(
                 gpuClusters: state.gpuClusters,
                 ownCompanyId: state.ownCompanyId,
+                priceCalculator: marketCubit.priceCalculator,
+                validator: marketCubit.transactionValidator,
+                onAddTransaction: marketCubit.addTransaction,
               );
             case MarketError():
               return const Center(child: Text('Error'));

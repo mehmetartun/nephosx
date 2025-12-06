@@ -1,6 +1,7 @@
 import 'package:nephosx/pages/data_entry/data_entry_page.dart';
 import 'package:nephosx/pages/sign_in/sign_in_page.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nephosx/pages/transactions/transactions_page.dart';
 
 import '../blocs/authentication/authentication_bloc.dart';
 import '../pages/companies/companies_page.dart';
@@ -254,6 +255,27 @@ class NestedRouter {
                     name: MyNavigatorRoute.profile.name,
                     builder: (BuildContext context, GoRouterState state) =>
                         const ProfilePage(),
+                    // routes: <RouteBase>[
+                    //   GoRoute(
+                    //     path: 'changeUserImage',
+                    //     builder: (BuildContext context, GoRouterState state) =>
+                    //         Container(),
+                    //   ),
+                    // ],
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                // navigatorKey: _sectionANavigatorKey,
+                routes: <RouteBase>[
+                  GoRoute(
+                    // The screen to display as the root in the third tab of the
+                    // bottom navigation bar.
+                    // name: "settings",
+                    path: MyNavigatorRoute.transactions.path,
+                    name: MyNavigatorRoute.transactions.name,
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const TransactionsPage(),
                     // routes: <RouteBase>[
                     //   GoRoute(
                     //     path: 'changeUserImage',

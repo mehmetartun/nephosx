@@ -16,8 +16,6 @@ class OccupationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.yellow,
-
       child: LayoutBuilder(
         builder: (context, constraints) {
           return CustomPaint(
@@ -66,7 +64,7 @@ class _SplitRectPainter extends CustomPainter {
     );
     for (var stopPoint in stopPoints) {
       // paintRectangle(stopPoint, canvas, size, foregroundColor);
-      paintRectangle(stopPoint, canvas, size, Colors.black26);
+      paintRectangle(stopPoint, canvas, size, Colors.red);
     }
     for (var markerPoint in markerPoints) {
       paintBar(canvas, size, foregroundColor, markerPoint['location'], 1);

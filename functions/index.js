@@ -477,6 +477,21 @@ exports.copyTransaction = onDocumentWritten("transactions/{transactionId}", asyn
 
   await db.runTransaction(async (t) => {
     const clusterDoc = await t.get(clusterRef);
+
+    var buyer_company_id = afterData.buyer_company_id;
+    var seller_company_id = afterData.seller_company_id;
+    var buyer_company_ref = await db.collection('companies').doc(buyer_company_id).get();
+    var seller_company_ref = await db.collection('companies').doc(seller_company_id).get();
+
+    const buyer_company_doc = await t.get(buyer_company_ref);
+    const seller_company_doc = await t.get(seller_company_ref);
+
+    const data = {
+      ...afterData,
+      buyer_company: buyer_company_doc.data(),
+      seller_company: seller_company_doc.data()
+    }
+
     if (!clusterDoc.exists) return;
 
     let transactions = clusterDoc.data().transactions || [];
@@ -486,7 +501,7 @@ exports.copyTransaction = onDocumentWritten("transactions/{transactionId}", asyn
 
     // If not a deletion, add the new data
     if (afterData) {
-      transactions.push({ ...afterData, id: transactionId });
+      transactions.push({ ...data, id: transactionId });
     }
 
     t.update(clusterRef, { transactions });
