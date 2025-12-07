@@ -9,6 +9,7 @@ import '../../model/platform_settings.dart';
 import '../../services/platform_settings/platform_settings_service.dart';
 import '../formfields/address_form_field.dart';
 import '../formfields/address_form_field_new.dart';
+import '../formfields/check_box_form_field.dart';
 
 class AddEditDatacenterDialog extends StatefulWidget {
   const AddEditDatacenterDialog({
@@ -36,6 +37,7 @@ class _AddEditDatacenterDialogState extends State<AddEditDatacenterDialog> {
   Address? address;
   late String companyId;
   String? id;
+  late bool iso27001;
 
   @override
   void initState() {
@@ -45,6 +47,7 @@ class _AddEditDatacenterDialogState extends State<AddEditDatacenterDialog> {
     tier = widget.datacenter?.tier;
     address = widget.datacenter?.address;
     id = widget.datacenter?.id;
+    iso27001 = widget.datacenter?.iso27001 ?? false;
   }
 
   @override
@@ -95,6 +98,13 @@ class _AddEditDatacenterDialogState extends State<AddEditDatacenterDialog> {
                     }
                     return null;
                   },
+                ),
+                CheckboxFormField(
+                  initialValue: iso27001,
+                  onSaved: (value) {
+                    iso27001 = value ?? false;
+                  },
+                  title: Text("ISO 27001"),
                 ),
                 AddressFormFieldNew(
                   initialValue: address,

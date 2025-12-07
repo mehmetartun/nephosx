@@ -22,7 +22,14 @@ class DatacenterListTile extends StatelessWidget {
       onTap: onTap,
       // leading: TierWidget(tier: datacenter.tier),
       leading: PropertyBadge(text: datacenter.tier.roman),
-      title: Text(datacenter.name),
+      title: datacenter.iso27001
+          ? Row(
+              children: [
+                Text(datacenter.name),
+                Icon(Icons.check_circle, color: Colors.green),
+              ],
+            )
+          : Text(datacenter.name),
       subtitle: Row(
         children: [
           Text("${datacenter.address.country.flagUnicode} "),

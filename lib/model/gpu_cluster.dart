@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'company.dart';
+import 'conversions.dart';
 import 'datacenter.dart';
 import 'gpu_transaction.dart';
 import 'rental_price.dart';
@@ -94,6 +96,9 @@ class GpuCluster {
   final double? diskStorageAvailableInGb;
   @JsonKey(name: "deep_learning_performance_score")
   final double? deepLearningPerformanceScore;
+  @JsonKey(name: "availability_date")
+  @TimestampConverter()
+  final DateTime? availabilityDate;
 
   GpuCluster({
     this.pcieGeneration,
@@ -123,6 +128,7 @@ class GpuCluster {
     this.diskBandwidthInMbPerSec,
     this.diskStorageAvailableInGb,
     this.deepLearningPerformanceScore,
+    this.availabilityDate,
   });
   factory GpuCluster.fromJson(Map<String, dynamic> json) =>
       _$GpuClusterFromJson(json);
@@ -157,6 +163,7 @@ class GpuCluster {
     double? diskBandwidthInMbPerSec,
     double? diskStorageAvailableInGb,
     double? deepLearningPerformanceScore,
+    DateTime? availabilityDate,
   }) {
     return GpuCluster(
       pcieGeneration: pcieGeneration ?? this.pcieGeneration,
@@ -198,6 +205,7 @@ class GpuCluster {
           diskStorageAvailableInGb ?? this.diskStorageAvailableInGb,
       deepLearningPerformanceScore:
           deepLearningPerformanceScore ?? this.deepLearningPerformanceScore,
+      availabilityDate: availabilityDate ?? this.availabilityDate,
     );
   }
 

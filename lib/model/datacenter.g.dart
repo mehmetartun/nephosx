@@ -12,6 +12,7 @@ Datacenter _$DatacenterFromJson(Map<String, dynamic> json) => Datacenter(
   companyId: json['company_id'] as String,
   address: Address.fromJson(json['address'] as Map<String, dynamic>),
   tier: $enumDecode(_$DatacenterTierEnumMap, json['tier']),
+  iso27001: json['iso27001'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$DatacenterToJson(Datacenter instance) =>
@@ -21,6 +22,7 @@ Map<String, dynamic> _$DatacenterToJson(Datacenter instance) =>
       'company_id': instance.companyId,
       'address': instance.address.toJson(),
       'tier': _$DatacenterTierEnumMap[instance.tier]!,
+      'iso27001': instance.iso27001,
     };
 
 const _$DatacenterTierEnumMap = {

@@ -11,6 +11,7 @@ import '../../../widgets/datacenter_list_tile.dart';
 import '../../../widgets/dialogs/add_edit_address_dialog.dart';
 import '../../../widgets/dialogs/add_edit_company_dialog.dart';
 import '../../../widgets/dialogs/add_edit_datacenter_dialog.dart';
+import '../../../widgets/formfields/check_box_form_field.dart';
 
 class DatacenterAddEditView extends StatefulWidget {
   const DatacenterAddEditView({
@@ -43,6 +44,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
   String? id;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? addressError;
+  late bool iso27001;
   @override
   void initState() {
     super.initState();
@@ -51,6 +53,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
     tier = widget.datacenter?.tier;
     address = widget.datacenter?.address;
     id = widget.datacenter?.id;
+    iso27001 = widget.datacenter?.iso27001 ?? false;
   }
 
   @override
@@ -123,6 +126,14 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
                       }
                       return null;
                     },
+                  ),
+                  SizedBox(height: 20),
+                  CheckboxFormField(
+                    initialValue: iso27001,
+                    onSaved: (value) {
+                      iso27001 = value ?? false;
+                    },
+                    title: Text("ISO 27001"),
                   ),
                   SizedBox(height: 20),
                   Text(
@@ -206,6 +217,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
                                     address: address!,
                                     tier: tier!,
                                     companyId: companyId,
+                                    iso27001: iso27001,
                                   ),
                                 )
                               : widget.updateDatacenter(
@@ -215,6 +227,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
                                     address: address!,
                                     tier: tier!,
                                     companyId: companyId,
+                                    iso27001: iso27001,
                                   ),
                                 );
                         } else {

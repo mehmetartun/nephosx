@@ -26,6 +26,7 @@ class Datacenter {
   final String companyId;
   final Address address;
   final DatacenterTier tier;
+  final bool iso27001;
 
   Datacenter({
     required this.id,
@@ -33,6 +34,7 @@ class Datacenter {
     required this.companyId,
     required this.address,
     required this.tier,
+    this.iso27001 = false,
     // required this.country,
     // required this.region,
   });
@@ -45,6 +47,7 @@ class Datacenter {
     // String? country,
     // String? region,
     Address? address,
+    bool? iso27001,
   }) {
     return Datacenter(
       id: id ?? this.id,
@@ -54,6 +57,7 @@ class Datacenter {
       // country: country ?? this.country,
       // region: region ?? this.region,
       address: address ?? this.address,
+      iso27001: iso27001 ?? this.iso27001,
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import '../../../model/datacenter.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../model/rental_price.dart';
+import '../../../widgets/formfields/date_formfield.dart';
 import '../../../widgets/formfields/rental_price.dart';
 
 class GpuClusterAddEditView extends StatefulWidget {
@@ -51,6 +52,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
   int? numberOfOpenPorts;
   double? diskBandwidthInMbPerSec;
   double? diskStorageAvailableInGb;
+  DateTime? availabilityDate;
 
   @override
   void initState() {
@@ -85,6 +87,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
     numberOfOpenPorts = widget.gpuCluster?.numberOfOpenPorts;
     diskBandwidthInMbPerSec = widget.gpuCluster?.diskBandwidthInMbPerSec;
     diskStorageAvailableInGb = widget.gpuCluster?.diskStorageAvailableInGb;
+    availabilityDate = widget.gpuCluster?.availabilityDate;
   }
 
   @override
@@ -625,6 +628,22 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                               },
                             ),
                           ),
+                          SizedBox(
+                            width: 250,
+                            child: DateTimeFormField(
+                              labelText: "Available From",
+                              initialValue: availabilityDate,
+                              onSaved: (value) {
+                                availabilityDate = value;
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Please enter a date";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
                         ],
                       ),
                       Divider(height: 40),
@@ -706,6 +725,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                         pcieLanes: pcieLanes,
                                         deepLearningPerformanceScore:
                                             deepLearningPerformanceScore,
+                                        availabilityDate: availabilityDate,
                                       ),
                                     )
                                   : widget.onUpdateGpuCluster(
@@ -742,6 +762,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                             diskStorageAvailableInGb,
                                         deepLearningPerformanceScore:
                                             deepLearningPerformanceScore,
+                                        availabilityDate: availabilityDate,
                                       ),
                                     );
                             }

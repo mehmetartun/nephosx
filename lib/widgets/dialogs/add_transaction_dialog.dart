@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:nephosx/model/enums.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -10,6 +11,7 @@ import '../../model/gpu_cluster.dart';
 import '../../model/gpu_transaction.dart';
 import '../../model/light_label.dart';
 import '../formfields/consideration_form_field.dart';
+import '../formfields/date_formfield.dart';
 import '../occupation_view_paint.dart';
 
 class AddTransactionDialog extends StatefulWidget {
@@ -35,14 +37,15 @@ class AddTransactionDialog extends StatefulWidget {
 
 class _AddTransactionDialogState extends State<AddTransactionDialog> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  Consideration? consideration;
-  DateTime? startDate;
-  DateTime? endDate;
+
+  late DateTime startDate;
+  late DateTime endDate;
   Company? buyer;
   String? overlapErrorText;
   late DateTime maxDate;
   late DateTime minDate;
 
+  late Consideration consideration;
   @override
   void initState() {
     super.initState();
@@ -51,6 +54,21 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
     }
     minDate = DateTime.now();
     maxDate = DateTime(minDate.year + 3, 12, 31);
+    startDate = widget.gpuCluster.availabilityDate!;
+    endDate = widget.gpuCluster.availabilityDate!.add(Duration(days: 30));
+    consideration = Consideration(
+      amount: widget.priceCalculator(widget.gpuCluster, startDate, endDate),
+      currency: Currency.usd,
+    );
+  }
+
+  void adjustPricing() {
+    setState(() {
+      consideration = Consideration(
+        amount: widget.priceCalculator(widget.gpuCluster, startDate, endDate),
+        currency: Currency.usd,
+      );
+    });
   }
 
   @override
@@ -175,30 +193,72 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   ),
                   SizedBox(height: 10),
                 ],
+                Text("Price"),
+                SizedBox(height: 10),
+                Text(consideration.formatted),
                 Text("Enter dates"),
                 SizedBox(height: 10),
-                InputDatePickerFormField(
-                  fieldLabelText: "Start Date",
+                DateTimeFormField(
                   firstDate: minDate,
                   lastDate: maxDate,
-                  initialDate: minDate.add(Duration(days: 200)),
-                  onDateSaved: (value) {
-                    startDate = value;
+                  initialValue: widget.gpuCluster.availabilityDate,
+                  readOnly: true,
+                  onChanged: (val) {
+                    endDate = val;
+                    adjustPricing();
                   },
-                  onDateSubmitted: (value) {
-                    startDate = value;
+                  onSaved: (value) {
+                    startDate = value!;
                   },
+                  labelText: 'Start Date',
                 ),
+                // TextFormField(
+                //   readOnly: true,
+                //   decoration: InputDecoration(labelText: "Start Date"),
+                //   initialValue: DateFormat(
+                //     'dd MMM yyyy',
+                //   ).format(widget.gpuCluster.availabilityDate!),
+                // ),
+                // InputDatePickerFormField(
+                //   fieldLabelText: "Start Date",
+                //   firstDate: minDate,
+                //   lastDate: maxDate,
+                //   initialDate: minDate.add(Duration(days: 200)),
+                //   onDateSaved: (value) {
+                //     startDate = value;
+                //   },
+                //   onDateSubmitted: (value) {
+                //     startDate = value;
+                //   },
+                // ),
                 SizedBox(height: 10),
-                InputDatePickerFormField(
-                  fieldLabelText: "End Date",
-                  initialDate: minDate.add(Duration(days: 360)),
-                  firstDate: minDate,
-                  lastDate: maxDate,
-                  onDateSaved: (value) {
-                    endDate = value;
+                DateTimeFormField(
+                  firstDate: widget.gpuCluster.availabilityDate,
+                  lastDate: widget.gpuCluster.availabilityDate!.add(
+                    Duration(days: 730),
+                  ),
+                  initialValue: widget.gpuCluster.availabilityDate!.add(
+                    Duration(days: 30),
+                  ),
+                  // readOnly: true,
+                  onSaved: (value) {
+                    endDate = value!;
                   },
+                  onChanged: (value) {
+                    endDate = value!;
+                    adjustPricing();
+                  },
+                  labelText: 'End Date',
                 ),
+                // InputDatePickerFormField(
+                //   fieldLabelText: "End Date",
+                //   initialDate: minDate.add(Duration(days: 360)),
+                //   firstDate: minDate,
+                //   lastDate: maxDate,
+                //   onDateSaved: (value) {
+                //     endDate = value;
+                //   },
+                // ),
                 SizedBox(height: 10),
                 // ConsiderationFormField(
                 //   validator: (value) {

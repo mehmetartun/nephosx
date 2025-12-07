@@ -56,6 +56,10 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
       ?.toDouble(),
   deepLearningPerformanceScore:
       (json['deep_learning_performance_score'] as num?)?.toDouble(),
+  availabilityDate: _$JsonConverterFromJson<Timestamp, DateTime>(
+    json['availability_date'],
+    const TimestampConverter().fromJson,
+  ),
 );
 
 Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
@@ -87,6 +91,10 @@ Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
       'disk_bandwidth_in_mb_per_sec': instance.diskBandwidthInMbPerSec,
       'disk_storage_available_in_gb': instance.diskStorageAvailableInGb,
       'deep_learning_performance_score': instance.deepLearningPerformanceScore,
+      'availability_date': _$JsonConverterToJson<Timestamp, DateTime>(
+        instance.availabilityDate,
+        const TimestampConverter().toJson,
+      ),
     };
 
 const _$PcieGenerationEnumMap = {
@@ -107,3 +115,13 @@ const _$GpuTypeEnumMap = {
   GpuType.MI300X: 'MI300X',
   GpuType.Gaudi3: 'Gaudi3',
 };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) => json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) => value == null ? null : toJson(value);

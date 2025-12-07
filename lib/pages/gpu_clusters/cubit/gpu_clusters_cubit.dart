@@ -29,7 +29,7 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
         .collectionGroup('gpu_clusters')
         .get();
     for (var doc in qs.docs) {
-      doc.reference.update({'pcie_generation': 'x5'});
+      doc.reference.update({'availability_date': Timestamp.now()});
     }
     //   //   "per_gpu_vram_in_gb": (20 + math.Random().nextDouble() * 100).floor(),
     //   //   "per_gpu_memory_bandwidth_in_gb_per_sec":
