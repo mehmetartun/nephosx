@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../services/platform_settings/platform_settings_service.dart';
 import 'enums.dart';
 
 part 'address.g.dart';
@@ -103,5 +104,13 @@ class Address {
         .where((element) => !favorites.contains(element))
         .toList();
     return favorites + rest;
+  }
+
+  static List<Country> get datacenterCountries {
+    return PlatformSettingsService
+        .instance
+        .platformSettings
+        .datacenterAllowedCountries
+        .toList();
   }
 }

@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'blocs/authentication/authentication_bloc.dart';
 import 'navigation/router.dart';
 import 'repositories/database/database.dart';
+import 'services/platform_settings/platform_settings_service.dart';
 import 'theme/cubit/theme_cubit.dart';
 import 'theme/theme_black.dart';
 import 'theme/util.dart';
@@ -66,6 +67,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     DatabaseRepository databaseRepository =
         FirestoreDatabaseRepository.instance;
+
+    PlatformSettingsService.instance.init(databaseRepository);
 
     AuthenticationRepository authenticationRepository =
         FirebaseAuthenticationRepository.instance..init(databaseRepository);

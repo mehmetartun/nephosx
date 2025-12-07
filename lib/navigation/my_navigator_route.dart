@@ -7,6 +7,7 @@ enum MyNavigatorRoute {
   profile("profile", "profile"),
   users("users", "users"),
   transactions("transactions", "transactions"),
+  admin("admin", "admin"),
   theme("/theme", "theme"),
   companies("companies", "companies"),
   datacenters("datacenters", "datacenters"),

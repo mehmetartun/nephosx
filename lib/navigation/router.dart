@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nephosx/pages/transactions/transactions_page.dart';
 
 import '../blocs/authentication/authentication_bloc.dart';
+import '../pages/admin/admin_page.dart';
 import '../pages/companies/companies_page.dart';
 import '../pages/datacenters/datacenters_page.dart';
 import '../pages/generic_page.dart';
@@ -283,6 +284,20 @@ class NestedRouter {
                     //         Container(),
                     //   ),
                     // ],
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                // navigatorKey: _sectionANavigatorKey,
+                routes: <RouteBase>[
+                  GoRoute(
+                    // The screen to display as the root in the third tab of the
+                    // bottom navigation bar.
+                    // name: "settings",
+                    path: MyNavigatorRoute.admin.path,
+                    name: MyNavigatorRoute.admin.name,
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const AdminPage(),
                   ),
                 ],
               ),

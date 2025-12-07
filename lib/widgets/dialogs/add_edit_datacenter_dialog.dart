@@ -5,7 +5,10 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../model/datacenter.dart';
 import '../../model/enums.dart';
+import '../../model/platform_settings.dart';
+import '../../services/platform_settings/platform_settings_service.dart';
 import '../formfields/address_form_field.dart';
+import '../formfields/address_form_field_new.dart';
 
 class AddEditDatacenterDialog extends StatefulWidget {
   const AddEditDatacenterDialog({
@@ -93,11 +96,19 @@ class _AddEditDatacenterDialogState extends State<AddEditDatacenterDialog> {
                     return null;
                   },
                 ),
-                AddressFormField(
+                AddressFormFieldNew(
                   initialValue: address,
                   onSaved: (value) {
                     address = value;
                   },
+                  allowedCountries: PlatformSettingsService
+                      .instance
+                      .platformSettings
+                      .datacenterRemainingCountriesList,
+                  favoriteCountries: PlatformSettingsService
+                      .instance
+                      .platformSettings
+                      .datacenterFavoriteCountriesList,
                 ),
 
                 ElevatedButton(

@@ -10,6 +10,7 @@ import '../../model/drink_image.dart';
 import '../../model/drinking_note.dart';
 import '../../model/enums.dart';
 import '../../model/gpu_cluster.dart';
+import '../../model/platform_settings.dart';
 import '../../model/user.dart';
 
 class DatabaseException implements Exception {
@@ -61,6 +62,7 @@ abstract class DatabaseRepository {
     String? companyId,
     TransactionType? type,
   });
+  Future<PlatformSettings> getPlatformSettings();
 }
 
 class FirestoreDatabaseRepository extends DatabaseRepository {
@@ -377,5 +379,15 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
           .map((doc) => GpuTransaction.fromJson({...doc.data(), 'id': doc.id}))
           .toList();
     });
+  }
+
+  @override
+  Future<PlatformSettings> getPlatformSettings() async {
+    var qs = await db.collection("settings").doc("settings").get();
+    if (qs.exists) {
+      return PlatformSettings.fromJson({...qs.data()!, 'id': qs.id});
+    } else {
+      return PlatformSettings.defaultSettings;
+    }
   }
 }

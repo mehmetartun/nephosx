@@ -135,6 +135,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
                           icon: const Icon(Icons.add),
                           onPressed: () async {
                             await showDialog(
+                              barrierDismissible: false,
                               context: context,
                               builder: (context) => MaxWidthBox(
                                 maxWidth: 700,
@@ -163,6 +164,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
                               icon: const Icon(Icons.edit),
                               onPressed: () async {
                                 await showDialog(
+                                  barrierDismissible: false,
                                   context: context,
                                   builder: (context) => MaxWidthBox(
                                     maxWidth: 700,

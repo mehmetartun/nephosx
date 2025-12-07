@@ -154,6 +154,8 @@ class User {
   bool get canSeeTransactions =>
       (type != UserType.anonymous || type != UserType.public);
 
+  bool get canSeeAdmin => type == UserType.admin;
+
   @override
   String toString() {
     return 'User(fN: $firstName, lN: $lastName, dN: $displayName,  uid: $uid\n'
