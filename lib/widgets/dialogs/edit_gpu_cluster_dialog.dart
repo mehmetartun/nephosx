@@ -3,6 +3,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../model/datacenter.dart';
 import '../../model/gpu_cluster.dart';
+import '../../services/platform_settings/platform_settings_service.dart';
 
 class EditGpuClusterDialog extends StatefulWidget {
   const EditGpuClusterDialog({
@@ -21,11 +22,11 @@ class _EditGpuClusterDialogState extends State<EditGpuClusterDialog> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   late int quantity;
-  late GpuType type;
+  late String deviceId;
   @override
   void initState() {
     super.initState();
-    type = widget.gpuCluster.type;
+    deviceId = widget.gpuCluster.deviceId;
     quantity = widget.gpuCluster.quantity;
   }
 
@@ -43,11 +44,11 @@ class _EditGpuClusterDialogState extends State<EditGpuClusterDialog> {
               children: [
                 Text("Update GPU"),
                 SizedBox(height: 20),
-                DropdownButtonFormField<GpuType>(
-                  initialValue: type,
-                  onChanged: (value) {
+                DropdownMenuFormField<String>(
+                  initialSelection: deviceId,
+                  onSelected: (value) {
                     setState(() {
-                      type = value!;
+                      deviceId = value!;
                     });
                   },
                   validator: (value) {
@@ -56,12 +57,17 @@ class _EditGpuClusterDialogState extends State<EditGpuClusterDialog> {
                     }
                     return null;
                   },
-                  items: GpuType.values.map((type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(type.name),
-                    );
-                  }).toList(),
+                  dropdownMenuEntries: PlatformSettingsService
+                      .instance
+                      .platformSettings
+                      .devices
+                      .map(
+                        (device) => DropdownMenuEntry(
+                          value: device.id,
+                          label: device.name,
+                        ),
+                      )
+                      .toList(),
                 ),
                 TextFormField(
                   autocorrect: false,
@@ -88,7 +94,7 @@ class _EditGpuClusterDialogState extends State<EditGpuClusterDialog> {
                         formKey.currentState!.save();
                         widget.onUpdateGpuCluster(
                           widget.gpuCluster.copyWith(
-                            type: type,
+                            deviceId: deviceId,
                             quantity: quantity,
                           ),
                         );

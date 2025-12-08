@@ -24,7 +24,10 @@ class GpuClusterInfo extends StatelessWidget {
           spacing: 20,
           runSpacing: 20,
           children: [
-            LabeledText(label: "GPUType", value: gpuCluster.type.name),
+            LabeledText(
+              label: "GPU Model",
+              value: gpuCluster.device?.name ?? 'ERROR',
+            ),
             LabeledText(label: "Quantity", value: "${gpuCluster.quantity}x"),
             LabeledText(
               label: "Datacenter",

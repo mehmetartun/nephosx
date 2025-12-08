@@ -59,7 +59,7 @@ class GpuClustersView extends StatelessWidget {
                     return ListTile(
                       leading: Icon(Icons.computer),
                       title: Text(
-                        "${gpuCluster.type.name} ${gpuCluster.quantity}x",
+                        "${gpuCluster.device?.name ?? 'ERROR'} ${gpuCluster.quantity}x",
                       ),
                       subtitle: Row(
                         children: [

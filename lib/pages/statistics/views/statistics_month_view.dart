@@ -28,7 +28,6 @@ class StatisticsMonthView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(data);
     return Scaffold(
       body: CustomScrollView(
         slivers: [

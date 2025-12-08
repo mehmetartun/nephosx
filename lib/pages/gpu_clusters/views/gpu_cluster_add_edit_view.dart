@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/datacenter.dart';
+import '../../../model/device.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../model/rental_price.dart';
+import '../../../services/platform_settings/platform_settings_service.dart';
 import '../../../widgets/formfields/date_formfield.dart';
 import '../../../widgets/formfields/rental_price.dart';
 
@@ -27,7 +29,8 @@ class GpuClusterAddEditView extends StatefulWidget {
 }
 
 class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
-  GpuType? type;
+  // GpuType? type;
+  String? deviceId;
   int? quantity;
   Datacenter? datacenter;
   late int numExistingRentalPrices;
@@ -57,7 +60,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
   @override
   void initState() {
     super.initState();
-    type = widget.gpuCluster?.type;
+    // type = widget.gpuCluster?.type;
+    deviceId = widget.gpuCluster?.deviceId;
     quantity = widget.gpuCluster?.quantity;
     datacenter = widget.gpuCluster?.datacenter;
     numExistingRentalPrices = widget.gpuCluster?.rentalPrices.length ?? 0;
@@ -136,28 +140,33 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                         children: [
                           SizedBox(
                             width: 200,
-                            child: DropdownButtonFormField<GpuType>(
-                              decoration: InputDecoration(
-                                labelText: "GPU Type",
-                              ),
-                              onChanged: (value) {
+                            child: DropdownMenuFormField<String>(
+                              label: Text("GPU Model"),
+                              // decoration: InputDecoration(labelText: "GPU"),
+                              onSelected: (value) {
                                 setState(() {
-                                  type = value!;
+                                  deviceId = value;
                                 });
                               },
-                              initialValue: type,
+                              initialSelection: deviceId,
+                              // initialValue: deviceId,
                               validator: (value) {
                                 if (value == null) {
-                                  return "Please select a GPU type";
+                                  return "Please select a GPU Model";
                                 }
                                 return null;
                               },
-                              items: GpuType.values.map((type) {
-                                return DropdownMenuItem(
-                                  value: type,
-                                  child: Text(type.name),
-                                );
-                              }).toList(),
+                              dropdownMenuEntries: PlatformSettingsService
+                                  .instance
+                                  .platformSettings
+                                  .devices
+                                  .map((device) {
+                                    return DropdownMenuEntry(
+                                      value: device.id,
+                                      label: device.name,
+                                    );
+                                  })
+                                  .toList(),
                             ),
                           ),
                           SizedBox(
@@ -691,7 +700,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                               widget.gpuCluster == null
                                   ? widget.onAddGpuCluster(
                                       GpuCluster(
-                                        type: type!,
+                                        deviceId: deviceId!,
+                                        // type: type!,
                                         quantity: quantity!,
                                         datacenterId: datacenter!.id,
                                         companyId: datacenter!.companyId,
@@ -730,7 +740,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                     )
                                   : widget.onUpdateGpuCluster(
                                       GpuCluster(
-                                        type: type!,
+                                        deviceId: deviceId!,
+                                        // type: type!,
                                         quantity: quantity!,
                                         datacenterId: datacenter!.id,
                                         companyId: datacenter!.companyId,

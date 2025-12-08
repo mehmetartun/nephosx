@@ -34,7 +34,7 @@ class GpuClusterListTileView extends StatelessWidget {
               //   context,
               // ).colorScheme.surfaceContainerHighest,
               leading: Icon(Icons.computer),
-              title: Text(gpuCluster.type.name),
+              title: Text(gpuCluster.device?.name ?? "ERROR"),
               subtitle: Text("${gpuCluster.quantity}x"),
               trailing: gpuCluster.companyId == ownCompanyId
                   ? Text("Own")
@@ -68,7 +68,7 @@ class GpuClusterListTileView extends StatelessWidget {
                           ),
                           SizedBox(width: 5),
                           Text(
-                            "${gpuCluster.type.name} ${gpuCluster.quantity}x",
+                            "${gpuCluster.device?.name ?? 'ERROR'} ${gpuCluster.quantity}x",
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                         ],

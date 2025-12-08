@@ -17,7 +17,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void init() async {
     emit(ProfileLoading());
-    print(uid);
+
     if (uid != null) {
       user = await databaseRepository.getUserData(uid!);
     } else {

@@ -7,6 +7,8 @@ void main() {
     PlatformSettings settings = PlatformSettings(
       datacenterAllowedCountries: {Country.us, Country.se, Country.gb},
       favoriteCountries: {Country.af, Country.se, Country.gb},
+      producers: [],
+      devices: [],
     );
     expect(settings.datacenterFavoriteCountriesList, [Country.se, Country.gb]);
     expect(settings.datacenterRemainingCountriesList, [Country.us]);

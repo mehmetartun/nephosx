@@ -28,7 +28,6 @@ class StatisticsFullView extends StatelessWidget {
     List<Consumption> consumptions = consumptionPeriod.consumptions;
     consumptions.sort((a, b) => b.consumptionDate.compareTo(a.consumptionDate));
 
-    // print(data);
     return Scaffold(
       body: CustomScrollView(
         slivers: [

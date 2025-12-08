@@ -5,12 +5,14 @@ import 'package:nephosx/model/request.dart';
 import '../../model/company.dart';
 import '../../model/consumption.dart';
 import '../../model/datacenter.dart';
+import '../../model/device.dart';
 import '../../model/drink.dart';
 import '../../model/drink_image.dart';
 import '../../model/drinking_note.dart';
 import '../../model/enums.dart';
 import '../../model/gpu_cluster.dart';
 import '../../model/platform_settings.dart';
+import '../../model/producer.dart';
 import '../../model/user.dart';
 
 class DatabaseException implements Exception {
@@ -201,7 +203,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
       //   }
       // }
       final data = userDocument.data() as Map<String, dynamic>;
-      print(data);
+
       return User.fromJson(userDocument.data() as Map<String, dynamic>);
     } else {
       throw DatabaseException("User has not been found");
@@ -266,7 +268,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
     } else {
       qs = await db.collection("datacenters").get();
     }
-    print("Getting Datacenters");
+
     return qs.docs
         .map<Datacenter>(
           (doc) => Datacenter.fromJson({...doc.data(), 'id': doc.id}),
@@ -383,11 +385,43 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
 
   @override
   Future<PlatformSettings> getPlatformSettings() async {
-    var qs = await db.collection("settings").doc("settings").get();
-    if (qs.exists) {
-      return PlatformSettings.fromJson({...qs.data()!, 'id': qs.id});
+    var futs = <Future<dynamic>>[];
+
+    futs.add(getSettings());
+    futs.add(getProducers());
+    futs.add(getDevices());
+
+    var results = await Future.wait(futs);
+
+    return PlatformSettings.fromJson({
+      ...results[0],
+      'producers': results[1].map((e) => e.toJson()).toList(),
+      'devices': results[2].map((e) => e.toJson()).toList(),
+    });
+  }
+
+  Future<Map<String, dynamic>> getSettings() async {
+    var settings_query = await db.doc("settings/settings").get();
+    if (settings_query.exists) {
+      return settings_query.data()!;
     } else {
-      return PlatformSettings.defaultSettings;
+      return PlatformSettings.defaultSettings.toJson();
     }
+  }
+
+  Future<List<Producer>> getProducers() async {
+    var producers_query = await db
+        .collection("settings/settings/producers")
+        .get();
+    return producers_query.docs
+        .map((doc) => Producer.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
+  }
+
+  Future<List<Device>> getDevices() async {
+    var devices_query = await db.collection("settings/settings/devices").get();
+    return devices_query.docs
+        .map((doc) => Device.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
   }
 }

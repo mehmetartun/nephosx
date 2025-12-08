@@ -58,7 +58,7 @@ class GpuClusterListTile extends StatelessWidget {
               );
             },
             leading: Icon(Icons.computer),
-            title: Text(gpuCluster.type.name),
+            title: Text(gpuCluster.device?.name ?? "ERROR"),
             subtitle: Text("${gpuCluster.quantity}x"),
             trailing: IconButton(
               icon: Icon(Icons.edit),

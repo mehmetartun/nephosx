@@ -71,9 +71,6 @@ class __AddressFormFieldState extends State<_AddressFormField> {
     _allowedCountries = widget.allowedCountries;
     _favoriteCountries = widget.favoriteCountries;
 
-    print(_allowedCountries);
-    print(_favoriteCountries);
-
     if (widget.state.value != null) {
       var country = widget.state.value!.country;
       if (!widget.allowedCountries.contains(country) ||
@@ -85,9 +82,6 @@ class __AddressFormFieldState extends State<_AddressFormField> {
     _allowedCountries.removeWhere(
       (element) => _favoriteCountries.contains(element),
     );
-
-    print(_allowedCountries);
-    print(_favoriteCountries);
 
     value = widget.state.value;
 
@@ -409,12 +403,6 @@ class __AddressFormFieldState extends State<_AddressFormField> {
             // }).toList(),
           ),
         ),
-        // FilledButton(
-        //   child: Text("Save"),
-        //   onPressed: () {
-        //     print(widget.state.value);
-        //   },
-        // ),
       ],
     );
   }

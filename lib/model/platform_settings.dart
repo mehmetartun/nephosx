@@ -1,5 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:nephosx/model/device.dart';
 import 'package:nephosx/model/enums.dart';
+
+import 'producer.dart';
 
 part 'platform_settings.g.dart';
 
@@ -9,10 +12,14 @@ class PlatformSettings {
   final Set<Country> datacenterAllowedCountries;
   @JsonKey(name: "favorite_countries")
   final Set<Country> favoriteCountries;
+  final List<Producer> producers;
+  final List<Device> devices;
 
   PlatformSettings({
     required this.datacenterAllowedCountries,
     required this.favoriteCountries,
+    required this.producers,
+    required this.devices,
   });
 
   static PlatformSettings get defaultSettings => PlatformSettings(
@@ -34,6 +41,8 @@ class PlatformSettings {
       Country.ch,
       Country.af,
     },
+    producers: [],
+    devices: [],
   );
 
   List<Country> get datacenterFavoriteCountriesList {
@@ -57,11 +66,15 @@ class PlatformSettings {
   PlatformSettings copyWith({
     Set<Country>? datacenterAllowedCountries,
     Set<Country>? favoriteCountries,
+    List<Producer>? producers,
+    List<Device>? devices,
   }) {
     return PlatformSettings(
       datacenterAllowedCountries:
           datacenterAllowedCountries ?? this.datacenterAllowedCountries,
       favoriteCountries: favoriteCountries ?? this.favoriteCountries,
+      producers: producers ?? this.producers,
+      devices: devices ?? this.devices,
     );
   }
 

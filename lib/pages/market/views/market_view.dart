@@ -8,12 +8,13 @@ import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../model/gpu_transaction.dart';
 import '../../../model/user.dart';
+import '../../../services/platform_settings/platform_settings_service.dart';
 import '../../../widgets/dialogs/add_transaction_dialog.dart';
 import '../../../widgets/filter_container.dart';
 import '../../../widgets/filter_range_slider.dart';
 import '../../../widgets/gpu_cluster_info.dart';
 
-class MarketView extends StatelessWidget {
+class MarketView extends StatefulWidget {
   const MarketView({
     required this.onAddTransaction,
     Key? key,
@@ -28,6 +29,12 @@ class MarketView extends StatelessWidget {
   final String? Function(GpuCluster, DateTime, DateTime) validator;
   final void Function(GpuTransaction) onAddTransaction;
 
+  @override
+  State<MarketView> createState() => _MarketViewState();
+}
+
+class _MarketViewState extends State<MarketView> {
+  String? selectedDeviceId;
   @override
   Widget build(BuildContext context) {
     User? user = context.read<AuthenticationBloc>().user;
@@ -82,9 +89,24 @@ class MarketView extends StatelessWidget {
                                     Flexible(
                                       flex: 1,
                                       fit: FlexFit.tight,
-                                      child: FilterRangeSlider(
-                                        title: "Selected Range: ",
-                                        initialRangeValues: RangeValues(20, 80),
+                                      child: DropdownMenuFormField<String>(
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedDeviceId = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries:
+                                            PlatformSettingsService
+                                                .instance
+                                                .platformSettings
+                                                .devices
+                                                .map((device) {
+                                                  return DropdownMenuEntry(
+                                                    value: device.id,
+                                                    label: device.name,
+                                                  );
+                                                })
+                                                .toList(),
                                       ),
                                     ),
                                     SizedBox(width: 20),
@@ -220,7 +242,7 @@ class MarketView extends StatelessWidget {
                               ),
                               DataColumn(
                                 label: Text(
-                                  'Ram/GPU',
+                                  'RAM/GPU',
                                   style: Theme.of(
                                     context,
                                   ).textTheme.labelMedium,
@@ -259,139 +281,153 @@ class MarketView extends StatelessWidget {
                                 ),
                               ),
                             ],
-                            rows: gpuClusters.map((gpuCluster) {
-                              return DataRow(
-                                cells: [
-                                  DataCell(
-                                    Text("NVIDIA\n${gpuCluster.type.name}"),
-                                  ),
-                                  DataCell(
-                                    Text(gpuCluster.quantity.toString()),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      gpuCluster
-                                              .datacenter
-                                              ?.address
-                                              .country
-                                              .region
-                                              .description ??
-                                          '',
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      gpuCluster
-                                              .datacenter
-                                              ?.address
-                                              .country
-                                              .iso2 ??
-                                          '',
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      gpuCluster.datacenter?.tier.roman ?? '',
-                                    ),
-                                  ),
+                            rows: widget.gpuClusters
+                                .where((element) {
+                                  if (selectedDeviceId == null) return true;
+                                  return element.deviceId == selectedDeviceId;
+                                })
+                                .map((gpuCluster) {
+                                  return DataRow(
+                                    cells: [
+                                      DataCell(
+                                        Text(
+                                          "${gpuCluster.producer?.name ?? 'ERROR'}\n${gpuCluster.device?.name ?? 'ERROR'}",
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(gpuCluster.quantity.toString()),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          gpuCluster
+                                                  .datacenter
+                                                  ?.address
+                                                  .country
+                                                  .region
+                                                  .description ??
+                                              '',
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          gpuCluster
+                                                  .datacenter
+                                                  ?.address
+                                                  .country
+                                                  .iso2 ??
+                                              '',
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          gpuCluster.datacenter?.tier.roman ??
+                                              '',
+                                        ),
+                                      ),
 
-                                  DataCell(
-                                    Text(
-                                      gpuCluster.teraFlops?.toString() ??
-                                          "15200",
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      "${gpuCluster.perGpuVramInGb?.toString() ?? "80"} GB",
-                                    ),
-                                  ),
-                                  DataCell(Text('2025-12-01')),
-                                  DataCell(
-                                    gpuCluster.rentalPrices.length == 0
-                                        ? Text('12 months / \$9.99/hr')
-                                        : DropdownButton(
-                                            value:
-                                                gpuCluster.rentalPrices.first,
-                                            items: gpuCluster.rentalPrices
-                                                .map(
-                                                  (e) => DropdownMenuItem(
-                                                    value: e,
-                                                    child: Text(
-                                                      "${e.numberOfMonths} mo @ ${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(e.priceInUsdPerHour)}/hr",
-                                                    ),
-                                                  ),
-                                                )
-                                                .toList(),
-                                            onChanged: (value) {},
-                                          ),
-                                  ),
-                                  DataCell(
-                                    gpuCluster.companyId == user?.companyId
-                                        ? Text("Own GPU")
-                                        : Row(
-                                            children: [
-                                              FilledButton(
-                                                onPressed: () async {
-                                                  await showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return AddTransactionDialog(
-                                                        gpuCluster: gpuCluster,
-                                                        priceCalculator:
-                                                            priceCalculator,
-                                                        validator: validator,
-                                                        buyers: [
-                                                          user!.company!,
-                                                        ],
-                                                        datacenter: gpuCluster
-                                                            .datacenter!,
-                                                        onAddTransaction:
-                                                            onAddTransaction,
+                                      DataCell(
+                                        Text(
+                                          gpuCluster.teraFlops?.toString() ??
+                                              "15200",
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          "${gpuCluster.perGpuVramInGb?.toString() ?? "80"} GB",
+                                        ),
+                                      ),
+                                      DataCell(Text('2025-12-01')),
+                                      DataCell(
+                                        gpuCluster.rentalPrices.length == 0
+                                            ? Text('12 months / \$9.99/hr')
+                                            : DropdownButton(
+                                                value: gpuCluster
+                                                    .rentalPrices
+                                                    .first,
+                                                items: gpuCluster.rentalPrices
+                                                    .map(
+                                                      (e) => DropdownMenuItem(
+                                                        value: e,
+                                                        child: Text(
+                                                          "${e.numberOfMonths} mo @ ${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(e.priceInUsdPerHour)}/hr",
+                                                        ),
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                                onChanged: (value) {},
+                                              ),
+                                      ),
+                                      DataCell(
+                                        gpuCluster.companyId == user?.companyId
+                                            ? Text("Own GPU")
+                                            : Row(
+                                                children: [
+                                                  FilledButton(
+                                                    onPressed: () async {
+                                                      await showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return AddTransactionDialog(
+                                                            gpuCluster:
+                                                                gpuCluster,
+                                                            priceCalculator: widget
+                                                                .priceCalculator,
+                                                            validator: widget
+                                                                .validator,
+                                                            buyers: [
+                                                              user!.company!,
+                                                            ],
+                                                            datacenter:
+                                                                gpuCluster
+                                                                    .datacenter!,
+                                                            onAddTransaction: widget
+                                                                .onAddTransaction,
+                                                          );
+                                                        },
                                                       );
                                                     },
-                                                  );
-                                                },
-                                                child: Text("Buy"),
+                                                    child: Text("Buy"),
+                                                  ),
+                                                  OutlinedButton(
+                                                    onPressed: () {},
+                                                    child: Text("Bid"),
+                                                  ),
+                                                ],
                                               ),
-                                              OutlinedButton(
-                                                onPressed: () {},
-                                                child: Text("Bid"),
-                                              ),
-                                            ],
-                                          ),
-                                  ),
-                                  DataCell(
-                                    TextButton(
-                                      child: Text("More Info"),
-                                      onPressed: () async {
-                                        await showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return SingleChildScrollView(
-                                              child: MaxWidthBox(
-                                                maxWidth: 600,
-                                                child: Dialog(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                          20.0,
+                                      ),
+                                      DataCell(
+                                        TextButton(
+                                          child: Text("More Info"),
+                                          onPressed: () async {
+                                            await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return SingleChildScrollView(
+                                                  child: MaxWidthBox(
+                                                    maxWidth: 600,
+                                                    child: Dialog(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                              20.0,
+                                                            ),
+                                                        child: GpuClusterInfo(
+                                                          gpuCluster:
+                                                              gpuCluster,
                                                         ),
-                                                    child: GpuClusterInfo(
-                                                      gpuCluster: gpuCluster,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
+                                                );
+                                              },
                                             );
                                           },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                })
+                                .toList(),
                           ),
                         ),
                       ],

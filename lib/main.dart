@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:nephosx/blocs/consumption/consumption_bloc.dart';
 import 'package:nephosx/blocs/notifications/bloc/notifications_bloc.dart';
 import 'package:nephosx/blocs/requests/bloc/requests_bloc.dart';
@@ -11,6 +13,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'blocs/authentication/authentication_bloc.dart';
+import 'model/device.dart';
 import 'navigation/router.dart';
 import 'repositories/database/database.dart';
 import 'services/platform_settings/platform_settings_service.dart';
@@ -37,7 +40,7 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // prefs.setString("password", "123");
   var password = prefs.getString("password");
-  // print(password);
+
   if (password == "TopSecret123") {
     runApp(const MyApp());
   } else {

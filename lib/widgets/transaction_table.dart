@@ -69,7 +69,11 @@ class TransactionTable extends StatelessWidget {
             // DataCell(Text("Hello")),
             DataCell(
               Text(
-                "${GpuCluster.getGpuClusterById(gpuClusters, tx.gpuClusterId)?.type.name ?? "Unknown"}",
+                GpuCluster.getGpuClusterById(
+                      gpuClusters,
+                      tx.gpuClusterId,
+                    )?.device?.name ??
+                    'ERROR',
                 // " ${GpuCluster.getGpuClusterById(gpuClusters, tx.gpuClusterId).quantity}x",
               ),
             ),

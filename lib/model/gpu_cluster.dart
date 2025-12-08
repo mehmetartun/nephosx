@@ -2,10 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../services/platform_settings/platform_settings_service.dart';
 import 'company.dart';
 import 'conversions.dart';
 import 'datacenter.dart';
+import 'device.dart';
 import 'gpu_transaction.dart';
+import 'producer.dart';
 import 'rental_price.dart';
 
 part 'gpu_cluster.g.dart';
@@ -45,7 +48,11 @@ enum PcieGeneration {
 
 @JsonSerializable(explicitToJson: true)
 class GpuCluster {
-  final GpuType type;
+  final GpuType? type;
+  // @JsonKey(name: "producer_id")
+  // final String producerId;
+  @JsonKey(name: "device_id")
+  final String deviceId;
   final int quantity;
   final String id;
   @JsonKey(name: "datacenter_id")
@@ -101,11 +108,13 @@ class GpuCluster {
   final DateTime? availabilityDate;
 
   GpuCluster({
+    // required this.producerId,
+    required this.deviceId,
     this.pcieGeneration,
     this.pcieLanes,
     this.perGpuPcieBandwidthInGbPerSec,
     this.maximumCudaVersionSupported,
-    required this.type,
+    this.type,
     this.perGpuMemoryBandwidthInGbPerSec,
     this.perGpuNvLinkBandwidthInGbPerSec,
     required this.quantity,
@@ -136,6 +145,8 @@ class GpuCluster {
   Map<String, dynamic> toJson() => _$GpuClusterToJson(this);
 
   GpuCluster copyWith({
+    // String? producerId,
+    String? deviceId,
     PcieGeneration? pcieGeneration,
     int? pcieLanes,
     double? perGpuPcieBandwidthInGbPerSec,
@@ -166,6 +177,8 @@ class GpuCluster {
     DateTime? availabilityDate,
   }) {
     return GpuCluster(
+      // producerId: producerId ?? this.producerId,
+      deviceId: deviceId ?? this.deviceId,
       pcieGeneration: pcieGeneration ?? this.pcieGeneration,
       pcieLanes: pcieLanes ?? this.pcieLanes,
       perGpuPcieBandwidthInGbPerSec:
@@ -207,6 +220,22 @@ class GpuCluster {
           deepLearningPerformanceScore ?? this.deepLearningPerformanceScore,
       availabilityDate: availabilityDate ?? this.availabilityDate,
     );
+  }
+
+  Device? get device {
+    return PlatformSettingsService.instance.platformSettings.devices
+        .firstWhereOrNull((e) {
+          return e.id == deviceId;
+        });
+  }
+
+  Producer? get producer {
+    Device? d = device;
+    if (d == null) return null;
+    return PlatformSettingsService.instance.platformSettings.producers
+        .firstWhereOrNull((e) {
+          return e.id == d.producerId;
+        });
   }
 
   static GpuCluster? getGpuClusterById(

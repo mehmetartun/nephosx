@@ -7,6 +7,7 @@ part of 'gpu_cluster.dart';
 // **************************************************************************
 
 GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
+  deviceId: json['device_id'] as String,
   pcieGeneration: $enumDecodeNullable(
     _$PcieGenerationEnumMap,
     json['pcie_generation'],
@@ -65,6 +66,7 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
 Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
     <String, dynamic>{
       'type': _$GpuTypeEnumMap[instance.type]!,
+      'device_id': instance.deviceId,
       'quantity': instance.quantity,
       'id': instance.id,
       'datacenter_id': instance.datacenterId,

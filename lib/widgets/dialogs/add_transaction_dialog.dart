@@ -73,7 +73,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    print("Building Now...");
     return Form(
       key: formKey,
       child: MaxWidthBox(
@@ -106,7 +105,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                           style: Theme.of(context).textTheme.titleSmall,
                         ),
                         Text(
-                          "${widget.gpuCluster.type.name} ${widget.gpuCluster.quantity}x",
+                          "${widget.gpuCluster.device?.name ?? 'ERROR'} ${widget.gpuCluster.quantity}x",
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ],
@@ -283,7 +282,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                           startDate!,
                           endDate!,
                         );
-                        print(price);
+
                         consideration = Consideration(
                           amount: price,
                           currency: Currency.usd,
@@ -293,7 +292,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                           startDate!,
                           endDate!,
                         );
-                        print(res);
+
                         if (res != null) {
                           setState(() {
                             overlapErrorText = res;
