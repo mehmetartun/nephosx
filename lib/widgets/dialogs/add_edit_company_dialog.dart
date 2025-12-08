@@ -46,6 +46,25 @@ class _AddEditCompanyDialogState extends State<AddEditCompanyDialog> {
     super.initState();
   }
 
+  String? validateNineDigits(String? value) {
+    // 1. Check if input is null or empty
+    if (value == null || value.isEmpty) {
+      return 'This field is required';
+    }
+
+    // 2. Define the Regex: Starts (^) with exactly 9 digits (\d{9}) and ends ($)
+    // This ensures no letters, symbols, or spaces are allowed.
+    final RegExp regex = RegExp(r'^\d{9}$');
+
+    // 3. Test the input
+    if (!regex.hasMatch(value)) {
+      return 'Please enter exactly 9 digits';
+    }
+
+    // 4. Return null if validation passes
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -117,6 +136,7 @@ class _AddEditCompanyDialogState extends State<AddEditCompanyDialog> {
                   onSaved: (value) {
                     businessDunsNumber = value!;
                   },
+                  validator: validateNineDigits,
                   // validator: (value) {
                   //   if (value == null || value.isEmpty) {
                   //     return "Please enter a country";

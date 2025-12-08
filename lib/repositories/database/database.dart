@@ -3,12 +3,9 @@ import 'package:nephosx/model/gpu_transaction.dart';
 import 'package:nephosx/model/request.dart';
 
 import '../../model/company.dart';
-import '../../model/consumption.dart';
 import '../../model/datacenter.dart';
 import '../../model/device.dart';
-import '../../model/drink.dart';
-import '../../model/drink_image.dart';
-import '../../model/drinking_note.dart';
+
 import '../../model/enums.dart';
 import '../../model/gpu_cluster.dart';
 import '../../model/platform_settings.dart';
@@ -31,9 +28,7 @@ abstract class DatabaseRepository {
     required String fileName,
     required String base64String,
   });
-  Future<Drink> getDrink(String drinkId);
-  Future<List<Drink>> getDrinks();
-  Future<List<DrinkImage>> getDrinkImages();
+
   Future<void> updateDocument({
     required String docPath,
     required Map<String, dynamic> data,
@@ -44,9 +39,6 @@ abstract class DatabaseRepository {
   });
   Future<void> delete({required String path});
 
-  Stream<List<Drink>> getDrinkStream();
-  Stream<List<Consumption>> getConsumptionStream(String uid);
-  Stream<List<DrinkingNote>> getDrinkingNoteStream(String uid);
   Stream<User?> getUserStream(String uid);
 
   Stream<List<GpuCluster>> getGpuClusterStream({String? companyId});
@@ -77,38 +69,6 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
     db = FirebaseFirestore.instance;
 
     db.settings = Settings(persistenceEnabled: true);
-  }
-
-  @override
-  Stream<List<Drink>> getDrinkStream() {
-    return db.collection('drinks').snapshots().map<List<Drink>>((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Drink.fromJson({...doc.data(), 'id': doc.id});
-      }).toList();
-    });
-  }
-
-  @override
-  Stream<List<Consumption>> getConsumptionStream(String uid) {
-    return db.collection('users/$uid/diary').snapshots().map<List<Consumption>>(
-      (snapshot) {
-        return snapshot.docs.map((doc) {
-          return Consumption.fromJson({...doc.data(), 'id': doc.id});
-        }).toList();
-      },
-    );
-  }
-
-  @override
-  Stream<List<DrinkingNote>> getDrinkingNoteStream(String uid) {
-    return db
-        .collection('users/$uid/notes')
-        .snapshots()
-        .map<List<DrinkingNote>>((snapshot) {
-          return snapshot.docs.map((doc) {
-            return DrinkingNote.fromJson({...doc.data(), 'id': doc.id});
-          }).toList();
-        });
   }
 
   @override
@@ -144,38 +104,6 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
       'base64': base64String,
       'timestamp': FieldValue.serverTimestamp(), // Optional: add a timestamp
     });
-  }
-
-  @override
-  Future<Drink> getDrink(String drinkId) async {
-    var qs = await db.collection("drinks").doc(drinkId).get();
-    return Drink.fromJson({...qs.data()!, 'id': drinkId});
-  }
-
-  @override
-  Future<List<Drink>> getDrinks() async {
-    var qs = await db.collection("drinks").get();
-    return qs.docs
-        .map((doc) => Drink.fromJson({...doc.data(), 'id': doc.id}))
-        .toList();
-  }
-
-  @override
-  Future<List<DrinkImage>> getDrinkImages() async {
-    var qs = await db.collection("images").get();
-    return qs.docs
-        .where((doc) {
-          return doc.data()['used'] != true;
-        })
-        .toList()
-        .map(
-          (doc) => DrinkImage(
-            fileName: doc['fileName'],
-            imageBase64: doc['base64'],
-            id: doc.id,
-          ),
-        )
-        .toList();
   }
 
   @override

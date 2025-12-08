@@ -1,6 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
-import 'package:nephosx/blocs/consumption/consumption_bloc.dart';
 import 'package:nephosx/blocs/notifications/bloc/notifications_bloc.dart';
 import 'package:nephosx/blocs/requests/bloc/requests_bloc.dart';
 import 'package:nephosx/firebase_options.dart';
@@ -13,7 +10,6 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'blocs/authentication/authentication_bloc.dart';
-import 'model/device.dart';
 import 'navigation/router.dart';
 import 'repositories/database/database.dart';
 import 'services/platform_settings/platform_settings_service.dart';
@@ -79,8 +75,6 @@ class MyApp extends StatelessWidget {
       authenticationRepository,
       databaseRepository,
     );
-    ConsumptionBloc consumptionBloc = ConsumptionBloc(databaseRepository)
-      ..init();
 
     ThemeCubit themeCubit = ThemeCubit()
       ..changeThemeMode(ThemeCubit.savedThemeMode);
@@ -98,7 +92,6 @@ class MyApp extends StatelessWidget {
               create: (context) => NotificationsBloc(),
             ),
             BlocProvider<ThemeCubit>(create: (context) => themeCubit),
-            BlocProvider<ConsumptionBloc>(create: (context) => consumptionBloc),
             BlocProvider<RequestsBloc>(
               create: (context) =>
                   RequestsBloc(databaseRepository: databaseRepository),

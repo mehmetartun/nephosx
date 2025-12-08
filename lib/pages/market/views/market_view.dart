@@ -5,6 +5,7 @@ import 'package:nephosx/pages/market/cubit/market_cubit.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../model/datacenter.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../model/gpu_transaction.dart';
@@ -15,6 +16,17 @@ import '../../../widgets/filter_container.dart';
 import '../../../widgets/filter_range_slider.dart';
 import '../../../widgets/formfields/date_formfield.dart';
 import '../../../widgets/gpu_cluster_info.dart';
+
+enum SortKey {
+  gpuModel,
+  quantity,
+  region,
+  location,
+  tier,
+  tflops,
+  ramPerGpu,
+  startDate,
+}
 
 class MarketView extends StatefulWidget {
   const MarketView({
@@ -44,6 +56,9 @@ class _MarketViewState extends State<MarketView> {
   AddressRegion? region;
   DateTime? availabilityFrom;
   DateTime? availabilityTo;
+  DatacenterTier? tier;
+  SortKey? sortKey;
+  bool sortAscending = true;
 
   @override
   void initState() {
@@ -87,6 +102,114 @@ class _MarketViewState extends State<MarketView> {
   //         .toSet();
   //   }
   // }
+
+  void sort() {
+    if (sortAscending) {
+      switch (sortKey) {
+        case SortKey.gpuModel:
+          widget.gpuClusters.sort((a, b) {
+            return a.device?.name.compareTo(b.device?.name ?? "") ?? 0;
+          });
+          break;
+        case SortKey.quantity:
+          widget.gpuClusters.sort((a, b) {
+            return a.quantity.compareTo(b.quantity);
+          });
+          break;
+        case SortKey.region:
+          widget.gpuClusters.sort((a, b) {
+            return a.datacenter!.address.country.region.description.compareTo(
+              b.datacenter!.address.country.region.description,
+            );
+          });
+          break;
+        case SortKey.location:
+          widget.gpuClusters.sort((a, b) {
+            return a.datacenter!.address.country.description.compareTo(
+              b.datacenter!.address.country.description,
+            );
+          });
+          break;
+        case SortKey.tier:
+          widget.gpuClusters.sort((a, b) {
+            return a.datacenter!.tier.rank.compareTo(b.datacenter!.tier.rank);
+          });
+          break;
+        case SortKey.tflops:
+          widget.gpuClusters.sort((a, b) {
+            return a.teraFlops?.compareTo(b.teraFlops ?? 0) ?? 0;
+          });
+          break;
+        case SortKey.ramPerGpu:
+          widget.gpuClusters.sort((a, b) {
+            return a.perGpuVramInGb?.compareTo(b.perGpuVramInGb ?? 0) ?? 0;
+          });
+          break;
+        case SortKey.startDate:
+          widget.gpuClusters.sort((a, b) {
+            return a.availabilityDate?.compareTo(
+                  b.availabilityDate ?? DateTime.now(),
+                ) ??
+                0;
+          });
+          break;
+        default:
+          break;
+      }
+    } else {
+      switch (sortKey) {
+        case SortKey.gpuModel:
+          widget.gpuClusters.sort((b, a) {
+            return a.device?.name.compareTo(b.device?.name ?? "") ?? 0;
+          });
+          break;
+        case SortKey.quantity:
+          widget.gpuClusters.sort((b, a) {
+            return a.quantity.compareTo(b.quantity);
+          });
+          break;
+        case SortKey.region:
+          widget.gpuClusters.sort((b, a) {
+            return a.datacenter!.address.country.region.description.compareTo(
+              b.datacenter!.address.country.region.description,
+            );
+          });
+          break;
+        case SortKey.location:
+          widget.gpuClusters.sort((b, a) {
+            return a.datacenter!.address.country.description.compareTo(
+              b.datacenter!.address.country.description,
+            );
+          });
+          break;
+        case SortKey.tier:
+          widget.gpuClusters.sort((b, a) {
+            return a.datacenter!.tier.rank.compareTo(b.datacenter!.tier.rank);
+          });
+          break;
+        case SortKey.tflops:
+          widget.gpuClusters.sort((b, a) {
+            return a.teraFlops?.compareTo(b.teraFlops ?? 0) ?? 0;
+          });
+          break;
+        case SortKey.ramPerGpu:
+          widget.gpuClusters.sort((b, a) {
+            return a.perGpuVramInGb?.compareTo(b.perGpuVramInGb ?? 0) ?? 0;
+          });
+          break;
+        case SortKey.startDate:
+          widget.gpuClusters.sort((b, a) {
+            return a.availabilityDate?.compareTo(
+                  b.availabilityDate ?? DateTime.now(),
+                ) ??
+                0;
+          });
+          break;
+        default:
+          break;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +272,7 @@ class _MarketViewState extends State<MarketView> {
                                         selectedDeviceId = null;
                                         availabilityFrom = null;
                                         availabilityTo = null;
+                                        tier = null;
                                       });
                                     },
                                     child: Text("Clear"),
@@ -288,90 +412,115 @@ class _MarketViewState extends State<MarketView> {
                                   Flexible(
                                     flex: 1,
                                     fit: FlexFit.tight,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 20),
-                                      child: DateTimeFormField(
-                                        clearButton: true,
-                                        border: const OutlineInputBorder(),
-                                        // trailing: IconButton(
-                                        //   icon: Icon(Icons.close),
-                                        //   onPressed: () {
-                                        //     setState(() {
-                                        //       availabilityFrom = null;
-                                        //     });
-                                        //   },
-                                        // ),
-                                        onClear: () {
-                                          setState(() {
-                                            availabilityFrom = null;
-                                          });
-                                        },
-                                        labelText: "Availability from",
-                                        initialValue: availabilityFrom,
-                                        // lastDate: availabilityTo,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            availabilityFrom = value;
+                                    child: DateTimeFormField(
+                                      clearButton: true,
+                                      border: const OutlineInputBorder(),
+                                      // trailing: IconButton(
+                                      //   icon: Icon(Icons.close),
+                                      //   onPressed: () {
+                                      //     setState(() {
+                                      //       availabilityFrom = null;
+                                      //     });
+                                      //   },
+                                      // ),
+                                      onClear: () {
+                                        setState(() {
+                                          availabilityFrom = null;
+                                        });
+                                      },
+                                      labelText: "Availability from",
+                                      initialValue: availabilityFrom,
+                                      // lastDate: availabilityTo,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          availabilityFrom = value;
 
-                                            if (value != null &&
-                                                (availabilityTo?.isBefore(
-                                                      value,
-                                                    ) ??
-                                                    false)) {
-                                              availabilityTo = value;
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    flex: 1,
-                                    fit: FlexFit.tight,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 20),
-                                      child: DateTimeFormField(
-                                        clearButton: true,
-                                        border: const OutlineInputBorder(),
-                                        // trailing: IconButton(
-                                        //   icon: Icon(Icons.close),
-                                        //   onPressed: () {
-                                        //     setState(() {
-                                        //       availabilityTo = null;
-                                        //     });
-                                        //   },
-                                        // ),
-                                        labelText: "Availability to",
-                                        initialValue: availabilityTo,
-
-                                        // firstDate: availabilityFrom?.subtract(
-                                        //   Duration(days: 1),
-                                        // ),
-                                        onClear: () {
-                                          setState(() {
-                                            availabilityTo = null;
-                                          });
-                                        },
-                                        onChanged: (value) {
-                                          setState(() {
+                                          if (value != null &&
+                                              (availabilityTo?.isBefore(
+                                                    value,
+                                                  ) ??
+                                                  false)) {
                                             availabilityTo = value;
-                                            if (value != null &&
-                                                (availabilityFrom?.isAfter(
-                                                      value,
-                                                    ) ??
-                                                    false)) {
-                                              availabilityFrom = value;
-                                            }
-                                          });
-                                        },
-                                      ),
+                                          }
+                                        });
+                                      },
                                     ),
                                   ),
+                                  SizedBox(width: 20),
                                   Flexible(
                                     flex: 1,
                                     fit: FlexFit.tight,
-                                    child: Container(),
+                                    child: DateTimeFormField(
+                                      clearButton: true,
+                                      border: const OutlineInputBorder(),
+                                      // trailing: IconButton(
+                                      //   icon: Icon(Icons.close),
+                                      //   onPressed: () {
+                                      //     setState(() {
+                                      //       availabilityTo = null;
+                                      //     });
+                                      //   },
+                                      // ),
+                                      labelText: "Availability to",
+                                      initialValue: availabilityTo,
+
+                                      // firstDate: availabilityFrom?.subtract(
+                                      //   Duration(days: 1),
+                                      // ),
+                                      onClear: () {
+                                        setState(() {
+                                          availabilityTo = null;
+                                        });
+                                      },
+                                      onChanged: (value) {
+                                        setState(() {
+                                          availabilityTo = value;
+                                          if (value != null &&
+                                              (availabilityFrom?.isAfter(
+                                                    value,
+                                                  ) ??
+                                                  false)) {
+                                            availabilityFrom = value;
+                                          }
+                                        });
+                                      },
+                                    ),
                                   ),
+                                  SizedBox(width: 20),
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.tight,
+                                    child:
+                                        DropdownMenuFormField<DatacenterTier?>(
+                                          label: Text("Tier"),
+                                          // width: double.infinity,
+                                          initialSelection: tier,
+                                          onSelected: (value) {
+                                            setState(() {
+                                              tier = value;
+                                              if (country?.region != region) {
+                                                country = null;
+                                              }
+                                              updateCountries();
+                                            });
+                                          },
+                                          dropdownMenuEntries: [
+                                            DropdownMenuEntry(
+                                              value: null,
+                                              label: "All",
+                                            ),
+                                            ...DatacenterTier.values.map((
+                                              tier,
+                                            ) {
+                                              return DropdownMenuEntry(
+                                                value: tier,
+                                                label: tier.roman,
+                                              );
+                                            }).toList(),
+                                          ],
+                                        ),
+                                  ),
+                                  SizedBox(width: 20),
                                   Flexible(
                                     flex: 1,
                                     fit: FlexFit.tight,
@@ -400,49 +549,49 @@ class _MarketViewState extends State<MarketView> {
                           ),
                         ),
 
-                        SizedBox(height: 20),
-                        SizedBox(
-                          height: 70,
-                          child: Row(
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                fit: FlexFit.tight,
-                                child: FilterContainer(
-                                  title: "Matching Clusters",
-                                  subtitle: "6",
-                                ),
-                              ),
-                              SizedBox(width: 20),
-                              Flexible(
-                                flex: 1,
-                                fit: FlexFit.tight,
-                                child: FilterContainer(
-                                  title: "Total GPUs",
-                                  subtitle: "40",
-                                ),
-                              ),
-                              SizedBox(width: 20),
-                              Flexible(
-                                flex: 1,
-                                fit: FlexFit.tight,
-                                child: FilterContainer(
-                                  title: "Regions",
-                                  subtitle: "3",
-                                ),
-                              ),
-                              SizedBox(width: 20),
-                              Flexible(
-                                flex: 1,
-                                fit: FlexFit.tight,
-                                child: FilterContainer(
-                                  title: "Avg. Reliability",
-                                  subtitle: "99.99%",
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // SizedBox(height: 20),
+                        // SizedBox(
+                        //   height: 70,
+                        //   child: Row(
+                        //     children: [
+                        //       Flexible(
+                        //         flex: 1,
+                        //         fit: FlexFit.tight,
+                        //         child: FilterContainer(
+                        //           title: "Matching Clusters",
+                        //           subtitle: "6",
+                        //         ),
+                        //       ),
+                        //       SizedBox(width: 20),
+                        //       Flexible(
+                        //         flex: 1,
+                        //         fit: FlexFit.tight,
+                        //         child: FilterContainer(
+                        //           title: "Total GPUs",
+                        //           subtitle: "40",
+                        //         ),
+                        //       ),
+                        //       SizedBox(width: 20),
+                        //       Flexible(
+                        //         flex: 1,
+                        //         fit: FlexFit.tight,
+                        //         child: FilterContainer(
+                        //           title: "Regions",
+                        //           subtitle: "3",
+                        //         ),
+                        //       ),
+                        //       SizedBox(width: 20),
+                        //       Flexible(
+                        //         flex: 1,
+                        //         fit: FlexFit.tight,
+                        //         child: FilterContainer(
+                        //           title: "Avg. Reliability",
+                        //           subtitle: "99.99%",
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         SizedBox(height: 20),
                         Container(
                           width: double.infinity,
@@ -584,6 +733,10 @@ class _MarketViewState extends State<MarketView> {
                                         availabilityTo!,
                                       ) ??
                                       true;
+                                })
+                                .where((element) {
+                                  if (tier == null) return true;
+                                  return element.datacenter?.tier == tier;
                                 })
                                 .map((gpuCluster) {
                                   return DataRow(

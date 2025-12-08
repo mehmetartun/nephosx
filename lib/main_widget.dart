@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/authentication/authentication_bloc.dart';
 import 'blocs/notifications/bloc/notifications_bloc.dart';
 import 'firebase_options.dart';
-import 'pages/data_entry/data_entry_page.dart';
 import 'repositories/authentication/authentication_repository.dart';
 import 'repositories/database/database.dart';
 import 'theme/theme.dart';
@@ -75,7 +74,7 @@ class MyMaterialApp extends StatelessWidget {
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // routerConfig: goRouter,
       // home: DataEntryPage(itemId: "2b2SgkiGZyTloYcmW7xF"),
-      home: DataEntryPage(),
+      home: Scaffold(),
 
       // builder: (context, child) => ResponsiveBreakpoints.builder(
       //   breakpoints: [

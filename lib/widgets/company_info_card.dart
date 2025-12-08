@@ -33,7 +33,7 @@ class CompanyInfoCard extends StatelessWidget {
         SizedBox(height: 10),
         LightLabel(text: "Business DUNS Number*"),
         Text(
-          company.businessTaxId ?? "--",
+          company.businessDunsNumber ?? "--",
           style: Theme.of(context).textTheme.titleSmall,
         ),
         SizedBox(height: 10),

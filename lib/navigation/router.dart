@@ -1,4 +1,3 @@
-import 'package:nephosx/pages/data_entry/data_entry_page.dart';
 import 'package:nephosx/pages/sign_in/sign_in_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nephosx/pages/transactions/transactions_page.dart';
@@ -11,13 +10,11 @@ import '../pages/generic_page.dart';
 import '../pages/gpu_clusters/gpu_clusters_page.dart';
 import '../pages/market/market_page.dart';
 import '../pages/profile/profile_page.dart';
-import '../pages/splash_page.dart';
 import '../pages/users/users_page.dart';
 import '../theme/theme_page.dart';
 import '../widgets/animation_widget.dart';
+import '../widgets/scaffolds/admin_with_navrail.dart';
 import '../widgets/scaffolds/responsive_scaffold.dart';
-import '../widgets/splash_screen.dart';
-import '../widgets/splash_screen_new.dart';
 import 'my_navigator_route.dart';
 
 import 'package:flutter/material.dart';
@@ -36,41 +33,41 @@ class NestedRouter {
   final AuthenticationBloc authenticationBloc;
 
   GoRouter get router => _router;
-  GoRouter get simpleRouter => _simpleRouter;
+  // GoRouter get simpleRouter => _simpleRouter;
 
-  late final GoRouter _simpleRouter = GoRouter(
-    initialLocation: MyNavigatorRoute.consumptionEntry.path,
-    refreshListenable: GoRouterRefreshStream(authenticationBloc.stream),
-    redirect: (context, state) {
-      switch (authenticationBloc.state) {
-        case AuthenticationStateSignedIn _:
-          if (state.matchedLocation.contains(MyNavigatorRoute.signIn.path)) {
-            return MyNavigatorRoute.consumptionEntry.path;
-            // return null;
-          } else {
-            return null;
-          }
-        default:
-          if (state.matchedLocation.contains(MyNavigatorRoute.signIn.path)) {
-            return null;
-          } else {
-            return MyNavigatorRoute.signIn.path;
-          }
-      }
-    },
-    routes: [
-      GoRoute(
-        path: MyNavigatorRoute.consumptionEntry.path,
-        name: MyNavigatorRoute.consumptionEntry.name,
-        builder: (context, state) => DataEntryPage(),
-      ),
-      GoRoute(
-        path: MyNavigatorRoute.signIn.path,
-        name: MyNavigatorRoute.signIn.name,
-        builder: (context, state) => SignInPage(),
-      ),
-    ],
-  );
+  // late final GoRouter _simpleRouter = GoRouter(
+  //   initialLocation: MyNavigatorRoute.consumptionEntry.path,
+  //   refreshListenable: GoRouterRefreshStream(authenticationBloc.stream),
+  //   redirect: (context, state) {
+  //     switch (authenticationBloc.state) {
+  //       case AuthenticationStateSignedIn _:
+  //         if (state.matchedLocation.contains(MyNavigatorRoute.signIn.path)) {
+  //           return MyNavigatorRoute.consumptionEntry.path;
+  //           // return null;
+  //         } else {
+  //           return null;
+  //         }
+  //       default:
+  //         if (state.matchedLocation.contains(MyNavigatorRoute.signIn.path)) {
+  //           return null;
+  //         } else {
+  //           return MyNavigatorRoute.signIn.path;
+  //         }
+  //     }
+  //   },
+  //   routes: [
+  //     GoRoute(
+  //       path: MyNavigatorRoute.consumptionEntry.path,
+  //       name: MyNavigatorRoute.consumptionEntry.name,
+  //       builder: (context, state) => DataEntryPage(),
+  //     ),
+  //     GoRoute(
+  //       path: MyNavigatorRoute.signIn.path,
+  //       name: MyNavigatorRoute.signIn.name,
+  //       builder: (context, state) => SignInPage(),
+  //     ),
+  //   ],
+  // );
 
   late final GoRouter _router = GoRouter(
     debugLogDiagnostics: true,
@@ -290,14 +287,29 @@ class NestedRouter {
               StatefulShellBranch(
                 // navigatorKey: _sectionANavigatorKey,
                 routes: <RouteBase>[
-                  GoRoute(
-                    // The screen to display as the root in the third tab of the
-                    // bottom navigation bar.
-                    // name: "settings",
-                    path: MyNavigatorRoute.admin.path,
-                    name: MyNavigatorRoute.admin.name,
-                    builder: (BuildContext context, GoRouterState state) =>
-                        const AdminPage(),
+                  StatefulShellRoute.indexedStack(
+                    builder: (context, state, innerShell) {
+                      return AdminWithNavrail(
+                        navigationShell: innerShell,
+                        width: 250,
+                      );
+                    },
+                    branches: [
+                      StatefulShellBranch(
+                        routes: [
+                          GoRoute(
+                            // The screen to display as the root in the third tab of the
+                            // bottom navigation bar.
+                            // name: "settings",
+                            path: MyNavigatorRoute.admin.path,
+                            name: MyNavigatorRoute.admin.name,
+                            builder:
+                                (BuildContext context, GoRouterState state) =>
+                                    const AdminPage(),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
