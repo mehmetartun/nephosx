@@ -48,7 +48,7 @@ enum PcieGeneration {
 
 @JsonSerializable(explicitToJson: true)
 class GpuCluster {
-  final GpuType? type;
+  // final GpuType? type;
   // @JsonKey(name: "producer_id")
   // final String producerId;
   @JsonKey(name: "device_id")
@@ -114,7 +114,7 @@ class GpuCluster {
     this.pcieLanes,
     this.perGpuPcieBandwidthInGbPerSec,
     this.maximumCudaVersionSupported,
-    this.type,
+    // this.type,
     this.perGpuMemoryBandwidthInGbPerSec,
     this.perGpuNvLinkBandwidthInGbPerSec,
     required this.quantity,
@@ -151,7 +151,7 @@ class GpuCluster {
     int? pcieLanes,
     double? perGpuPcieBandwidthInGbPerSec,
     String? maximumCudaVersionSupported,
-    GpuType? type,
+    // GpuType? type,
     double? perGpuMemoryBandwidthInGbPerSec,
     double? perGpuNvLinkBandwidthInGbPerSec,
     int? quantity,
@@ -185,7 +185,7 @@ class GpuCluster {
           perGpuPcieBandwidthInGbPerSec ?? this.perGpuPcieBandwidthInGbPerSec,
       maximumCudaVersionSupported:
           maximumCudaVersionSupported ?? this.maximumCudaVersionSupported,
-      type: type ?? this.type,
+      // type: type ?? this.type,
       quantity: quantity ?? this.quantity,
       datacenterId: datacenterId ?? this.datacenterId,
       companyId: companyId ?? this.companyId,

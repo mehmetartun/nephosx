@@ -378,6 +378,9 @@ class MaterialTheme {
             ),
           ),
         ),
+        dialogTheme: DialogThemeData(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+        ),
         // dataTableTheme: DataTableThemeData(
         //   columnSpacing: 10,
         //   horizontalMargin: 10,

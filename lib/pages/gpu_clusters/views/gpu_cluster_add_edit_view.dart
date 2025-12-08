@@ -692,90 +692,96 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                           onPressed: () {
                             if (formKey.currentState?.validate() ?? false) {
                               formKey.currentState!.save();
+
                               rentalPricesSubmitted.sort(
                                 (a, b) => a.numberOfMonths.compareTo(
                                   b.numberOfMonths,
                                 ),
                               );
-                              widget.gpuCluster == null
-                                  ? widget.onAddGpuCluster(
-                                      GpuCluster(
-                                        deviceId: deviceId!,
-                                        // type: type!,
-                                        quantity: quantity!,
-                                        datacenterId: datacenter!.id,
-                                        companyId: datacenter!.companyId,
-                                        id: widget.gpuCluster?.id ?? "",
-                                        rentalPrices: rentalPricesSubmitted,
-                                        teraFlops: teraFlops,
-                                        perGpuVramInGb: perGpuVramInGb,
-                                        maximumCudaVersionSupported:
-                                            maximumCudaVersionSupported,
-                                        internetUploadSpeedInMbps:
-                                            internetUploadSpeedInMbps,
-                                        internetDownloadSpeedInMbps:
-                                            internetDownloadSpeedInMbps,
-                                        numberOfOpenPorts: numberOfOpenPorts,
-                                        perGpuPcieBandwidthInGbPerSec:
-                                            perGpuPcieBandwidthInGbPerSec,
-                                        perGpuMemoryBandwidthInGbPerSec:
-                                            perGpuMemoryBandwidthInGbPerSec,
-                                        perGpuNvLinkBandwidthInGbPerSec:
-                                            perGpuNvLinkBandwidthInGbPerSec,
-                                        effectiveRam: effectiveRam,
-                                        totalRam: totalRam,
-                                        totalCpuCoreCount: totalCpuCoreCount,
-                                        effectiveCpuCoreCount:
-                                            effectiveCpuCoreCount,
-                                        diskBandwidthInMbPerSec:
-                                            diskBandwidthInMbPerSec,
-                                        diskStorageAvailableInGb:
-                                            diskStorageAvailableInGb,
-                                        pcieGeneration: pcieGeneration,
-                                        pcieLanes: pcieLanes,
-                                        deepLearningPerformanceScore:
-                                            deepLearningPerformanceScore,
-                                        availabilityDate: availabilityDate,
-                                      ),
-                                    )
-                                  : widget.onUpdateGpuCluster(
-                                      GpuCluster(
-                                        deviceId: deviceId!,
-                                        // type: type!,
-                                        quantity: quantity!,
-                                        datacenterId: datacenter!.id,
-                                        companyId: datacenter!.companyId,
-                                        id: widget.gpuCluster?.id ?? "",
-                                        rentalPrices: rentalPricesSubmitted,
-                                        teraFlops: teraFlops,
-                                        perGpuVramInGb: perGpuVramInGb,
-                                        maximumCudaVersionSupported:
-                                            maximumCudaVersionSupported,
-                                        internetUploadSpeedInMbps:
-                                            internetUploadSpeedInMbps,
-                                        internetDownloadSpeedInMbps:
-                                            internetDownloadSpeedInMbps,
-                                        numberOfOpenPorts: numberOfOpenPorts,
-                                        perGpuPcieBandwidthInGbPerSec:
-                                            perGpuPcieBandwidthInGbPerSec,
-                                        perGpuMemoryBandwidthInGbPerSec:
-                                            perGpuMemoryBandwidthInGbPerSec,
-                                        perGpuNvLinkBandwidthInGbPerSec:
-                                            perGpuNvLinkBandwidthInGbPerSec,
-                                        effectiveRam: effectiveRam,
-                                        totalRam: totalRam,
-                                        totalCpuCoreCount: totalCpuCoreCount,
-                                        effectiveCpuCoreCount:
-                                            effectiveCpuCoreCount,
-                                        diskBandwidthInMbPerSec:
-                                            diskBandwidthInMbPerSec,
-                                        diskStorageAvailableInGb:
-                                            diskStorageAvailableInGb,
-                                        deepLearningPerformanceScore:
-                                            deepLearningPerformanceScore,
-                                        availabilityDate: availabilityDate,
-                                      ),
-                                    );
+
+                              if (widget.gpuCluster == null) {
+                                widget.onAddGpuCluster(
+                                  GpuCluster(
+                                    deviceId: deviceId!,
+                                    // type: type!,
+                                    pcieGeneration: pcieGeneration,
+                                    pcieLanes: pcieLanes,
+                                    quantity: quantity!,
+                                    datacenterId: datacenter!.id,
+                                    companyId: datacenter!.companyId,
+                                    id: widget.gpuCluster?.id ?? "",
+                                    rentalPrices: rentalPricesSubmitted,
+                                    teraFlops: teraFlops,
+                                    perGpuVramInGb: perGpuVramInGb,
+                                    maximumCudaVersionSupported:
+                                        maximumCudaVersionSupported,
+                                    internetUploadSpeedInMbps:
+                                        internetUploadSpeedInMbps,
+                                    internetDownloadSpeedInMbps:
+                                        internetDownloadSpeedInMbps,
+                                    numberOfOpenPorts: numberOfOpenPorts,
+                                    perGpuPcieBandwidthInGbPerSec:
+                                        perGpuPcieBandwidthInGbPerSec,
+                                    perGpuMemoryBandwidthInGbPerSec:
+                                        perGpuMemoryBandwidthInGbPerSec,
+                                    perGpuNvLinkBandwidthInGbPerSec:
+                                        perGpuNvLinkBandwidthInGbPerSec,
+                                    effectiveRam: effectiveRam,
+                                    totalRam: totalRam,
+                                    totalCpuCoreCount: totalCpuCoreCount,
+                                    effectiveCpuCoreCount:
+                                        effectiveCpuCoreCount,
+                                    diskBandwidthInMbPerSec:
+                                        diskBandwidthInMbPerSec,
+                                    diskStorageAvailableInGb:
+                                        diskStorageAvailableInGb,
+                                    deepLearningPerformanceScore:
+                                        deepLearningPerformanceScore,
+                                    availabilityDate: availabilityDate,
+                                  ),
+                                );
+                              } else {
+                                widget.onUpdateGpuCluster(
+                                  GpuCluster(
+                                    deviceId: deviceId!,
+                                    // type: type!,
+                                    pcieGeneration: pcieGeneration,
+                                    pcieLanes: pcieLanes,
+                                    quantity: quantity!,
+                                    datacenterId: datacenter!.id,
+                                    companyId: datacenter!.companyId,
+                                    id: widget.gpuCluster!.id,
+                                    rentalPrices: rentalPricesSubmitted,
+                                    teraFlops: teraFlops,
+                                    perGpuVramInGb: perGpuVramInGb,
+                                    maximumCudaVersionSupported:
+                                        maximumCudaVersionSupported,
+                                    internetUploadSpeedInMbps:
+                                        internetUploadSpeedInMbps,
+                                    internetDownloadSpeedInMbps:
+                                        internetDownloadSpeedInMbps,
+                                    numberOfOpenPorts: numberOfOpenPorts,
+                                    perGpuPcieBandwidthInGbPerSec:
+                                        perGpuPcieBandwidthInGbPerSec,
+                                    perGpuMemoryBandwidthInGbPerSec:
+                                        perGpuMemoryBandwidthInGbPerSec,
+                                    perGpuNvLinkBandwidthInGbPerSec:
+                                        perGpuNvLinkBandwidthInGbPerSec,
+                                    effectiveRam: effectiveRam,
+                                    totalRam: totalRam,
+                                    totalCpuCoreCount: totalCpuCoreCount,
+                                    effectiveCpuCoreCount:
+                                        effectiveCpuCoreCount,
+                                    diskBandwidthInMbPerSec:
+                                        diskBandwidthInMbPerSec,
+                                    diskStorageAvailableInGb:
+                                        diskStorageAvailableInGb,
+                                    deepLearningPerformanceScore:
+                                        deepLearningPerformanceScore,
+                                    availabilityDate: availabilityDate,
+                                  ),
+                                );
+                              }
                             }
                           },
                           child: Text("Save GPU Cluster"),

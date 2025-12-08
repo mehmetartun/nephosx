@@ -17,7 +17,6 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
       (json['per_gpu_pcie_bandwidth_in_gb_per_sec'] as num?)?.toDouble(),
   maximumCudaVersionSupported:
       json['maximum_cuda_version_supported'] as String?,
-  type: $enumDecode(_$GpuTypeEnumMap, json['type']),
   perGpuMemoryBandwidthInGbPerSec:
       (json['per_gpu_memory_bandwidth_in_gb_per_sec'] as num?)?.toDouble(),
   perGpuNvLinkBandwidthInGbPerSec:
@@ -65,7 +64,6 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
 
 Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
     <String, dynamic>{
-      'type': _$GpuTypeEnumMap[instance.type]!,
       'device_id': instance.deviceId,
       'quantity': instance.quantity,
       'id': instance.id,
@@ -107,15 +105,6 @@ const _$PcieGenerationEnumMap = {
   PcieGeneration.x5: 'x5',
   PcieGeneration.x6: 'x6',
   PcieGeneration.x7: 'x7',
-};
-
-const _$GpuTypeEnumMap = {
-  GpuType.H100: 'H100',
-  GpuType.H200: 'H200',
-  GpuType.A100: 'A100',
-  GpuType.B200: 'B200',
-  GpuType.MI300X: 'MI300X',
-  GpuType.Gaudi3: 'Gaudi3',
 };
 
 Value? _$JsonConverterFromJson<Json, Value>(

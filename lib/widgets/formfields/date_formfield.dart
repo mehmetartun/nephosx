@@ -10,17 +10,23 @@ class DateTimeFormField extends FormField<DateTime> {
     super.initialValue,
     super.autovalidateMode,
     void Function(DateTime)? onChanged,
+    void Function()? onClear,
     bool readOnly = false,
-
+    Widget? trailing,
+    bool clearButton = false,
     // Date Picker Constraints
     DateTime? firstDate,
     DateTime? lastDate,
+    InputBorder? border,
 
     // Style options
     IconData? icon = Icons.calendar_today,
     DateFormat? dateFormat, // Optional: Pass a specific format
   }) : super(
          builder: (FormFieldState<DateTime> state) {
+           print('FirstDate $firstDate');
+           print('LastDate $lastDate');
+           print('InitialValue $initialValue');
            // Helper to handle the click
            Future<void> pickDate(BuildContext context) async {
              final DateTime? picked = await showDatePicker(
@@ -53,6 +59,17 @@ class DateTimeFormField extends FormField<DateTime> {
                isEmpty: state.value == null,
 
                decoration: InputDecoration(
+                 border: border,
+                 suffix: clearButton
+                     ? IconButton(
+                         icon: Icon(Icons.close),
+                         onPressed: () {
+                           state.didChange(null);
+                           //  onChanged?.call(null);
+                           onClear?.call();
+                         },
+                       )
+                     : null,
                  labelText: labelText,
                  prefixIcon: Icon(icon),
                  errorText: state.errorText, // Standard Form error display
