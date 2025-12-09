@@ -76,6 +76,9 @@ class AuthenticationBloc
     on<AuthenticationEventSignInAnonymously>((event, emit) async {
       await _handleSignInAnonymously(event, emit);
     });
+    on<AuthenticationEventSendEmailVerification>((event, emit) async {
+      await _handleSendEmailVerification(event, emit);
+    });
   }
   final AuthenticationRepository authenticationRepository;
   final DatabaseRepository databaseRepository;
@@ -111,6 +114,16 @@ class AuthenticationBloc
       user = await authenticationRepository.signInAnonymously();
       emit(AuthenticationStateSignedIn(destination: destination, user: user!));
       return;
+    } catch (e) {
+      emit(AuthenticationStateError.fromMessage(e.toString()));
+    }
+  }
+
+  Future<void> _handleSendEmailVerification(event, emit) async {
+    emit(AuthenticationStateWaiting());
+    try {
+      await authenticationRepository.sendEmailVerification();
+      add(AuthenticationEventSignOut());
     } catch (e) {
       emit(AuthenticationStateError.fromMessage(e.toString()));
     }

@@ -152,7 +152,9 @@ class User {
       (type != UserType.anonymous && type != UserType.public);
 
   bool get canSeeTransactions =>
-      (type != UserType.anonymous || type != UserType.public);
+      (type != UserType.anonymous && type != UserType.public);
+  bool get canSeePrices =>
+      (type != UserType.anonymous && type != UserType.public);
 
   bool get canSeeAdmin => type == UserType.admin;
 

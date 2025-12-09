@@ -59,3 +59,5 @@ class AuthenticationEventNewUserRequest extends AuthenticationEvent {}
 class AuthenticationEventCancelNewUserRequest extends AuthenticationEvent {}
 
 class AuthenticationEventSignInAnonymously extends AuthenticationEvent {}
+
+class AuthenticationEventSendEmailVerification extends AuthenticationEvent {}

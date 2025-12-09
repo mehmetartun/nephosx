@@ -25,18 +25,18 @@ void main() async {
   //   FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   // }
 
-  var qs = await FirebaseFirestore.instance
-      .collectionGroup("gpu_clusters")
-      .get();
+  // var qs = await FirebaseFirestore.instance
+  //     .collectionGroup("gpu_clusters")
+  //     .get();
 
-  for (var doc in qs.docs) {
-    int randomDays = math.Random().nextInt(365);
-    await doc.reference.update({
-      'manufacture_date': Timestamp.fromDate(
-        DateTime.now().subtract(Duration(days: randomDays)),
-      ),
-    });
-  }
+  // for (var doc in qs.docs) {
+  //   int randomDays = math.Random().nextInt(365);
+  //   await doc.reference.update({
+  //     'manufacture_date': Timestamp.fromDate(
+  //       DateTime.now().subtract(Duration(days: randomDays)),
+  //     ),
+  //   });
+  // }
   runApp(const MyApp());
 }
 

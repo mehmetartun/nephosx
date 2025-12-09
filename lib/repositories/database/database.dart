@@ -64,11 +64,9 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   static final FirestoreDatabaseRepository instance =
       FirestoreDatabaseRepository._internal();
 
-  late final FirebaseFirestore db;
+  final FirebaseFirestore db = FirebaseFirestore.instance;
 
   FirestoreDatabaseRepository._internal() {
-    db = FirebaseFirestore.instance;
-
     db.settings = Settings(persistenceEnabled: true);
   }
 

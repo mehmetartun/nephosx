@@ -71,22 +71,24 @@ class GpuClusterDataSource extends DataTableSource {
           ),
         ),
         DataCell(
-          gpuCluster.rentalPrices.length == 0
-              ? Text('12 months / \$9.99/hr')
-              : DropdownButton(
-                  value: gpuCluster.rentalPrices.first,
-                  items: gpuCluster.rentalPrices
-                      .map(
-                        (e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(
-                            "${e.numberOfMonths} mo @ ${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(e.priceInUsdPerHour)}/hr",
-                          ),
-                        ),
+          user!.canSeePrices
+              ? gpuCluster.rentalPrices.length == 0
+                    ? Text('12 months / \$9.99/hr')
+                    : DropdownButton(
+                        value: gpuCluster.rentalPrices.first,
+                        items: gpuCluster.rentalPrices
+                            .map(
+                              (e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  "${e.numberOfMonths} mo @ ${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(e.priceInUsdPerHour)}/hr",
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {},
                       )
-                      .toList(),
-                  onChanged: (value) {},
-                ),
+              : Text("Locked"),
         ),
         DataCell(
           gpuCluster.companyId == user?.companyId

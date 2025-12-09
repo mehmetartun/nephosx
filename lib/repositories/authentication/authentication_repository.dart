@@ -37,6 +37,7 @@ abstract class AuthenticationRepository {
   Future<void> sendPasswordResetEmail(String email);
   Future<bool> get isSignedIn;
   Future<User> signInAnonymously();
+  Future<void> sendEmailVerification();
 
   User? get user {
     return _user;
@@ -337,5 +338,11 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     });
     _user = await databaseRepository.getUserData(userCredential!.user!.uid);
     return _user!;
+  }
+
+  @override
+  Future<void> sendEmailVerification() async {
+    return await auth.FirebaseAuth.instance.currentUser!
+        .sendEmailVerification();
   }
 }

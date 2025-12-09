@@ -150,6 +150,17 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                             },
                             child: const Text("Settings"),
                           )
+                        : user.emailVerified == false
+                        ? TextButton.icon(
+                            icon: Icon(
+                              Icons.warning,
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                            onPressed: () {
+                              navigationShell?.goBranch(5);
+                            },
+                            label: const Text("Settings"),
+                          )
                         : TextButton(
                             onPressed: () {
                               navigationShell?.goBranch(5);

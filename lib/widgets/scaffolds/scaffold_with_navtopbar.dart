@@ -33,6 +33,10 @@ class ScaffoldWithNavTopbBar extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: Scaffold(
+        // bottomSheet: BottomSheet(
+        //   onClosing: () {},
+        //   builder: (context) => Container(height: 100, color: Colors.red),
+        // ),
         appBar: TopBar(
           title: 'Nephos X',
           navigationShell: navigationShell,
