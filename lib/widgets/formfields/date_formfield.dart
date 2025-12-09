@@ -24,10 +24,6 @@ class DateTimeFormField extends FormField<DateTime> {
     DateFormat? dateFormat, // Optional: Pass a specific format
   }) : super(
          builder: (FormFieldState<DateTime> state) {
-           print('FirstDate $firstDate');
-           print('LastDate $lastDate');
-           print('InitialValue $initialValue');
-           // Helper to handle the click
            Future<void> pickDate(BuildContext context) async {
              final DateTime? picked = await showDatePicker(
                context: context,

@@ -5,17 +5,24 @@ import 'address.dart';
 part 'datacenter.g.dart';
 
 enum DatacenterTier {
-  tier1("Tier 1", "Uptime > 99.99%", 1, "Tier I"),
-  tier2("Tier 2", "Uptime > 99.90%", 2, "Tier II"),
-  tier3("Tier 3", "Uptime > 99.00%", 3, "Tier III"),
-  tier4("Tier 4", "Uptime > 95.00%", 4, "Tier IV");
+  tier1("Tier 1", "Uptime > 99.99%", 1, "Tier I", 99.99),
+  tier2("Tier 2", "Uptime > 99.90%", 2, "Tier II", 99.90),
+  tier3("Tier 3", "Uptime > 99.00%", 3, "Tier III", 99.00),
+  tier4("Tier 4", "Uptime > 95.00%", 4, "Tier IV", 95.00);
 
   final String title;
   final String roman;
   final String description;
   final int rank;
+  final double reliabilityPercentage;
 
-  const DatacenterTier(this.title, this.description, this.rank, this.roman);
+  const DatacenterTier(
+    this.title,
+    this.description,
+    this.rank,
+    this.roman,
+    this.reliabilityPercentage,
+  );
 }
 
 @JsonSerializable(explicitToJson: true)
