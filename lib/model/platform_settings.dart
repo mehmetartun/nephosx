@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:nephosx/model/device.dart';
 import 'package:nephosx/model/enums.dart';
 
+import 'cpu.dart';
 import 'producer.dart';
 
 part 'platform_settings.g.dart';
@@ -14,12 +15,14 @@ class PlatformSettings {
   final Set<Country> favoriteCountries;
   final List<Producer> producers;
   final List<Device> devices;
+  final List<Cpu> cpus;
 
   PlatformSettings({
     required this.datacenterAllowedCountries,
     required this.favoriteCountries,
     required this.producers,
     required this.devices,
+    required this.cpus,
   });
 
   static PlatformSettings get defaultSettings => PlatformSettings(
@@ -43,6 +46,7 @@ class PlatformSettings {
     },
     producers: [],
     devices: [],
+    cpus: [],
   );
 
   List<Country> get datacenterFavoriteCountriesList {
@@ -68,6 +72,7 @@ class PlatformSettings {
     Set<Country>? favoriteCountries,
     List<Producer>? producers,
     List<Device>? devices,
+    List<Cpu>? cpus,
   }) {
     return PlatformSettings(
       datacenterAllowedCountries:
@@ -75,6 +80,7 @@ class PlatformSettings {
       favoriteCountries: favoriteCountries ?? this.favoriteCountries,
       producers: producers ?? this.producers,
       devices: devices ?? this.devices,
+      cpus: cpus ?? this.cpus,
     );
   }
 

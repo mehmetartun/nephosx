@@ -1,14 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nephosx/pages/market/market_page.dart';
 
 import 'blocs/authentication/authentication_bloc.dart';
 import 'blocs/notifications/bloc/notifications_bloc.dart';
+import 'blocs/requests/bloc/requests_bloc.dart';
 import 'firebase_options.dart';
 import 'repositories/authentication/authentication_repository.dart';
 import 'repositories/database/database.dart';
-import 'theme/theme.dart';
+import 'services/platform_settings/platform_settings_service.dart';
+import 'theme/cubit/theme_cubit.dart';
+import 'theme/theme_black.dart';
 import 'theme/util.dart';
+import 'dart:math' as math;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +25,18 @@ void main() async {
   //   FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   // }
 
+  var qs = await FirebaseFirestore.instance
+      .collectionGroup("gpu_clusters")
+      .get();
+
+  for (var doc in qs.docs) {
+    int randomDays = math.Random().nextInt(365);
+    await doc.reference.update({
+      'manufacture_date': Timestamp.fromDate(
+        DateTime.now().subtract(Duration(days: randomDays)),
+      ),
+    });
+  }
   runApp(const MyApp());
 }
 
@@ -30,6 +48,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     DatabaseRepository databaseRepository =
         FirestoreDatabaseRepository.instance;
+    PlatformSettingsService.instance.init(databaseRepository);
 
     AuthenticationRepository authenticationRepository =
         FirebaseAuthenticationRepository.instance..init(databaseRepository);
@@ -37,6 +56,9 @@ class MyApp extends StatelessWidget {
       authenticationRepository,
       databaseRepository,
     );
+
+    ThemeCubit themeCubit = ThemeCubit()
+      ..changeThemeMode(ThemeCubit.savedThemeMode);
 
     return RepositoryProvider<DatabaseRepository>(
       create: (context) => databaseRepository,
@@ -49,6 +71,11 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider<NotificationsBloc>(
               create: (context) => NotificationsBloc(),
+            ),
+            BlocProvider<ThemeCubit>(create: (context) => themeCubit),
+            BlocProvider<RequestsBloc>(
+              create: (context) =>
+                  RequestsBloc(databaseRepository: databaseRepository),
             ),
           ],
 
@@ -64,17 +91,17 @@ class MyMaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MaterialTheme theme = MaterialTheme(
-      createTextTheme(context, "Roboto", "Roboto"),
+    MaterialTheme materialTheme = MaterialTheme(
+      createTextTheme(context, "Noto Sans", "Noto Sans Display"),
     );
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: theme.dark(),
+      theme: materialTheme.light(),
 
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // routerConfig: goRouter,
       // home: DataEntryPage(itemId: "2b2SgkiGZyTloYcmW7xF"),
-      home: Scaffold(),
+      home: MarketPage(),
 
       // builder: (context, child) => ResponsiveBreakpoints.builder(
       //   breakpoints: [

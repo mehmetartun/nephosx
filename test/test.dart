@@ -9,6 +9,7 @@ void main() {
       favoriteCountries: {Country.af, Country.se, Country.gb},
       producers: [],
       devices: [],
+      cpus: [],
     );
     expect(settings.datacenterFavoriteCountriesList, [Country.se, Country.gb]);
     expect(settings.datacenterRemainingCountriesList, [Country.us]);

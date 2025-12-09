@@ -5,6 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../services/platform_settings/platform_settings_service.dart';
 import 'company.dart';
 import 'conversions.dart';
+import 'cpu.dart';
 import 'datacenter.dart';
 import 'device.dart';
 import 'gpu_transaction.dart';
@@ -53,6 +54,8 @@ class GpuCluster {
   // final String producerId;
   @JsonKey(name: "device_id")
   final String deviceId;
+  @JsonKey(name: "cpu_id")
+  final String cpuId;
   final int quantity;
   final String id;
   @JsonKey(name: "datacenter_id")
@@ -106,10 +109,14 @@ class GpuCluster {
   @JsonKey(name: "availability_date")
   @TimestampConverter()
   final DateTime? availabilityDate;
+  @JsonKey(name: "manufacture_date")
+  @TimestampConverter()
+  final DateTime? manufactureDate;
 
   GpuCluster({
     // required this.producerId,
     required this.deviceId,
+    required this.cpuId,
     this.pcieGeneration,
     this.pcieLanes,
     this.perGpuPcieBandwidthInGbPerSec,
@@ -138,6 +145,7 @@ class GpuCluster {
     this.diskStorageAvailableInGb,
     this.deepLearningPerformanceScore,
     this.availabilityDate,
+    this.manufactureDate,
   });
   factory GpuCluster.fromJson(Map<String, dynamic> json) =>
       _$GpuClusterFromJson(json);
@@ -147,6 +155,7 @@ class GpuCluster {
   GpuCluster copyWith({
     // String? producerId,
     String? deviceId,
+    String? cpuId,
     PcieGeneration? pcieGeneration,
     int? pcieLanes,
     double? perGpuPcieBandwidthInGbPerSec,
@@ -175,8 +184,10 @@ class GpuCluster {
     double? diskStorageAvailableInGb,
     double? deepLearningPerformanceScore,
     DateTime? availabilityDate,
+    DateTime? manufactureDate,
   }) {
     return GpuCluster(
+      cpuId: cpuId ?? this.cpuId,
       // producerId: producerId ?? this.producerId,
       deviceId: deviceId ?? this.deviceId,
       pcieGeneration: pcieGeneration ?? this.pcieGeneration,
@@ -219,6 +230,7 @@ class GpuCluster {
       deepLearningPerformanceScore:
           deepLearningPerformanceScore ?? this.deepLearningPerformanceScore,
       availabilityDate: availabilityDate ?? this.availabilityDate,
+      manufactureDate: manufactureDate ?? this.manufactureDate,
     );
   }
 
@@ -229,12 +241,33 @@ class GpuCluster {
         });
   }
 
+  Cpu? get cpu {
+    return PlatformSettingsService.instance.platformSettings.cpus
+        .firstWhereOrNull((e) {
+          return e.id == cpuId;
+        });
+  }
+
+  int get ageInMonths {
+    if (manufactureDate == null) return 0;
+    return DateTime.now().difference(manufactureDate!).inDays ~/ 30;
+  }
+
   Producer? get producer {
     Device? d = device;
     if (d == null) return null;
     return PlatformSettingsService.instance.platformSettings.producers
         .firstWhereOrNull((e) {
           return e.id == d.producerId;
+        });
+  }
+
+  Producer? get cpuProducer {
+    Cpu? c = cpu;
+    if (c == null) return null;
+    return PlatformSettingsService.instance.platformSettings.producers
+        .firstWhereOrNull((e) {
+          return e.id == c.producerId;
         });
   }
 

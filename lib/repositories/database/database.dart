@@ -3,6 +3,7 @@ import 'package:nephosx/model/gpu_transaction.dart';
 import 'package:nephosx/model/request.dart';
 
 import '../../model/company.dart';
+import '../../model/cpu.dart';
 import '../../model/datacenter.dart';
 import '../../model/device.dart';
 
@@ -318,6 +319,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
     futs.add(getSettings());
     futs.add(getProducers());
     futs.add(getDevices());
+    futs.add(getCpus());
 
     var results = await Future.wait(futs);
 
@@ -325,6 +327,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
       ...results[0],
       'producers': results[1].map((e) => e.toJson()).toList(),
       'devices': results[2].map((e) => e.toJson()).toList(),
+      'cpus': results[3].map((e) => e.toJson()).toList(),
     });
   }
 
@@ -350,6 +353,13 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
     var devices_query = await db.collection("settings/settings/devices").get();
     return devices_query.docs
         .map((doc) => Device.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
+  }
+
+  Future<List<Cpu>> getCpus() async {
+    var cpus_query = await db.collection("settings/settings/cpus").get();
+    return cpus_query.docs
+        .map((doc) => Cpu.fromJson({...doc.data(), 'id': doc.id}))
         .toList();
   }
 }

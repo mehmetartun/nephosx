@@ -31,6 +31,7 @@ class GpuClusterAddEditView extends StatefulWidget {
 class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
   // GpuType? type;
   String? deviceId;
+  String? cpuId;
   int? quantity;
   Datacenter? datacenter;
   late int numExistingRentalPrices;
@@ -62,6 +63,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
     super.initState();
     // type = widget.gpuCluster?.type;
     deviceId = widget.gpuCluster?.deviceId;
+    cpuId = widget.gpuCluster?.cpuId;
     quantity = widget.gpuCluster?.quantity;
     datacenter = widget.gpuCluster?.datacenter;
     numExistingRentalPrices = widget.gpuCluster?.rentalPrices.length ?? 0;
@@ -164,6 +166,37 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                     return DropdownMenuEntry(
                                       value: device.id,
                                       label: device.name,
+                                    );
+                                  })
+                                  .toList(),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 200,
+                            child: DropdownMenuFormField<String>(
+                              label: Text("CPU Model"),
+                              // decoration: InputDecoration(labelText: "GPU"),
+                              onSelected: (value) {
+                                setState(() {
+                                  cpuId = value;
+                                });
+                              },
+                              initialSelection: cpuId,
+                              // initialValue: deviceId,
+                              validator: (value) {
+                                if (value == null) {
+                                  return "Please select a CPU Model";
+                                }
+                                return null;
+                              },
+                              dropdownMenuEntries: PlatformSettingsService
+                                  .instance
+                                  .platformSettings
+                                  .cpus
+                                  .map((cpu) {
+                                    return DropdownMenuEntry(
+                                      value: cpu.id,
+                                      label: cpu.name,
                                     );
                                   })
                                   .toList(),
@@ -703,6 +736,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                 widget.onAddGpuCluster(
                                   GpuCluster(
                                     deviceId: deviceId!,
+                                    cpuId: cpuId!,
                                     // type: type!,
                                     pcieGeneration: pcieGeneration,
                                     pcieLanes: pcieLanes,
@@ -745,6 +779,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                   GpuCluster(
                                     deviceId: deviceId!,
                                     // type: type!,
+                                    cpuId: cpuId!,
                                     pcieGeneration: pcieGeneration,
                                     pcieLanes: pcieLanes,
                                     quantity: quantity!,

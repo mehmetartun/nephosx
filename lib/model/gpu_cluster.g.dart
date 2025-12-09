@@ -8,6 +8,7 @@ part of 'gpu_cluster.dart';
 
 GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
   deviceId: json['device_id'] as String,
+  cpuId: json['cpu_id'] as String,
   pcieGeneration: $enumDecodeNullable(
     _$PcieGenerationEnumMap,
     json['pcie_generation'],
@@ -60,11 +61,16 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
     json['availability_date'],
     const TimestampConverter().fromJson,
   ),
+  manufactureDate: _$JsonConverterFromJson<Timestamp, DateTime>(
+    json['manufacture_date'],
+    const TimestampConverter().fromJson,
+  ),
 );
 
 Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
     <String, dynamic>{
       'device_id': instance.deviceId,
+      'cpu_id': instance.cpuId,
       'quantity': instance.quantity,
       'id': instance.id,
       'datacenter_id': instance.datacenterId,
@@ -93,6 +99,10 @@ Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
       'deep_learning_performance_score': instance.deepLearningPerformanceScore,
       'availability_date': _$JsonConverterToJson<Timestamp, DateTime>(
         instance.availabilityDate,
+        const TimestampConverter().toJson,
+      ),
+      'manufacture_date': _$JsonConverterToJson<Timestamp, DateTime>(
+        instance.manufactureDate,
         const TimestampConverter().toJson,
       ),
     };

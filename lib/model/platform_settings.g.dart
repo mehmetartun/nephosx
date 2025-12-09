@@ -6,24 +6,25 @@ part of 'platform_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PlatformSettings _$PlatformSettingsFromJson(Map<String, dynamic> json) {
-  print(json);
-  return PlatformSettings(
-    datacenterAllowedCountries:
-        (json['datacenter_allowed_countries'] as List<dynamic>)
-            .map((e) => $enumDecode(_$CountryEnumMap, e))
-            .toSet(),
-    favoriteCountries: (json['favorite_countries'] as List<dynamic>)
-        .map((e) => $enumDecode(_$CountryEnumMap, e))
-        .toSet(),
-    producers: (json['producers'] as List<dynamic>)
-        .map((e) => Producer.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    devices: (json['devices'] as List<dynamic>)
-        .map((e) => Device.fromJson(e as Map<String, dynamic>))
-        .toList(),
-  );
-}
+PlatformSettings _$PlatformSettingsFromJson(Map<String, dynamic> json) =>
+    PlatformSettings(
+      datacenterAllowedCountries:
+          (json['datacenter_allowed_countries'] as List<dynamic>)
+              .map((e) => $enumDecode(_$CountryEnumMap, e))
+              .toSet(),
+      favoriteCountries: (json['favorite_countries'] as List<dynamic>)
+          .map((e) => $enumDecode(_$CountryEnumMap, e))
+          .toSet(),
+      producers: (json['producers'] as List<dynamic>)
+          .map((e) => Producer.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      devices: (json['devices'] as List<dynamic>)
+          .map((e) => Device.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      cpus: (json['cpus'] as List<dynamic>)
+          .map((e) => Cpu.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$PlatformSettingsToJson(PlatformSettings instance) =>
     <String, dynamic>{
@@ -35,6 +36,7 @@ Map<String, dynamic> _$PlatformSettingsToJson(PlatformSettings instance) =>
           .toList(),
       'producers': instance.producers.map((e) => e.toJson()).toList(),
       'devices': instance.devices.map((e) => e.toJson()).toList(),
+      'cpus': instance.cpus.map((e) => e.toJson()).toList(),
     };
 
 const _$CountryEnumMap = {

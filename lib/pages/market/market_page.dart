@@ -5,6 +5,7 @@ import 'package:nephosx/pages/market/views/market_view.dart';
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../repositories/database/database.dart';
 import 'cubit/market_cubit.dart';
+import 'views/market_view_2.dart';
 
 class MarketPage extends StatelessWidget {
   const MarketPage({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class MarketPage extends StatelessWidget {
             case MarketLoading():
               return const Center(child: CircularProgressIndicator());
             case MarketLoaded():
-              return MarketView(
+              return MarketView2(
                 gpuClusters: state.gpuClusters,
                 ownCompanyId: state.ownCompanyId,
                 priceCalculator: marketCubit.priceCalculator,
