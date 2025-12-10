@@ -579,3 +579,51 @@ exports.adminAddCompany = onCall(async (request) => {
   });
   return { 'message': 'Company added successfully', 'id': companyRef.id };
 });
+
+exports.corpAdminAddInvitation = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+  if (!request.data.email || !request.data.displayName || !request.data.companyId || !request.data.companyName || !request.data.message) {
+    throw new HttpsError(
+      "invalid-argument",
+      "The function must be called with one argument 'email', 'displayName', 'companyId', 'companyName', 'message' containing the company's name, domain, confirmation email, user ID, and user type."
+    );
+  }
+
+  const db = getFirestore();
+
+  var qs = await db.collection('invitations').where('email', '==', request.data.email).get();
+  if (qs.docs.length > 0) {
+    throw new HttpsError(
+      "invalid-argument",
+      "The invitation already exists."
+    );
+  }
+
+  await db.runTransaction(async (t) => {
+    var docref = await db.collection('invitations').add({
+      inviting_user_id: request.auth.uid,
+      email: request.data.email,
+      display_name: request.data.displayName,
+      company_id: request.data.companyId,
+      company_name: request.data.companyName,
+      message: request.data.message,
+      created_at: Timestamp.now(),
+      status: 'invited',
+    });
+    var emailref = await db.collection('mail').add({
+      to: request.data.email,
+      message: {
+        subject: 'Invitation to join ' + request.data.companyName,
+        html: request.data.message,
+        text: 'Invitation to join ' + request.data.companyName,
+      }
+    })
+    t.update(docref, { id: docref.id, mail_record_id: emailref.id });
+  });
+  return { 'message': 'Invitation added successfully' };
+});

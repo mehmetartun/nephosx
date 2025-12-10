@@ -9,6 +9,7 @@ import '../../model/device.dart';
 
 import '../../model/enums.dart';
 import '../../model/gpu_cluster.dart';
+import '../../model/invitaton.dart';
 import '../../model/platform_settings.dart';
 import '../../model/producer.dart';
 import '../../model/user.dart';
@@ -45,6 +46,7 @@ abstract class DatabaseRepository {
   Stream<List<GpuCluster>> getGpuClusterStream({String? companyId});
   Stream<List<User>> getUsersStream();
   Future<List<User>> getUsers({String? companyId});
+  Future<List<Invitation>> getInvitations({String? companyId});
   Future<List<Company>> getCompanies();
   Future<List<Datacenter>> getDatacenters({String? companyId});
   Future<List<GpuCluster>> getGpuClusters({String? companyId});
@@ -369,5 +371,11 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   Future<List<Request>> getRequests() async {
     var qs = await db.collectionGroup("requests").get();
     return qs.docs.map((doc) => Request.fromJson({...doc.data()})).toList();
+  }
+
+  @override
+  Future<List<Invitation>> getInvitations({String? companyId}) async {
+    var qs = await db.collection("invitations").get();
+    return qs.docs.map((doc) => Invitation.fromJson({...doc.data()})).toList();
   }
 }

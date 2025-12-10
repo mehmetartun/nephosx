@@ -17,6 +17,7 @@ import '../pages/users/users_page.dart';
 import '../theme/theme_page.dart';
 import '../widgets/animation_widget.dart';
 import '../widgets/scaffolds/admin_with_navrail.dart';
+import '../widgets/scaffolds/corp_admin_with_navrail.dart';
 import '../widgets/scaffolds/responsive_scaffold.dart';
 import 'my_navigator_route.dart';
 
@@ -359,7 +360,7 @@ class NestedRouter {
                     routes: [
                       StatefulShellRoute.indexedStack(
                         builder: (context, state, innerShell) {
-                          return AdminWithNavrail(
+                          return CorpAdminWithNavrail(
                             navigationShell: innerShell,
                             width: 250,
                           );
