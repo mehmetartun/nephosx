@@ -1082,11 +1082,17 @@ enum ErrorType {
   const ErrorType(this.description);
 }
 
+@JsonEnum(fieldRename: FieldRename.snake)
 enum UserType {
   public("Public", "User that doesn't belong to a company"),
   admin("Admin", "NephosX admin user"),
-  corporate("Corporate", "A corporate user that belongs to a company"),
+  corporateViewer(
+    "Corporate Viewer",
+    "A corporate user that belongs to a company",
+  ),
   corporateAdmin("Corporate Admin", "A corporate user that has admin rights"),
+  corporateTrader("Corporate Trader", "A corporate user that can trade"),
+  corporateBlocked("Corporate Blocked", "A corporate user that is blocked"),
   anonymous("Anonymous User", "A user that hasn't created an account");
 
   final String description;

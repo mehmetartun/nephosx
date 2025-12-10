@@ -22,14 +22,14 @@ class Company {
   final String? businessTaxId;
   @JsonKey(name: "business_duns_number")
   final String? businessDunsNumber;
-  @JsonKey(name: "primary_contact", includeFromJson: true, includeToJson: false)
-  final User? primaryContact;
   @JsonKey(name: "primary_contact_id")
   final String? primaryContactId;
   @JsonKey(name: "is_buyer")
   final bool? isBuyer;
   @JsonKey(name: "is_seller")
   final bool? isSeller;
+  @JsonKey(name: "domain")
+  final String? domain;
 
   Company({
     required this.id,
@@ -38,12 +38,13 @@ class Company {
     this.addressIds = const [],
     this.addresses = const [],
     this.businessTaxId,
-    this.primaryContact,
+
     this.primaryContactId,
     this.isBuyer,
     this.isSeller,
     this.confirmationEmail,
     this.businessDunsNumber,
+    this.domain,
     // this.addressIds = const [],
   });
 
@@ -90,12 +91,13 @@ class Company {
     String? primaryAddressId,
     List<String>? addressIds,
     String? businessTaxId,
-    User? primaryContact,
+
     String? primaryContactId,
     bool? isBuyer,
     bool? isSeller,
     String? confirmationEmail,
     String? businessDunsNumber,
+    String? domain,
   }) {
     return Company(
       id: id ?? this.id,
@@ -104,12 +106,12 @@ class Company {
       addresses: addresses ?? this.addresses,
       addressIds: addressIds ?? this.addressIds,
       businessTaxId: businessTaxId ?? this.businessTaxId,
-      primaryContact: primaryContact ?? this.primaryContact,
       primaryContactId: primaryContactId ?? this.primaryContactId,
       isBuyer: isBuyer ?? this.isBuyer,
       isSeller: isSeller ?? this.isSeller,
       confirmationEmail: confirmationEmail ?? this.confirmationEmail,
       businessDunsNumber: businessDunsNumber ?? this.businessDunsNumber,
+      domain: domain ?? this.domain,
     );
   }
 

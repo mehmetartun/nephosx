@@ -10,9 +10,9 @@ import '../../../model/user.dart';
 
 class CompanyAssignView extends StatefulWidget {
   final User user;
-  final void Function(Company company) onRequestCompany;
+  // final void Function(Company company) onRequestCompany;
   final Request? request;
-  final void Function(Request request) onWithdrawRequest;
+  // final void Function(Request request) onWithdrawRequest;
 
   final List<Company> companies;
   const CompanyAssignView({
@@ -20,9 +20,9 @@ class CompanyAssignView extends StatefulWidget {
     required this.user,
 
     required this.companies,
-    required this.onRequestCompany,
+    // required this.onRequestCompany,
     this.request,
-    required this.onWithdrawRequest,
+    // required this.onWithdrawRequest,
   });
 
   @override
@@ -64,13 +64,23 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         SizedBox(height: 10),
+
                         Text(
                           "Please ask your company administrator to enter"
                           " your email address on the admin panel and once"
                           " you have verified your email you will be assigned to your company.",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Flexible(flex: 1, child: Divider()),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("or"),
+                            ),
+                            Flexible(flex: 1, child: Divider()),
+                          ],
+                        ),
                         Text(
                           "I represent the company and wish to register our company on the platform.",
                           style: Theme.of(context).textTheme.titleMedium,
@@ -78,7 +88,8 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
                         SizedBox(height: 10),
                         Text(
                           "Once you verify your email address, you will be able to "
-                          "create a request for your company to be added to the platform.",
+                          "create a request for your company to be added to the platform."
+                          "\n\nIf approved, you will be added as a Corporate Admin for your company.",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 10),
@@ -144,39 +155,39 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
                           child: const Text("Request"),
                         ),
                       ],
-                      if (widget.request != null) ...[
-                        Text(
-                          "Authorization Request Pending",
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        SizedBox(height: 20),
-                        LightLabel(text: "Request Date"),
-                        Text(
-                          DateFormat(
-                            "dd MMM yyyy",
-                          ).format(widget.request!.requestDate),
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        SizedBox(height: 20),
-                        LightLabel(text: "Request Summary"),
-                        Text(
-                          widget.request!.summary ?? "--",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        SizedBox(height: 20),
-                        LightLabel(text: "Request Status"),
-                        Text(
-                          widget.request!.status.description,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        SizedBox(height: 20),
-                        FilledButton(
-                          child: Text("Withdraw Request"),
-                          onPressed: () {
-                            widget.onWithdrawRequest(widget.request!);
-                          },
-                        ),
-                      ],
+                      // if (widget.request != null) ...[
+                      //   Text(
+                      //     "Authorization Request Pending",
+                      //     style: Theme.of(context).textTheme.headlineMedium,
+                      //   ),
+                      //   SizedBox(height: 20),
+                      //   LightLabel(text: "Request Date"),
+                      //   Text(
+                      //     DateFormat(
+                      //       "dd MMM yyyy",
+                      //     ).format(widget.request!.requestDate),
+                      //     style: Theme.of(context).textTheme.bodyMedium,
+                      //   ),
+                      //   SizedBox(height: 20),
+                      //   LightLabel(text: "Request Summary"),
+                      //   Text(
+                      //     widget.request!.summary ?? "--",
+                      //     style: Theme.of(context).textTheme.bodyMedium,
+                      //   ),
+                      //   SizedBox(height: 20),
+                      //   LightLabel(text: "Request Status"),
+                      //   Text(
+                      //     widget.request!.status.description,
+                      //     style: Theme.of(context).textTheme.bodyMedium,
+                      //   ),
+                      //   SizedBox(height: 20),
+                      //   FilledButton(
+                      //     child: Text("Withdraw Request"),
+                      //     onPressed: () {
+                      //       widget.onWithdrawRequest(widget.request!);
+                      //     },
+                      //   ),
+                      // ],
                     ],
                   ),
                 ),

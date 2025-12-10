@@ -59,7 +59,7 @@ class _MarketView2State extends State<MarketView2> {
       countries.add(gpuCluster.datacenter!.address.country);
       regions.add(gpuCluster.datacenter!.address.country.region);
     });
-    User? user = context.read<AuthenticationBloc>().user;
+    user = context.read<AuthenticationBloc>().user;
     gpuClusterDataSource = GpuClusterDataSource(
       user: user,
       gpuClusters: widget.gpuClusters,

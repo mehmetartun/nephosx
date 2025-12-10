@@ -52,8 +52,10 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
 const _$UserTypeEnumMap = {
   UserType.public: 'public',
   UserType.admin: 'admin',
-  UserType.corporate: 'corporate',
-  UserType.corporateAdmin: 'corporateAdmin',
+  UserType.corporateViewer: 'corporate_viewer',
+  UserType.corporateAdmin: 'corporate_admin',
+  UserType.corporateTrader: 'corporate_trader',
+  UserType.corporateBlocked: 'corporate_blocked',
   UserType.anonymous: 'anonymous',
 };
 

@@ -37,10 +37,10 @@ class GpuClustersView extends StatelessWidget {
                     "GPU Clusters",
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  if (BlocProvider.of<AuthenticationBloc>(context).user?.type ==
-                          UserType.corporate ||
-                      BlocProvider.of<AuthenticationBloc>(context).user?.type ==
-                          UserType.corporateAdmin)
+                  if (BlocProvider.of<AuthenticationBloc>(
+                        context,
+                      ).user?.canSeeGpuClusters ??
+                      false)
                     FilledButton.tonalIcon(
                       icon: Icon(Icons.add),
                       label: Text("Add"),
@@ -102,13 +102,9 @@ class GpuClustersView extends StatelessWidget {
                       ),
                       trailing:
                           (BlocProvider.of<AuthenticationBloc>(
-                                    context,
-                                  ).user?.type ==
-                                  UserType.corporate ||
-                              BlocProvider.of<AuthenticationBloc>(
-                                    context,
-                                  ).user?.type ==
-                                  UserType.corporateAdmin)
+                                context,
+                              ).user?.canUpdateGpuCluster ??
+                              false)
                           ? IconButton(
                               onPressed: () =>
                                   updateGpuClusterRequest(gpuCluster),

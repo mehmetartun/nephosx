@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nephosx/pages/admin_onboarding/admin_onboarding_page.dart';
 import 'package:nephosx/pages/market/market_page.dart';
 
 import 'blocs/authentication/authentication_bloc.dart';
@@ -101,7 +102,7 @@ class MyMaterialApp extends StatelessWidget {
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // routerConfig: goRouter,
       // home: DataEntryPage(itemId: "2b2SgkiGZyTloYcmW7xF"),
-      home: MarketPage(),
+      home: AdminOnboardingPage(),
 
       // builder: (context, child) => ResponsiveBreakpoints.builder(
       //   breakpoints: [

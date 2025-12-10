@@ -49,10 +49,14 @@ abstract class DatabaseRepository {
   Future<List<Datacenter>> getDatacenters({String? companyId});
   Future<List<GpuCluster>> getGpuClusters({String? companyId});
   Future<Company> getCompany(String companyId);
+
   Future<List<Request>> getRequestsByRequestorId(String requestorId);
   Future<List<Request>> getRequestsByCompanyId(String companyId);
+  Future<List<Request>> getRequests();
+
   Stream<List<Request>> getRequestsByCompanyIdStream(String companyId);
   Stream<List<Request>> getRequestsByRequestorIdStream(String requestorId);
+
   Stream<List<GpuTransaction>> getGpuTransactionStream({
     String? companyId,
     TransactionType? type,
@@ -359,5 +363,11 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
     return cpus_query.docs
         .map((doc) => Cpu.fromJson({...doc.data(), 'id': doc.id}))
         .toList();
+  }
+
+  @override
+  Future<List<Request>> getRequests() async {
+    var qs = await db.collectionGroup("requests").get();
+    return qs.docs.map((doc) => Request.fromJson({...doc.data()})).toList();
   }
 }

@@ -10,7 +10,7 @@
 const admin = require("firebase-admin");
 const { setGlobalOptions } = require("firebase-functions");
 const { defineSecret } = require('firebase-functions/params');
-const { onCall, onRequest, HttpsError } = require("firebase-functions/v2/https");
+const { onCall, onRequest, HttpsError, } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 const { onInit } = require('firebase-functions/v2/core');
 const { beforeUserCreated, beforeUserSignedIn } = require("firebase-functions/v2/identity");
@@ -529,4 +529,53 @@ exports.addressWritten = onCall(async (request) => {
   var result = postal.format();
   console.log(result);
   return result;
+});
+
+exports.adminAddCompany = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+  if (!request.data.companyName || !request.data.companyDomain || !request.data.confirmationEmail || !request.data.userId || !request.data.userType || !request.data.requestId) {
+    throw new HttpsError(
+      "invalid-argument",
+      "The function must be called with one argument 'companyName', 'companyDomain', 'confirmationEmail', 'userId', 'userType' containing the company's name, domain, confirmation email, user ID, and user type."
+    );
+  }
+
+  const db = getFirestore();
+
+  var qs = await db.collection('companies').where('domain', '==', request.data.companyDomain).get();
+  if (qs.docs.length > 0) {
+    throw new HttpsError(
+      "invalid-argument",
+      "The company domain already exists."
+    );
+  }
+
+  await db.runTransaction(async (t) => {
+    const companyRef = await db.collection('companies').add({
+      name: request.data.companyName,
+      domain: request.data.companyDomain,
+      created_at: Timestamp.now(),
+      confirmation_email: request.data.confirmationEmail,
+    });
+
+
+    const requestPath = `requests/${request.data.requestId}`;
+    const userPath = 'users/' + request.data.userId;
+    const userDoc = await db.doc(userPath).get();
+    if (!userDoc.exists) {
+      throw new HttpsError(
+        "invalid-argument",
+        "The user does not exist."
+      );
+    }
+    t.update(companyRef, { id: companyRef.id });
+    t.update(userDoc.ref, { company_id: companyRef.id, type: request.data.userType });
+    t.update(db.doc(requestPath), { status: 'accepted' });
+  });
+  return { 'message': 'Company added successfully', 'id': companyRef.id };
 });

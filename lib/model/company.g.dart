@@ -21,14 +21,12 @@ Company _$CompanyFromJson(Map<String, dynamic> json) => Company(
           .toList() ??
       const [],
   businessTaxId: json['business_tax_id'] as String?,
-  primaryContact: json['primary_contact'] == null
-      ? null
-      : User.fromJson(json['primary_contact'] as Map<String, dynamic>),
   primaryContactId: json['primary_contact_id'] as String?,
   isBuyer: json['is_buyer'] as bool?,
   isSeller: json['is_seller'] as bool?,
   confirmationEmail: json['confirmation_email'] as String?,
   businessDunsNumber: json['business_duns_number'] as String?,
+  domain: json['domain'] as String?,
 );
 
 Map<String, dynamic> _$CompanyToJson(Company instance) => <String, dynamic>{
@@ -43,4 +41,5 @@ Map<String, dynamic> _$CompanyToJson(Company instance) => <String, dynamic>{
   'primary_contact_id': instance.primaryContactId,
   'is_buyer': instance.isBuyer,
   'is_seller': instance.isSeller,
+  'domain': instance.domain,
 };

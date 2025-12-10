@@ -100,7 +100,7 @@ class GpuClusterDataSource extends DataTableSource {
                         await showDialog(
                           context: context,
                           builder: (context) {
-                            if (user!.type == UserType.corporate ||
+                            if (user!.type == UserType.corporateTrader ||
                                 user!.type == UserType.corporateAdmin) {
                               return AddTransactionDialog(
                                 gpuCluster: gpuCluster,

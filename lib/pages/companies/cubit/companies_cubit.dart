@@ -52,7 +52,7 @@ class CompaniesCubit extends Cubit<CompaniesState> {
       } else {
         for (var request in requestsMade) {
           if (request.status == RequestStatus.pending &&
-              request.requestType == RequestType.joinCompany) {
+              request.type == RequestType.joinCompany) {
             emit(
               CompaniesAssign(
                 companies: companies,
@@ -69,13 +69,13 @@ class CompaniesCubit extends Cubit<CompaniesState> {
       }
     }
 
-    if (user!.type == UserType.corporate) {
+    if (user!.type == UserType.corporateAdmin) {
       Company company = await databaseRepository.getCompany(user!.companyId!);
       users = await databaseRepository.getUsers(companyId: company.id);
       emit(CompaniesEditCompany(company: company, users: users));
       return;
     }
-    emit(CompaniesError(message: "User type is not admin or public"));
+    emit(CompaniesError(message: "User type is not corporate admin"));
   }
 
   void addCompany(Map<String, dynamic> data) async {
@@ -86,40 +86,40 @@ class CompaniesCubit extends Cubit<CompaniesState> {
     init();
   }
 
-  void onRequestCompany(Company company) async {
-    emit(CompaniesInitial());
-    await databaseRepository.addDocument(
-      collectionPath: 'companies/${company.id}/requests',
-      data: Request(
-        id: Mock.uid(),
-        requestorId: user!.uid,
-        targetCompanyId: company.id,
-        requestDate: DateTime.now(),
-        requestType: RequestType.joinCompany,
-        status: RequestStatus.pending,
-        summary:
-            "Request to join company ${company.name}\n"
-            "Email: ${user!.email}\n"
-            "Name: ${user!.firstName} ${user!.lastName}\n"
-            "Requested at: ${DateFormat("dd MMM yyyy HH:mm").format(DateTime.now())}",
-      ).toJson(),
-    );
-    init();
-  }
+  // void onRequestCompany(Company company) async {
+  //   emit(CompaniesInitial());
+  //   await databaseRepository.addDocument(
+  //     collectionPath: 'companies/${company.id}/requests',
+  //     data: Request(
+  //       id: Mock.uid(),
+  //       requestorId: user!.uid,
+  //       targetCompanyId: company.id,
+  //       requestDate: DateTime.now(),
+  //       requestType: RequestType.joinCompany,
+  //       status: RequestStatus.pending,
+  //       summary:
+  //           "Request to join company ${company.name}\n"
+  //           "Email: ${user!.email}\n"
+  //           "Name: ${user!.firstName} ${user!.lastName}\n"
+  //           "Requested at: ${DateFormat("dd MMM yyyy HH:mm").format(DateTime.now())}",
+  //     ).toJson(),
+  //   );
+  //   init();
+  // }
 
-  void onWithdrawRequestCompany(Request request) async {
-    emit(CompaniesInitial());
+  // void onWithdrawRequestCompany(Request request) async {
+  //   emit(CompaniesInitial());
 
-    if (request.requestType != RequestType.joinCompany) {
-      emit(CompaniesError(message: "Invalid request type"));
-      return;
-    }
-    await databaseRepository.updateDocument(
-      docPath: 'companies/${request.targetCompanyId}/requests/${request.id}',
-      data: request.copyWith(status: RequestStatus.withdrawn).toJson(),
-    );
-    init();
-  }
+  //   if (request.requestType != RequestType.joinCompany) {
+  //     emit(CompaniesError(message: "Invalid request type"));
+  //     return;
+  //   }
+  //   await databaseRepository.updateDocument(
+  //     docPath: 'companies/${request.targetCompanyId}/requests/${request.id}',
+  //     data: request.copyWith(status: RequestStatus.withdrawn).toJson(),
+  //   );
+  //   init();
+  // }
 
   void updateCompany(Company company) async {
     emit(CompaniesInitial());

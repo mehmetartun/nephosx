@@ -147,6 +147,7 @@ class User {
       (type != UserType.anonymous && type != UserType.public);
   bool get canSeeGpuClusters =>
       (type != UserType.anonymous && type != UserType.public);
+  bool get canUpdateGpuCluster => (type == UserType.corporateAdmin);
   bool get canSeeSettings => (type != UserType.anonymous);
   bool get canSeeUsers =>
       (type != UserType.anonymous && type != UserType.public);
@@ -157,6 +158,8 @@ class User {
       (type != UserType.anonymous && type != UserType.public);
 
   bool get canSeeAdmin => type == UserType.admin;
+
+  bool get canSeeCorporateAdmin => type == UserType.corporateAdmin;
 
   @override
   String toString() {

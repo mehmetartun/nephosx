@@ -3,8 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:nephosx/pages/transactions/transactions_page.dart';
 
 import '../blocs/authentication/authentication_bloc.dart';
-import '../pages/admin/admin_page.dart';
+import '../pages/admin_data/admin_data.dart';
+import '../pages/admin_onboarding/admin_onboarding_page.dart';
 import '../pages/companies/companies_page.dart';
+import '../pages/corp_admin_onboarding/corp_admin_onboarding_page.dart';
+import '../pages/corp_admin_users/corp_admin_users_page.dart';
 import '../pages/datacenters/datacenters_page.dart';
 import '../pages/generic_page.dart';
 import '../pages/gpu_clusters/gpu_clusters_page.dart';
@@ -287,25 +290,112 @@ class NestedRouter {
               StatefulShellBranch(
                 // navigatorKey: _sectionANavigatorKey,
                 routes: <RouteBase>[
-                  StatefulShellRoute.indexedStack(
-                    builder: (context, state, innerShell) {
-                      return AdminWithNavrail(
-                        navigationShell: innerShell,
-                        width: 250,
-                      );
-                    },
-                    branches: [
-                      StatefulShellBranch(
-                        routes: [
-                          GoRoute(
-                            // The screen to display as the root in the third tab of the
-                            // bottom navigation bar.
-                            // name: "settings",
-                            path: MyNavigatorRoute.admin.path,
-                            name: MyNavigatorRoute.admin.name,
-                            builder:
-                                (BuildContext context, GoRouterState state) =>
-                                    const AdminPage(),
+                  GoRoute(
+                    path: MyNavigatorRoute.admin.path,
+                    name: MyNavigatorRoute.admin.name,
+                    // redirect: (context, state) {
+                    //   return "/admin/data";
+                    // },
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const Scaffold(),
+                    routes: [
+                      StatefulShellRoute.indexedStack(
+                        builder: (context, state, innerShell) {
+                          return AdminWithNavrail(
+                            navigationShell: innerShell,
+                            width: 250,
+                          );
+                        },
+                        branches: [
+                          StatefulShellBranch(
+                            routes: [
+                              GoRoute(
+                                // The screen to display as the root in the third tab of the
+                                // bottom navigation bar.
+                                // name: "settings",
+                                path: MyNavigatorRoute.data.path,
+                                name: MyNavigatorRoute.data.name,
+                                builder:
+                                    (
+                                      BuildContext context,
+                                      GoRouterState state,
+                                    ) => const AdminDataPage(),
+                              ),
+                            ],
+                          ),
+                          StatefulShellBranch(
+                            routes: [
+                              GoRoute(
+                                // The screen to display as the root in the third tab of the
+                                // bottom navigation bar.
+                                // name: "settings",
+                                path: MyNavigatorRoute.onboarding.path,
+                                name: MyNavigatorRoute.onboarding.name,
+                                builder:
+                                    (
+                                      BuildContext context,
+                                      GoRouterState state,
+                                    ) => const AdminOnboardingPage(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                // navigatorKey: _sectionANavigatorKey,
+                routes: <RouteBase>[
+                  GoRoute(
+                    path: MyNavigatorRoute.corpAdmin.path,
+                    name: MyNavigatorRoute.corpAdmin.name,
+                    // redirect: (context, state) {
+                    //   return "/admin/data";
+                    // },
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const Scaffold(),
+                    routes: [
+                      StatefulShellRoute.indexedStack(
+                        builder: (context, state, innerShell) {
+                          return AdminWithNavrail(
+                            navigationShell: innerShell,
+                            width: 250,
+                          );
+                        },
+                        branches: [
+                          StatefulShellBranch(
+                            routes: [
+                              GoRoute(
+                                // The screen to display as the root in the third tab of the
+                                // bottom navigation bar.
+                                // name: "settings",
+                                path: MyNavigatorRoute.corpAdminUsers.path,
+                                name: MyNavigatorRoute.corpAdminUsers.name,
+                                builder:
+                                    (
+                                      BuildContext context,
+                                      GoRouterState state,
+                                    ) => const CorpAdminUsersPage(),
+                              ),
+                            ],
+                          ),
+                          StatefulShellBranch(
+                            routes: [
+                              GoRoute(
+                                // The screen to display as the root in the third tab of the
+                                // bottom navigation bar.
+                                // name: "settings",
+                                path: MyNavigatorRoute.corpAdminOnboarding.path,
+                                name: MyNavigatorRoute.corpAdminOnboarding.name,
+                                builder:
+                                    (
+                                      BuildContext context,
+                                      GoRouterState state,
+                                    ) => const CorpAdminOnboardingPage(),
+                              ),
+                            ],
                           ),
                         ],
                       ),

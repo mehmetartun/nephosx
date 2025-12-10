@@ -11,9 +11,9 @@ import '../user_profile_card.dart';
 
 /// Builds the "shell" for the app by building a Scaffold with a
 /// BottomNavigationBar, where [child] is placed in the body of the Scaffold.
-class AdminWithNavrail extends StatelessWidget {
-  /// Constructs an [AdminWithNavrail].
-  const AdminWithNavrail({
+class CorpAdminWithNavrail extends StatelessWidget {
+  /// Constructs an [CorpAdminWithNavrail].
+  const CorpAdminWithNavrail({
     required this.navigationShell,
     Key? key,
     required this.width,
@@ -32,7 +32,7 @@ class AdminWithNavrail extends StatelessWidget {
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       foregroundColor: Theme.of(context).colorScheme.onSurface,
-      title: Text('Drinks Diary'),
+      title: Text('Corp Admin'),
       centerTitle: true,
       actions: [
         // TextButton(child: Text("About"), onPressed: () {}),
@@ -64,7 +64,7 @@ class AdminWithNavrail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Admin Panel",
+                        "CorpAdmin Panel",
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Divider(),
@@ -83,12 +83,12 @@ class AdminWithNavrail extends StatelessWidget {
                 destinations: <NavigationRailDestination>[
                   NavigationRailDestination(
                     icon: Icon(Icons.public),
-                    label: Text('Data'),
+                    label: Text('Users'),
                     disabled:
                         BlocProvider.of<AuthenticationBloc>(
                           context,
                         ).user?.type !=
-                        UserType.admin,
+                        UserType.corporateAdmin,
                   ),
                   NavigationRailDestination(
                     icon: Icon(Icons.person),
@@ -97,7 +97,7 @@ class AdminWithNavrail extends StatelessWidget {
                         BlocProvider.of<AuthenticationBloc>(
                           context,
                         ).user?.type !=
-                        UserType.admin,
+                        UserType.corporateAdmin,
                   ),
                   // NavigationRailDestination(
                   //   icon: Icon(Icons.domain),

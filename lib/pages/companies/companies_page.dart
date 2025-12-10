@@ -51,10 +51,10 @@ class CompaniesPage extends StatelessWidget {
             case CompaniesAssign _:
               return CompanyAssignView(
                 user: state.user,
-                onRequestCompany: cubit.onRequestCompany,
+                // onRequestCompany: cubit.onRequestCompany,
                 companies: state.companies,
                 request: state.request,
-                onWithdrawRequest: cubit.onWithdrawRequestCompany,
+                // onWithdrawRequest: cubit.onWithdrawRequestCompany,
               );
             default:
               return CompaniesLoadingView();

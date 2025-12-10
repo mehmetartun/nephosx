@@ -5,21 +5,25 @@ import 'package:responsive_framework/responsive_framework.dart';
 import '../../../model/enums.dart';
 import '../../../model/platform_settings.dart';
 
-class AdminView extends StatefulWidget {
-  final PlatformSettings platformSettings;
+class AdminDataCountryView extends StatefulWidget {
+  final Set<Country> selectedCountries;
   final void Function(Set<Country>) updateCountries;
-  const AdminView({
+  final void Function() onCancel;
+  final String title;
+  const AdminDataCountryView({
     super.key,
-    required this.platformSettings,
+    required this.selectedCountries,
+    required this.title,
     required this.updateCountries,
+    required this.onCancel,
   });
 
   @override
-  State<AdminView> createState() => _AdminViewState();
+  State<AdminDataCountryView> createState() => _AdminDataCountryViewState();
 }
 
-class _AdminViewState extends State<AdminView> {
-  late List<Country> _allowedCountries;
+class _AdminDataCountryViewState extends State<AdminDataCountryView> {
+  late List<Country> _selectedCountries;
   late List<Country> allCountries;
   late bool _isDirty;
   late bool _edit;
@@ -27,9 +31,9 @@ class _AdminViewState extends State<AdminView> {
   void initState() {
     super.initState();
     _isDirty = false;
-    _edit = false;
-    _allowedCountries = widget.platformSettings.datacenterAllowedCountries
-        .toList();
+    _edit = true;
+    _selectedCountries = widget.selectedCountries.toList();
+    _selectedCountries.sort((a, b) => a.description.compareTo(b.description));
     allCountries = Country.values.toList();
     allCountries.sort((a, b) => a.description.compareTo(b.description));
   }
@@ -38,9 +42,9 @@ class _AdminViewState extends State<AdminView> {
     _isDirty = true;
     setState(() {
       if (value) {
-        _allowedCountries.add(country);
+        _selectedCountries.add(country);
       } else {
-        _allowedCountries.remove(country);
+        _selectedCountries.remove(country);
       }
     });
   }
@@ -63,7 +67,7 @@ class _AdminViewState extends State<AdminView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Allowed Countries"),
+                      Text(widget.title),
 
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -72,7 +76,7 @@ class _AdminViewState extends State<AdminView> {
                             onPressed: _isDirty
                                 ? () {
                                     widget.updateCountries(
-                                      _allowedCountries.toSet(),
+                                      _selectedCountries.toSet(),
                                     );
                                   }
                                 : null,
@@ -81,14 +85,7 @@ class _AdminViewState extends State<AdminView> {
                           SizedBox(width: 20),
                           FilledButton(
                             onPressed: () {
-                              setState(() {
-                                _edit = false;
-                                _isDirty = false;
-                                _allowedCountries = widget
-                                    .platformSettings
-                                    .datacenterAllowedCountries
-                                    .toList();
-                              });
+                              widget.onCancel();
                             },
                             child: Text("Cancel"),
                           ),
@@ -108,7 +105,7 @@ class _AdminViewState extends State<AdminView> {
                             title: Text(
                               "${country.flagUnicode} ${country.description}",
                             ),
-                            value: _allowedCountries.contains(country),
+                            value: _selectedCountries.contains(country),
                             onChanged: (value) => _onChanged(country, value!),
                           );
                         }),
@@ -122,7 +119,7 @@ class _AdminViewState extends State<AdminView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Allowed Countries"),
+                    Text(widget.title),
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
@@ -140,7 +137,7 @@ class _AdminViewState extends State<AdminView> {
                       children: [
                         ...allCountries
                             .where((country) {
-                              return _allowedCountries.contains(country);
+                              return _selectedCountries.contains(country);
                             })
                             .map((country) {
                               return ListTile(
