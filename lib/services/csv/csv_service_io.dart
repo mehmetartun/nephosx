@@ -1,14 +1,26 @@
 import 'dart:io';
 
 import 'package:csv/csv.dart';
+import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../../model/datacenter.dart';
 
 class CsvService {
   /// Exports the given list of drinks to a CSV file and opens the share dialog.
   ///
   /// The CSV file will be named `drinks_export.csv` and stored in a temporary
   /// directory before being shared.
+  ///
+  ///
+  Future<void> exportGpuClusters(List<GpuCluster> gpuClustersToExport) async {
+    throw (UnimplementedError());
+  }
+
+  Future<void> exportDatacenters(List<Datacenter> datacentersToExport) async {
+    throw (UnimplementedError());
+  }
   // Future<void> exportDrinks(List<Drink> drinksToExport) async {
   //   if (drinksToExport.isEmpty) {
   //     // In a real app, you might want to return a status or show a notification.

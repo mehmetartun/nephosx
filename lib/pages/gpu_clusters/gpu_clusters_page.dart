@@ -7,6 +7,7 @@ import '../../repositories/database/database.dart';
 import '../../widgets/views/loading_view.dart';
 import 'cubit/gpu_clusters_cubit.dart';
 import 'views/gpu_cluster_add_edit_view.dart';
+import 'views/gpu_clusters_error_view.dart';
 import 'views/gpu_clusters_view.dart';
 
 class GpuClustersPage extends StatelessWidget {
@@ -26,6 +27,12 @@ class GpuClustersPage extends StatelessWidget {
             case GpuClustersInitial _:
             case GpuClustersLoading _:
               return GpuClustersLoadingView();
+            case GpuClustersError _:
+              return GpuClustersErrorView(
+                title: "Gpu Clusters Error",
+                message: state.message,
+                onRetry: cubit.init,
+              );
             case GpuClustersLoaded _:
               return GpuClustersView(
                 gpuClusters: state.gpuClusters,

@@ -217,6 +217,23 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                             child: const Text("Admin"),
                           ),
                   ],
+                  if (user.canSeeCorporateAdmin) ...[
+                    navigationShell?.currentIndex == 9
+                        ? FilledButton(
+                            onPressed: () {
+                              // navigationShell?.goBranch(7);
+                              // context.go("/admin/data");
+                            },
+                            child: const Text("Listing"),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              context.goNamed("listing");
+                              // navigationShell?.goBranch(7);
+                            },
+                            child: const Text("Listing"),
+                          ),
+                  ],
                 ],
               ),
               Row(

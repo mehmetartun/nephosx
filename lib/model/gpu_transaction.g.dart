@@ -12,14 +12,14 @@ GpuTransaction _$GpuTransactionFromJson(Map<String, dynamic> json) =>
       buyerCompanyId: json['buyer_company_id'] as String,
       gpuClusterId: json['gpu_cluster_id'] as String,
       sellerCompanyId: json['seller_company_id'] as String,
-      createdAt: const TimestampConverter().fromJson(
-        json['createdAt'] as Timestamp,
+      createdAt: const TimestampToEpochConverter().fromJson(
+        json['created_at'] as Object,
       ),
-      startDate: const TimestampConverter().fromJson(
-        json['startDate'] as Timestamp,
+      startDate: const TimestampToEpochConverter().fromJson(
+        json['start_date'] as Object,
       ),
-      endDate: const TimestampConverter().fromJson(
-        json['endDate'] as Timestamp,
+      endDate: const TimestampToEpochConverter().fromJson(
+        json['end_date'] as Object,
       ),
       consideration: Consideration.fromJson(
         json['consideration'] as Map<String, dynamic>,
@@ -27,15 +27,16 @@ GpuTransaction _$GpuTransactionFromJson(Map<String, dynamic> json) =>
       datacenterId: json['datacenter_id'] as String,
     );
 
-Map<String, dynamic> _$GpuTransactionToJson(GpuTransaction instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'buyer_company_id': instance.buyerCompanyId,
-      'gpu_cluster_id': instance.gpuClusterId,
-      'datacenter_id': instance.datacenterId,
-      'seller_company_id': instance.sellerCompanyId,
-      'createdAt': const TimestampConverter().toJson(instance.createdAt),
-      'startDate': const TimestampConverter().toJson(instance.startDate),
-      'endDate': const TimestampConverter().toJson(instance.endDate),
-      'consideration': instance.consideration.toJson(),
-    };
+Map<String, dynamic> _$GpuTransactionToJson(
+  GpuTransaction instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'buyer_company_id': instance.buyerCompanyId,
+  'gpu_cluster_id': instance.gpuClusterId,
+  'datacenter_id': instance.datacenterId,
+  'seller_company_id': instance.sellerCompanyId,
+  'created_at': const TimestampToEpochConverter().toJson(instance.createdAt),
+  'start_date': const TimestampToEpochConverter().toJson(instance.startDate),
+  'end_date': const TimestampToEpochConverter().toJson(instance.endDate),
+  'consideration': instance.consideration.toJson(),
+};

@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
+import 'package:nephosx/model/listing.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../widgets/dialogs/add_transaction_dialog.dart';
@@ -9,18 +12,18 @@ import 'enums.dart';
 import 'gpu_transaction.dart';
 import 'user.dart';
 
-class GpuClusterDataSource extends DataTableSource {
+class ListingDataSource extends DataTableSource {
   // Generate some dummy dat
 
-  final List<GpuCluster> gpuClusters;
+  final List<Listing> listings;
   final User? user;
   final BuildContext context;
   final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
   final String? Function(GpuCluster, DateTime, DateTime) validator;
   final void Function(GpuTransaction) onAddTransaction;
 
-  GpuClusterDataSource({
-    required this.gpuClusters,
+  ListingDataSource({
+    required this.listings,
     this.user,
     required this.context,
     required this.priceCalculator,
@@ -29,8 +32,8 @@ class GpuClusterDataSource extends DataTableSource {
   });
 
   // Sorting Logic
-  void sort<T>(Comparable<T> Function(GpuCluster d) getField, bool ascending) {
-    gpuClusters.sort((a, b) {
+  void sort<T>(Comparable<T> Function(Listing d) getField, bool ascending) {
+    listings.sort((a, b) {
       final aValue = getField(a);
       final bValue = getField(b);
       return ascending
@@ -44,39 +47,67 @@ class GpuClusterDataSource extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
-    if (index >= gpuClusters.length) return null;
-    final gpuCluster = gpuClusters[index];
+    if (index >= listings.length) return null;
+    final listing = listings[index];
 
     return DataRow(
       cells: [
         DataCell(
-          Text(
-            "${gpuCluster.producer?.name ?? 'ERROR'}\n${gpuCluster.device?.name ?? 'ERROR'}",
+          Row(
+            children: [
+              listing.gpuCluster?.producer?.base64Image != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 3.0),
+                      child: Image.memory(
+                        base64Decode(
+                          listing.gpuCluster!.producer!.base64Image!,
+                        ),
+                        width: 16,
+                        height: 16,
+                      ),
+                    )
+                  : Container(),
+              Text(
+                // "${listing.gpuCluster?.producer?.name ?? 'X'}\n${listing.gpuCluster?.device?.name ?? 'X'}",
+                "${listing.gpuCluster?.device?.name ?? 'X'}",
+              ),
+            ],
           ),
         ),
-        DataCell(Text(gpuCluster.quantity.toString())),
+        DataCell(Text(listing.gpuCluster?.quantity.toString() ?? "X")),
         DataCell(
-          Text(gpuCluster.datacenter?.address.country.region.description ?? ''),
+          Text(
+            listing
+                    .gpuCluster
+                    ?.datacenter
+                    ?.address
+                    .country
+                    .region
+                    .description ??
+                'X',
+          ),
         ),
-        DataCell(Text(gpuCluster.datacenter?.address.country.iso2 ?? '')),
-        DataCell(Text(gpuCluster.datacenter?.tier.roman ?? '')),
+        DataCell(
+          Text(
+            listing.gpuCluster?.datacenter == null
+                ? 'X'
+                : '${listing.gpuCluster!.datacenter!.address.country.flagUnicode} ${listing.gpuCluster!.datacenter!.address.country.iso2}',
+          ),
+        ),
+        DataCell(Text(listing.gpuCluster?.datacenter?.tier.roman ?? 'X')),
 
-        DataCell(Text(gpuCluster.teraFlops?.toString() ?? "15200")),
-        DataCell(Text("${gpuCluster.perGpuVramInGb?.toString() ?? "80"} GB")),
+        DataCell(Text(listing.gpuCluster?.teraFlops?.toString() ?? "ERROR")),
         DataCell(
-          Text(
-            gpuCluster.startDate == null
-                ? "ERROR"
-                : DateFormat("dd MMM yy").format(gpuCluster.startDate!),
-          ),
+          Text("${listing.gpuCluster?.perGpuVramInGb?.toString() ?? "X"} GB"),
         ),
+        DataCell(Text(DateFormat("dd MMM yy").format(listing.startDate))),
         DataCell(
           user!.canSeePrices
-              ? gpuCluster.rentalPrices.length == 0
-                    ? Text('12 months / \$9.99/hr')
+              ? listing.rentalPrices.isEmpty
+                    ? Text('No Price')
                     : DropdownButton(
-                        value: gpuCluster.rentalPrices.first,
-                        items: gpuCluster.rentalPrices
+                        value: listing.rentalPrices.first,
+                        items: listing.rentalPrices
                             .map(
                               (e) => DropdownMenuItem(
                                 value: e,
@@ -91,7 +122,7 @@ class GpuClusterDataSource extends DataTableSource {
               : Text("Locked"),
         ),
         DataCell(
-          gpuCluster.companyId == user?.companyId
+          listing.companyId == user?.companyId
               ? Text("Own GPU")
               : Row(
                   children: [
@@ -102,14 +133,19 @@ class GpuClusterDataSource extends DataTableSource {
                           builder: (context) {
                             if (user!.type == UserType.corporateTrader ||
                                 user!.type == UserType.corporateAdmin) {
-                              return AddTransactionDialog(
-                                gpuCluster: gpuCluster,
-                                priceCalculator: priceCalculator,
-                                validator: validator,
-                                buyers: [user!.company!],
-                                datacenter: gpuCluster.datacenter!,
-                                onAddTransaction: onAddTransaction,
-                              );
+                              if (listing.gpuCluster != null &&
+                                  listing.datacenter != null) {
+                                return AddTransactionDialog(
+                                  gpuCluster: listing.gpuCluster!,
+                                  priceCalculator: priceCalculator,
+                                  validator: validator,
+                                  buyers: [user!.company!],
+                                  datacenter: listing.datacenter!,
+                                  onAddTransaction: onAddTransaction,
+                                );
+                              } else {
+                                return Container();
+                              }
                             } else {
                               return AlertDialog(
                                 title: Text("Not Authorized"),
@@ -149,7 +185,11 @@ class GpuClusterDataSource extends DataTableSource {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(20.0),
-                            child: GpuClusterInfo(gpuCluster: gpuCluster),
+                            child: listing.gpuCluster == null
+                                ? Container()
+                                : GpuClusterInfo(
+                                    gpuCluster: listing.gpuCluster!,
+                                  ),
                           ),
                           Positioned(
                             top: 10,
@@ -178,7 +218,7 @@ class GpuClusterDataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => gpuClusters.length;
+  int get rowCount => listings.length;
 
   @override
   int get selectedRowCount => 0;

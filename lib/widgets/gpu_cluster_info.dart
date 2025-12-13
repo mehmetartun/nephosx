@@ -272,19 +272,17 @@ class GpuClusterInfo extends StatelessWidget {
                 properties: [
                   KeyValuePair(
                     key: "Earliest Start",
-                    value: gpuCluster.availabilityDate == null
+                    value: gpuCluster.startDate == null
                         ? ""
                         : DateFormat(
                             "yyyy-MM-dd",
-                          ).format(gpuCluster.availabilityDate!),
+                          ).format(gpuCluster.startDate!),
                   ),
                   KeyValuePair(
                     key: "Latest End",
-                    value: gpuCluster.availabilityDate == null
+                    value: gpuCluster.endDate == null
                         ? ""
-                        : DateFormat(
-                            "yyyy-MM-dd",
-                          ).format(gpuCluster.availabilityDate!),
+                        : DateFormat("yyyy-MM-dd").format(gpuCluster.endDate!),
                   ),
                   KeyValuePair(
                     key: "Reliability (%)",

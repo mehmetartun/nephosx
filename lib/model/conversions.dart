@@ -48,3 +48,30 @@ class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
     return Timestamp.fromDate(dateTime);
   }
 }
+
+class TimestampToEpochConverter implements JsonConverter<DateTime, Object> {
+  const TimestampToEpochConverter();
+
+  @override
+  DateTime fromJson(Object json) {
+    // print("json in TimestampToEpochConverter: $json");
+    // The prompt specifies the input is a Firestore Timestamp
+    if (json is Timestamp) {
+      // print("returning json in TimestampToEpochConverter");
+      return json.toDate();
+    }
+
+    // Optional: Handle the case where the data is already an int (e.g., re-reading local cache)
+    if (json is int) {
+      return DateTime.fromMillisecondsSinceEpoch(json);
+    }
+
+    throw ArgumentError.value(json, 'json', 'Expected Timestamp or int');
+  }
+
+  @override
+  Object toJson(DateTime object) {
+    // The prompt specifies the output should be millisecondsSinceEpoch
+    return object.millisecondsSinceEpoch;
+  }
+}

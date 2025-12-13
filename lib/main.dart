@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:nephosx/blocs/notifications/bloc/notifications_bloc.dart';
 import 'package:nephosx/blocs/requests/bloc/requests_bloc.dart';
 import 'package:nephosx/firebase_options.dart';
@@ -36,6 +37,15 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // prefs.setString("password", "123");
   var password = prefs.getString("password");
+
+  // var qs = await FirebaseFirestore.instance.collection("transactions").get();
+  // for (var doc in qs.docs) {
+  //   doc.reference.update({
+  //     "startDate": FieldValue.delete(),
+  //     "endDate": FieldValue.delete(),
+  //     "createdAt": FieldValue.delete(),
+  //   });
+  // }
 
   if (password == "TopSecret123") {
     runApp(const MyApp());

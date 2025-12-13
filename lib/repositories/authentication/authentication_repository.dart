@@ -48,7 +48,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
   static final FirebaseAuthenticationRepository instance =
       FirebaseAuthenticationRepository._internal();
 
-  late final DatabaseRepository databaseRepository;
+  DatabaseRepository? databaseRepository;
   auth.UserCredential? userCredential;
   void init(DatabaseRepository databaseRepository) {
     try {
@@ -62,7 +62,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     final currentUser = auth.FirebaseAuth.instance.currentUser;
 
     if (currentUser != null) {
-      _user = await databaseRepository.getUserData(currentUser.uid);
+      _user = await databaseRepository!.getUserData(currentUser.uid);
     }
     return currentUser != null;
   }
@@ -87,13 +87,13 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     );
     // return userCredential!;
     try {
-      _user = await databaseRepository.getUserData(userCredential!.user!.uid);
+      _user = await databaseRepository!.getUserData(userCredential!.user!.uid);
     } catch (e) {
-      await databaseRepository.saveUserData({
+      await databaseRepository!.saveUserData({
         'uid': userCredential!.user!.uid,
         'email': userCredential!.user!.email,
       });
-      _user = await databaseRepository.getUserData(userCredential!.user!.uid);
+      _user = await databaseRepository!.getUserData(userCredential!.user!.uid);
     }
 
     return _user!;
@@ -136,13 +136,13 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     );
     // return userCredential!;
     try {
-      _user = await databaseRepository.getUserData(userCredential!.user!.uid);
+      _user = await databaseRepository!.getUserData(userCredential!.user!.uid);
     } catch (e) {
-      await databaseRepository.saveUserData({
+      await databaseRepository!.saveUserData({
         'uid': userCredential!.user!.uid,
         'email': userCredential!.user!.email,
       });
-      _user = await databaseRepository.getUserData(userCredential!.user!.uid);
+      _user = await databaseRepository!.getUserData(userCredential!.user!.uid);
     }
 
     return _user!;
@@ -201,7 +201,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     }
 
     // return userCredential;
-    _user = await databaseRepository.getUserData(userCredential.user!.uid);
+    _user = await databaseRepository!.getUserData(userCredential.user!.uid);
     return _user!;
   }
 
@@ -246,7 +246,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
       throw Exception("Sign in Failed");
     }
 
-    return await databaseRepository.getUserData(userCredential!.user!.uid);
+    return await databaseRepository!.getUserData(userCredential!.user!.uid);
     // return User.fromMap({
     //   'email': userCredential!.user!.email,
     //   'uid': userCredential!.user!.uid,
@@ -274,7 +274,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
       if (userCredential?.user == null) {
         throw Exception("User creation failed");
       }
-      _user = await databaseRepository.getUserData(userCredential!.user!.uid);
+      _user = await databaseRepository!.getUserData(userCredential!.user!.uid);
       // await databaseRepository.saveUserData({
       //   'uid': userCredential!.user!.uid,
       //   'email': email,
@@ -324,7 +324,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
     if (userCredential?.user == null) {
       throw Exception("User creation failed");
     }
-    await databaseRepository.saveUserData({
+    await databaseRepository!.saveUserData({
       'uid': userCredential!.user!.uid,
       'email': null,
       'display_name': "Anonymous User",
@@ -336,7 +336,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
       'created_at': Timestamp.now(),
       'last_login_at': Timestamp.now(),
     });
-    _user = await databaseRepository.getUserData(userCredential!.user!.uid);
+    _user = await databaseRepository!.getUserData(userCredential!.user!.uid);
     return _user!;
   }
 

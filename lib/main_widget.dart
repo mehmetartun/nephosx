@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nephosx/pages/admin_onboarding/admin_onboarding_page.dart';
+import 'package:nephosx/pages/listing/listing_page.dart';
 import 'package:nephosx/pages/market/market_page.dart';
 
 import 'blocs/authentication/authentication_bloc.dart';
@@ -20,10 +22,10 @@ import 'dart:math' as math;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // if (Platform.isAndroid) {
-  //   FirebaseFunctions.instance.useFunctionsEmulator('10.0.2.2', 5001);
-  // } else {
-  //   FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+  // // if (Platform.isAndroid) {
+  // //   FirebaseFunctions.instance.useFunctionsEmulator('10.0.2.2', 5001);
+  // // } else {
+  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   // }
 
   // var qs = await FirebaseFirestore.instance
@@ -102,7 +104,7 @@ class MyMaterialApp extends StatelessWidget {
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // routerConfig: goRouter,
       // home: DataEntryPage(itemId: "2b2SgkiGZyTloYcmW7xF"),
-      home: AdminOnboardingPage(),
+      home: ListingPage(),
 
       // builder: (context, child) => ResponsiveBreakpoints.builder(
       //   breakpoints: [

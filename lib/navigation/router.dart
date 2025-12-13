@@ -11,6 +11,7 @@ import '../pages/corp_admin_users/corp_admin_users_page.dart';
 import '../pages/datacenters/datacenters_page.dart';
 import '../pages/generic_page.dart';
 import '../pages/gpu_clusters/gpu_clusters_page.dart';
+import '../pages/listing/listing_page.dart';
 import '../pages/market/market_page.dart';
 import '../pages/profile/profile_page.dart';
 import '../pages/users/users_page.dart';
@@ -401,6 +402,27 @@ class NestedRouter {
                         ],
                       ),
                     ],
+                  ),
+                ],
+              ),
+              StatefulShellBranch(
+                // navigatorKey: _sectionANavigatorKey,
+                routes: <RouteBase>[
+                  GoRoute(
+                    // The screen to display as the root in the third tab of the
+                    // bottom navigation bar.
+                    // name: "settings",
+                    path: MyNavigatorRoute.listing.path,
+                    name: MyNavigatorRoute.listing.name,
+                    builder: (BuildContext context, GoRouterState state) =>
+                        ListingPage(),
+                    // routes: <RouteBase>[
+                    //   GoRoute(
+                    //     path: 'changeUserImage',
+                    //     builder: (BuildContext context, GoRouterState state) =>
+                    //         Container(),
+                    //   ),
+                    // ],
                   ),
                 ],
               ),

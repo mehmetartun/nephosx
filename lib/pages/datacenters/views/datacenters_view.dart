@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nephosx/extensions/capitalize.dart';
 import 'package:nephosx/pages/datacenters/views/datacenters_view.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../model/company.dart';
 import '../../../model/datacenter.dart';
+import '../../../services/csv/csv_service.dart';
 import '../../../widgets/company_list_tile.dart';
 import '../../../widgets/datacenter_list_tile.dart';
 import '../../../widgets/dialogs/add_edit_company_dialog.dart';
@@ -62,12 +65,33 @@ class _DatacentersViewState extends State<DatacentersView> {
                     "Datacenters",
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  FilledButton.tonalIcon(
-                    icon: Icon(Icons.add),
-                    label: Text("Add"),
-                    onPressed: () {
-                      widget.addDatacenterRequest();
-                    },
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (BlocProvider.of<AuthenticationBloc>(
+                            context,
+                          ).user?.canSeeDatacenters ??
+                          false)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: OutlinedButton.icon(
+                            icon: Icon(Icons.add),
+                            label: Text("Add"),
+                            onPressed: widget.addDatacenterRequest,
+                          ),
+                        ),
+                      if (BlocProvider.of<AuthenticationBloc>(
+                            context,
+                          ).user?.canSeeGpuClusters ??
+                          false)
+                        OutlinedButton.icon(
+                          icon: Icon(Icons.download),
+                          label: Text("Export"),
+                          onPressed: () async {
+                            await CsvService().exportDatacenters(datacenters);
+                          },
+                        ),
+                    ],
                   ),
                 ],
               ),

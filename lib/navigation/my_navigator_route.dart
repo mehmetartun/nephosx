@@ -9,6 +9,7 @@ enum MyNavigatorRoute {
   transactions("transactions", "transactions"),
   data("data", "data"),
   admin("admin", "admin"),
+  listing("listing", "listing"),
   corpAdmin("corp_admin", "corp_admin"),
   corpAdminOnboarding("corp_admin_onboarding", "corp_admin_onboarding"),
   corpAdminUsers("corp_admin_users", "corp_admin_users"),

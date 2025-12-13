@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 import '../model/gpu_transaction.dart';
+import '../model/slot.dart';
 
 class OccupationView extends StatelessWidget {
   const OccupationView({
     super.key,
-    required this.transactions,
+    this.occupiedSlots = const [],
+    this.listedSlots = const [],
+    this.unListedSlots = const [],
     required this.fromDate,
     required this.toDate,
   });
-  final List<GpuTransaction> transactions;
+  final List<Slot> occupiedSlots;
+  final List<Slot> listedSlots;
+  final List<Slot> unListedSlots;
   final DateTime fromDate;
   final DateTime toDate;
 
@@ -21,7 +27,10 @@ class OccupationView extends StatelessWidget {
           return CustomPaint(
             size: Size(constraints.maxWidth, 17),
             painter: _SplitRectPainter(
-              transactions: transactions,
+              occupiedSlots: occupiedSlots,
+              listedSlots: listedSlots,
+              unListedSlots: unListedSlots,
+
               fromDate: fromDate,
               toDate: DateTime(toDate.year, 12, 31),
               foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -37,14 +46,18 @@ class OccupationView extends StatelessWidget {
 
 class _SplitRectPainter extends CustomPainter {
   const _SplitRectPainter({
-    required this.transactions,
+    required this.occupiedSlots,
+    required this.listedSlots,
+    required this.unListedSlots,
     required this.fromDate,
     required this.toDate,
     required this.foregroundColor,
     required this.backgroundColor,
     required this.textColor,
   });
-  final List<GpuTransaction> transactions;
+  final List<Slot> occupiedSlots;
+  final List<Slot> listedSlots;
+  final List<Slot> unListedSlots;
   final DateTime fromDate;
   final DateTime toDate;
   final Color foregroundColor;
@@ -53,7 +66,9 @@ class _SplitRectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final stopPoints = getStopPoints(transactions, fromDate, toDate);
+    final stopPoints = getStopPoints(occupiedSlots, fromDate, toDate);
+    final listedStopPoints = getStopPoints(listedSlots, fromDate, toDate);
+    final unListedStopPoints = getStopPoints(unListedSlots, fromDate, toDate);
     final markerPoints = getMarkerPoints(fromDate, toDate);
 
     Paint backgroundColorPaint = Paint()..color = backgroundColor;
@@ -65,6 +80,14 @@ class _SplitRectPainter extends CustomPainter {
     for (var stopPoint in stopPoints) {
       // paintRectangle(stopPoint, canvas, size, foregroundColor);
       paintRectangle(stopPoint, canvas, size, Colors.red);
+    }
+    for (var stopPoint in listedStopPoints) {
+      // paintRectangle(stopPoint, canvas, size, foregroundColor);
+      paintRectangle(stopPoint, canvas, size, Colors.blue);
+    }
+    for (var stopPoint in unListedStopPoints) {
+      // paintRectangle(stopPoint, canvas, size, foregroundColor);
+      paintRectangle(stopPoint, canvas, size, Colors.green);
     }
     for (var markerPoint in markerPoints) {
       paintBar(canvas, size, foregroundColor, markerPoint['location'], 1);
@@ -141,18 +164,23 @@ void paintText(
 }
 
 List<Map<String, dynamic>> getStopPoints(
-  List<GpuTransaction> transactions,
+  List<Slot> slots,
   DateTime fromDate,
   DateTime toDate,
 ) {
   List<Map<String, dynamic>> stopPoints = [];
   int totalDuration = toDate.difference(fromDate).inSeconds;
 
-  for (GpuTransaction transaction in transactions) {
+  for (Slot slot in slots) {
     stopPoints.add({
-      'start':
-          transaction.startDate.difference(fromDate).inSeconds / totalDuration,
-      'end': transaction.endDate.difference(fromDate).inSeconds / totalDuration,
+      'start': math.max(
+        slot.from.difference(fromDate).inSeconds / totalDuration,
+        0,
+      ),
+      'end': math.min(
+        1,
+        slot.to.difference(fromDate).inSeconds / totalDuration,
+      ),
     });
   }
 
@@ -163,9 +191,7 @@ List<Map<String, dynamic>> getMarkerPoints(DateTime fromDate, DateTime toDate) {
   List<Map<String, dynamic>> markerPoints = [];
   int totalDuration = toDate.difference(fromDate).inSeconds;
 
-  int numYears = toDate.year - fromDate.year;
-
-  for (int i = fromDate.year; i <= toDate.year; i++) {
+  for (int i = fromDate.year + 1; i < toDate.year + 1; i++) {
     markerPoints.add({
       'location':
           DateTime(i, 1, 1).difference(fromDate).inSeconds / totalDuration,

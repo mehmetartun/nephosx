@@ -147,10 +147,7 @@ class _MarketViewState extends State<MarketView> {
           break;
         case SortKey.startDate:
           widget.gpuClusters.sort((a, b) {
-            return a.availabilityDate?.compareTo(
-                  b.availabilityDate ?? DateTime.now(),
-                ) ??
-                0;
+            return a.startDate?.compareTo(b.startDate ?? DateTime.now()) ?? 0;
           });
           break;
         default:
@@ -199,10 +196,7 @@ class _MarketViewState extends State<MarketView> {
           break;
         case SortKey.startDate:
           widget.gpuClusters.sort((b, a) {
-            return a.availabilityDate?.compareTo(
-                  b.availabilityDate ?? DateTime.now(),
-                ) ??
-                0;
+            return a.startDate?.compareTo(b.startDate ?? DateTime.now()) ?? 0;
           });
           break;
         default:
@@ -722,14 +716,14 @@ class _MarketViewState extends State<MarketView> {
                                 })
                                 .where((gpuCluster) {
                                   if (availabilityFrom == null) return true;
-                                  return gpuCluster.availabilityDate?.isAfter(
+                                  return gpuCluster.startDate?.isAfter(
                                         availabilityFrom!,
                                       ) ??
                                       true;
                                 })
                                 .where((gpuCluster) {
                                   if (availabilityTo == null) return true;
-                                  return gpuCluster.availabilityDate?.isBefore(
+                                  return gpuCluster.startDate?.isBefore(
                                         availabilityTo!,
                                       ) ??
                                       true;
@@ -790,11 +784,11 @@ class _MarketViewState extends State<MarketView> {
                                       ),
                                       DataCell(
                                         Text(
-                                          gpuCluster.availabilityDate == null
+                                          gpuCluster.startDate == null
                                               ? "ERROR"
-                                              : DateFormat("dd MMM yy").format(
-                                                  gpuCluster.availabilityDate!,
-                                                ),
+                                              : DateFormat(
+                                                  "dd MMM yy",
+                                                ).format(gpuCluster.startDate!),
                                         ),
                                       ),
                                       DataCell(

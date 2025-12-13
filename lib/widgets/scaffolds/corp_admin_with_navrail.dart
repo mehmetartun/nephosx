@@ -18,7 +18,9 @@ class CorpAdminWithNavrail extends StatelessWidget {
     Key? key,
     required this.width,
     this.narrow = false,
-  }) : super(key: key ?? const ValueKey<String>('ScaffoldWithNavRail'));
+  }) : super(
+         key: key ?? const ValueKey<String>('CorporateScaffoldWithNavRail'),
+       );
 
   /// The navigation shell and container for the branch Navigators.
   final StatefulNavigationShell navigationShell;
@@ -93,6 +95,15 @@ class CorpAdminWithNavrail extends StatelessWidget {
                   NavigationRailDestination(
                     icon: Icon(Icons.person),
                     label: Text('Onboarding'),
+                    disabled:
+                        BlocProvider.of<AuthenticationBloc>(
+                          context,
+                        ).user?.type !=
+                        UserType.corporateAdmin,
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.list),
+                    label: Text('Listing'),
                     disabled:
                         BlocProvider.of<AuthenticationBloc>(
                           context,

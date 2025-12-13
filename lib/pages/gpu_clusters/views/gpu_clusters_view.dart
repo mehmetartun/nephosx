@@ -5,6 +5,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
+import '../../../services/csv/csv_service.dart';
 import '../../../widgets/gpu_cluster_list_tile.dart';
 import '../../../widgets/property_badge.dart';
 
@@ -37,15 +38,34 @@ class GpuClustersView extends StatelessWidget {
                     "GPU Clusters",
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  if (BlocProvider.of<AuthenticationBloc>(
-                        context,
-                      ).user?.canSeeGpuClusters ??
-                      false)
-                    FilledButton.tonalIcon(
-                      icon: Icon(Icons.add),
-                      label: Text("Add"),
-                      onPressed: addGpuClusterRequest,
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (BlocProvider.of<AuthenticationBloc>(
+                            context,
+                          ).user?.canSeeGpuClusters ??
+                          false)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10.0),
+                          child: OutlinedButton.icon(
+                            icon: Icon(Icons.add),
+                            label: Text("Add"),
+                            onPressed: addGpuClusterRequest,
+                          ),
+                        ),
+                      if (BlocProvider.of<AuthenticationBloc>(
+                            context,
+                          ).user?.canSeeGpuClusters ??
+                          false)
+                        OutlinedButton.icon(
+                          icon: Icon(Icons.download),
+                          label: Text("Export"),
+                          onPressed: () async {
+                            await CsvService().exportGpuClusters(gpuClusters);
+                          },
+                        ),
+                    ],
+                  ),
                 ],
               ),
               SizedBox(height: 20),

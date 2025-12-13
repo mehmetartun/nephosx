@@ -10,6 +10,7 @@ import '../../model/device.dart';
 import '../../model/enums.dart';
 import '../../model/gpu_cluster.dart';
 import '../../model/invitaton.dart';
+import '../../model/listing.dart';
 import '../../model/platform_settings.dart';
 import '../../model/producer.dart';
 import '../../model/user.dart';
@@ -47,10 +48,12 @@ abstract class DatabaseRepository {
   Stream<List<User>> getUsersStream();
   Future<List<User>> getUsers({String? companyId});
   Future<List<Invitation>> getInvitations({String? companyId});
+  Future<List<Listing>> getListings({String? companyId});
   Future<List<Company>> getCompanies();
   Future<List<Datacenter>> getDatacenters({String? companyId});
   Future<List<GpuCluster>> getGpuClusters({String? companyId});
   Future<Company> getCompany(String companyId);
+  Future<List<GpuTransaction>> getGpuTransactions({String? companyId});
 
   Future<List<Request>> getRequestsByRequestorId(String requestorId);
   Future<List<Request>> getRequestsByCompanyId(String companyId);
@@ -377,5 +380,45 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   Future<List<Invitation>> getInvitations({String? companyId}) async {
     var qs = await db.collection("invitations").get();
     return qs.docs.map((doc) => Invitation.fromJson({...doc.data()})).toList();
+  }
+
+  @override
+  Future<List<Listing>> getListings({String? companyId}) async {
+    var qs = await db
+        .collection("listings")
+        .where("company_id", isEqualTo: companyId)
+        .get();
+    return qs.docs.map((doc) => Listing.fromJson({...doc.data()})).toList();
+  }
+
+  @override
+  Future<List<GpuTransaction>> getGpuTransactions({String? companyId}) async {
+    List<GpuTransaction> txs = [];
+    if (companyId != null) {
+      var buys = await db
+          .collection("transactions")
+          .where('buyer_company_id', isEqualTo: companyId)
+          .get();
+      var sells = await db
+          .collection("transactions")
+          .where('seller_company_id', isEqualTo: companyId)
+          .get();
+      txs.addAll(
+        buys.docs
+            .map((doc) => GpuTransaction.fromJson({...doc.data()}))
+            .toList(),
+      );
+      txs.addAll(
+        sells.docs
+            .map((doc) => GpuTransaction.fromJson({...doc.data()}))
+            .toList(),
+      );
+    } else {
+      var qs = await db.collectionGroup("transactions").get();
+      txs.addAll(
+        qs.docs.map((doc) => GpuTransaction.fromJson({...doc.data()})).toList(),
+      );
+    }
+    return txs;
   }
 }

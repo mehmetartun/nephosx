@@ -10,6 +10,8 @@ import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../model/gpu_cluster_data_source.dart';
 import '../../../model/gpu_transaction.dart';
+import '../../../model/listing.dart';
+import '../../../model/listing_data_source.dart';
 import '../../../model/user.dart';
 import '../../../services/platform_settings/platform_settings_service.dart';
 import '../../../widgets/dialogs/add_transaction_dialog.dart';
@@ -18,26 +20,26 @@ import '../../../widgets/filter_range_slider.dart';
 import '../../../widgets/formfields/date_formfield.dart';
 import '../../../widgets/gpu_cluster_info.dart';
 
-class MarketView2 extends StatefulWidget {
-  const MarketView2({
+class MarketView3 extends StatefulWidget {
+  const MarketView3({
     required this.onAddTransaction,
     Key? key,
-    required this.gpuClusters,
+    required this.listings,
     this.ownCompanyId,
     required this.priceCalculator,
     required this.validator,
   }) : super(key: key);
-  final List<GpuCluster> gpuClusters;
+  final List<Listing> listings;
   final String? ownCompanyId;
   final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
   final String? Function(GpuCluster, DateTime, DateTime) validator;
   final void Function(GpuTransaction) onAddTransaction;
 
   @override
-  State<MarketView2> createState() => _MarketView2State();
+  State<MarketView3> createState() => _MarketView3State();
 }
 
-class _MarketView2State extends State<MarketView2> {
+class _MarketView3State extends State<MarketView3> {
   String? selectedDeviceId;
   int? clusterSize;
   Set<Country> countries = {};
@@ -47,7 +49,7 @@ class _MarketView2State extends State<MarketView2> {
   DateTime? availabilityFrom;
   DateTime? availabilityTo;
   DatacenterTier? tier;
-  late GpuClusterDataSource gpuClusterDataSource;
+  late ListingDataSource listingDataSource;
   int? _sortColumnIndex;
   bool? _sortAscending;
   User? user;
@@ -55,14 +57,14 @@ class _MarketView2State extends State<MarketView2> {
   @override
   void initState() {
     super.initState();
-    widget.gpuClusters.where((e) => e.datacenter != null).forEach((gpuCluster) {
-      countries.add(gpuCluster.datacenter!.address.country);
-      regions.add(gpuCluster.datacenter!.address.country.region);
+    widget.listings.where((e) => e.datacenter != null).forEach((listing) {
+      countries.add(listing.datacenter!.address.country);
+      regions.add(listing.datacenter!.address.country.region);
     });
     user = context.read<AuthenticationBloc>().user;
-    gpuClusterDataSource = GpuClusterDataSource(
+    listingDataSource = ListingDataSource(
       user: user,
-      gpuClusters: widget.gpuClusters,
+      listings: widget.listings,
       context: context,
       priceCalculator: widget.priceCalculator,
       validator: widget.validator,
@@ -71,16 +73,16 @@ class _MarketView2State extends State<MarketView2> {
   }
 
   void updateSource() {
-    gpuClusterDataSource = GpuClusterDataSource(
+    listingDataSource = ListingDataSource(
       user: user,
-      gpuClusters: widget.gpuClusters
+      listings: widget.listings
           .where((element) {
             if (selectedDeviceId == null) return true;
-            return element.deviceId == selectedDeviceId;
+            return element.gpuCluster?.deviceId == selectedDeviceId;
           })
           .where((element) {
             if (clusterSize == null) return true;
-            return element.quantity == clusterSize;
+            return element.gpuCluster?.quantity == clusterSize;
           })
           .where((element) {
             if (country == null) return true;
@@ -90,14 +92,14 @@ class _MarketView2State extends State<MarketView2> {
             if (region == null) return true;
             return element.datacenter?.address.country.region == region;
           })
-          .where((gpuCluster) {
-            if (availabilityFrom == null) return true;
-            return gpuCluster.startDate?.isAfter(availabilityFrom!) ?? true;
-          })
-          .where((gpuCluster) {
-            if (availabilityTo == null) return true;
-            return gpuCluster.startDate?.isBefore(availabilityTo!) ?? true;
-          })
+          // .where((element) {
+          //   if (availabilityFrom == null) return true;
+          //   return element.startDate.isAfter(availabilityFrom);
+          // })
+          // .where((element) {
+          //   if (availabilityTo == null) return true;
+          //   return element.startDate.isBefore(availabilityTo) ?? false;
+          // })
           .where((element) {
             if (tier == null) return true;
             return element.datacenter?.tier == tier;
@@ -112,29 +114,26 @@ class _MarketView2State extends State<MarketView2> {
 
   void updateCountries() {
     if (region != null) {
-      countries = widget.gpuClusters
+      countries = widget.listings
           .where((e) => e.datacenter != null)
-          .where(
-            (gpuCluster) =>
-                gpuCluster.datacenter!.address.country.region == region,
-          )
-          .map((gpuCluster) => gpuCluster.datacenter!.address.country)
+          .where((e) => e.datacenter!.address.country.region == region)
+          .map((e) => e.datacenter!.address.country)
           .toSet();
     } else {
-      countries = widget.gpuClusters
+      countries = widget.listings
           .where((e) => e.datacenter != null)
-          .map((gpuCluster) => gpuCluster.datacenter!.address.country)
+          .map((e) => e.datacenter!.address.country)
           .toSet();
     }
   }
 
   void _sort<T>(
-    Comparable<T> Function(GpuCluster d) getField,
+    Comparable<T> Function(Listing d) getField,
     int columnIndex,
     bool ascending,
   ) {
     setState(() {
-      gpuClusterDataSource.sort<T>(getField, ascending);
+      listingDataSource.sort<T>(getField, ascending);
       _sortColumnIndex = columnIndex;
       _sortAscending = ascending;
     });
@@ -492,7 +491,7 @@ class _MarketView2State extends State<MarketView2> {
                             child: PaginatedDataTable(
                               sortColumnIndex: _sortColumnIndex,
                               sortAscending: _sortAscending ?? true,
-                              source: gpuClusterDataSource,
+                              source: listingDataSource,
                               // source: GpuClusterDataSource(
                               //   gpuClusters: widget.gpuClusters,
                               //   user: user,
@@ -515,7 +514,7 @@ class _MarketView2State extends State<MarketView2> {
                                     print(ascending);
                                     _sort<String>(
                                       (d) =>
-                                          "${d.producer?.name ?? 'ERROR'}\n${d.device?.name ?? 'ERROR'}",
+                                          "${d.gpuCluster?.producer?.name ?? 'ERROR'}\n${d.gpuCluster?.device?.name ?? 'ERROR'}",
                                       columnIndex,
                                       ascending,
                                     );
@@ -530,7 +529,7 @@ class _MarketView2State extends State<MarketView2> {
                                   ),
                                   onSort: (columnIndex, ascending) {
                                     _sort<num>(
-                                      (d) => d.quantity,
+                                      (d) => d.gpuCluster?.quantity ?? 0,
                                       columnIndex,
                                       ascending,
                                     );
@@ -603,7 +602,7 @@ class _MarketView2State extends State<MarketView2> {
                                   ),
                                   onSort: (columnIndex, ascending) {
                                     _sort<num>(
-                                      (d) => d.teraFlops ?? 0,
+                                      (d) => d.gpuCluster?.teraFlops ?? 0,
                                       columnIndex,
                                       ascending,
                                     );
@@ -618,7 +617,7 @@ class _MarketView2State extends State<MarketView2> {
                                   ),
                                   onSort: (columnIndex, ascending) {
                                     _sort<num>(
-                                      (d) => d.perGpuVramInGb ?? 0,
+                                      (d) => d.gpuCluster?.perGpuVramInGb ?? 0,
                                       columnIndex,
                                       ascending,
                                     );

@@ -11,7 +11,7 @@ const admin = require("firebase-admin");
 const { setGlobalOptions } = require("firebase-functions");
 const { defineSecret } = require('firebase-functions/params');
 const { onCall, onRequest, HttpsError, } = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+const { logger } = require("firebase-functions");
 const { onInit } = require('firebase-functions/v2/core');
 const { beforeUserCreated, beforeUserSignedIn } = require("firebase-functions/v2/identity");
 const { getMessaging } = require("firebase-admin/messaging");
@@ -626,4 +626,196 @@ exports.corpAdminAddInvitation = onCall(async (request) => {
     t.update(docref, { id: docref.id, mail_record_id: emailref.id });
   });
   return { 'message': 'Invitation added successfully' };
+});
+
+async function getUserById(userId) {
+  const db = getFirestore();
+  var user = await db.collection('users').doc(userId).get();
+  if (!user.exists) {
+    logger.error({ message: 'User not found', userId: userId });
+    throw new HttpsError('user-not-found', 'User not found');
+  }
+  return user.data();
+};
+
+async function getCompanyById(companyId) {
+  const db = getFirestore();
+  var company = await db.collection('companies').doc(companyId).get();
+  if (!company.exists) {
+    logger.error({ message: 'Company not found', companyId: companyId });
+    throw new HttpsError('company-not-found', 'Company not found');
+  }
+  return company.data();
+}
+
+async function getGpuClusterById(gpuClusterId, datacenterId) {
+  const db = getFirestore();
+  var gpuCluster = await db.collection('datacenters').doc(datacenterId).collection('gpu_clusters').doc(gpuClusterId).get();
+  if (!gpuCluster.exists) {
+    logger.error({ message: 'GPU Cluster not found', gpuClusterId: gpuClusterId });
+    throw new HttpsError('gpu-cluster-not-found', 'GPU Cluster not found');
+  }
+  return { ...gpuCluster.data(), company: null, datacenter: null, rental_prices: null };
+}
+
+async function getDatacenterById(datacenterId) {
+  const db = getFirestore();
+  var datacenter = await db.collection('datacenters').doc(datacenterId).get();
+  if (!datacenter.exists) {
+    logger.error({ message: 'Datacenter not found', datacenterId: datacenterId });
+    throw new HttpsError('datacenter-not-found', 'Datacenter not found');
+  }
+  return datacenter.data();
+}
+
+
+exports.addTransaction = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+  if (
+    !request.data.start_date ||
+    !request.data.end_date ||
+    !request.data.seller_company_id ||
+    !request.data.buyer_company_id ||
+    !request.data.gpu_cluster_id ||
+    !request.data.consideration.amount ||
+    !request.data.consideration.currency
+  ) {
+    logger.error({ message: 'One of the required arguments is missing', request: request });
+    throw new HttpsError(
+      "invalid-argument",
+      "One of the required arguments is missing."
+    );
+  }
+
+  const db = getFirestore();
+
+  await db.runTransaction(async (t) => {
+    const sellerCompany = await getCompanyById(request.data.seller_company_id);
+    const buyerCompany = await getCompanyById(request.data.buyer_company_id);
+    const gpuCluster = await getGpuClusterById(request.data.gpu_cluster_id, request.data.datacenter_id);
+    const datacenter = await getDatacenterById(request.data.datacenter_id);
+    var txref = await db.collection('transactions').add({
+      start_date: Timestamp.fromMillis(request.data.start_date),
+      end_date: Timestamp.fromMillis(request.data.end_date),
+      seller_company_id: request.data.seller_company_id,
+      buyer_company_id: request.data.buyer_company_id,
+      gpu_cluster_id: request.data.gpu_cluster_id,
+      consideration: request.data.consideration,
+      created_at: Timestamp.now(),
+      datacenter_id: datacenter.id,
+      datacenter: datacenter,
+      gpu_cluster: gpuCluster,
+      seller_company: sellerCompany,
+      buyer_company: buyerCompany,
+    });
+    t.update(txref, { id: txref.id });
+  });
+  return { 'message': 'Transaction added successfully' };
+});
+
+exports.testFunc = onCall(async (request) => {
+  return { 'message': 'Hello World' };
+});
+
+exports.addListing = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+  console.log(request.data);
+  if (
+    !request.data.start_date
+    || !request.data.end_date
+    || !request.data.company_id
+    || !request.data.datacenter_id
+    || !request.data.gpu_cluster_id
+    || !request.data.rental_prices
+    || !request.data.status
+  ) {
+    logger.error({ message: 'One of the required arguments is missing', request: request });
+    throw new HttpsError(
+      "invalid-argument",
+      "One of the required arguments is missing."
+    );
+  }
+
+  const db = getFirestore();
+
+  await db.runTransaction(async (t) => {
+    const company = await getCompanyById(request.data.company_id);
+    const datacenter = await getDatacenterById(request.data.datacenter_id);
+    const gpuCluster = await getGpuClusterById(request.data.gpu_cluster_id, request.data.datacenter_id);
+    var txref = await db.collection('listings').add({
+      start_date: Timestamp.fromMillis(request.data.start_date),
+      end_date: Timestamp.fromMillis(request.data.end_date),
+      company_id: request.data.company_id,
+      datacenter_id: request.data.datacenter_id,
+      gpu_cluster_id: request.data.gpu_cluster_id,
+      created_at: Timestamp.now(),
+      datacenter: datacenter,
+      gpu_cluster: gpuCluster,
+      company: company,
+      status: request.data.status,
+      rental_prices: request.data.rental_prices
+    });
+    t.update(txref, { id: txref.id });
+  });
+  return { 'message': 'Listing added successfully' };
+});
+
+exports.cleanUpTransactionDataOnGpuClusters = onRequest(async (req, res) => {
+  const db = getFirestore();
+  var gpus = await db.collectionGroup('gpu_clusters').get();
+  gpus.forEach((doc) => {
+    doc.ref.update({ transactions: [] });
+  });
+  res.send({ 'message': 'Transaction data cleaned up successfully' });
+});
+
+exports.gpuClusterUpdateCheck = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+  console.log(request.data);
+  if (
+    !request.data.gpuClusterId
+  ) {
+    logger.error({ message: 'One of the required arguments is missing', request: request });
+    throw new HttpsError(
+      "invalid-argument",
+      "One of the required arguments is missing."
+    );
+  }
+
+  const db = getFirestore();
+
+  var futs = [];
+  var listing_qs;
+  var transaction_qs;
+  futs.push(db.collection('listings').where('gpu_cluster_id', '==', request.data.gpuClusterId).get().then(
+    (querySnapshot) => {
+      listing_qs = querySnapshot;
+    }
+  ));
+  futs.push(db.collection('transactions').where('gpu_cluster_id', '==', request.data.gpuClusterId).get().then(
+    (querySnapshot) => {
+      transaction_qs = querySnapshot;
+    }
+  ));
+  await Promise.all(futs);
+  if (listing_qs.docs.length == 0 && transaction_qs.docs.length == 0) {
+    return { 'update_possible': true };
+  } else {
+    return { 'update_possible': false };
+  }
 });

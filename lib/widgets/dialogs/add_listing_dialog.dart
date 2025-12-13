@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nephosx/model/enums.dart';
-import 'package:nephosx/model/slot.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../model/company.dart';
@@ -15,33 +14,31 @@ import '../formfields/consideration_form_field.dart';
 import '../formfields/date_formfield.dart';
 import '../occupation_view_paint.dart';
 
-class AddTransactionDialog extends StatefulWidget {
-  const AddTransactionDialog({
+class AddListingDialog extends StatefulWidget {
+  const AddListingDialog({
     Key? key,
-    required this.onAddTransaction,
+    required this.onAddListing,
     required this.gpuCluster,
-    required this.buyers,
     required this.datacenter,
     required this.validator,
     required this.priceCalculator,
   }) : super(key: key);
-  final void Function(GpuTransaction) onAddTransaction;
+  final void Function(GpuCluster) onAddListing;
   final Datacenter datacenter;
   final GpuCluster gpuCluster;
-  final List<Company> buyers;
   final String? Function(GpuCluster, DateTime, DateTime) validator;
   final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
 
   @override
-  State<AddTransactionDialog> createState() => _AddTransactionDialogState();
+  State<AddListingDialog> createState() => _AddListingDialogState();
 }
 
-class _AddTransactionDialogState extends State<AddTransactionDialog> {
+class _AddListingDialogState extends State<AddListingDialog> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   late DateTime startDate;
   late DateTime endDate;
-  Company? buyer;
+  // Company? buyer;
   String? overlapErrorText;
   late DateTime maxDate;
   late DateTime minDate;
@@ -50,9 +47,9 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
   @override
   void initState() {
     super.initState();
-    if (widget.buyers.length == 1) {
-      buyer = widget.buyers.first;
-    }
+    // if (widget.buyers.length == 1) {
+    //   buyer = widget.buyers.first;
+    // }
     minDate = DateTime.now();
     maxDate = DateTime(minDate.year + 3, 12, 31);
     startDate = widget.gpuCluster.startDate!;
@@ -131,58 +128,44 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   fromDate: widget.gpuCluster.startDate,
                   toDate: widget.gpuCluster.endDate,
                 ),
-                if (overlapErrorText != null) ...[
-                  SizedBox(height: 10),
-                  LightLabel(text: "Proposed Transaction"),
-                  OccupationView(
-                    occupiedSlots: [Slot(from: startDate!, to: endDate!)],
-                    fromDate: DateTime.now(),
-                    toDate: DateTime.now().add(Duration(days: 3 * 365)),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(top: 10),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.errorContainer,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Text(
-                      overlapErrorText!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    ),
-                  ),
-                ],
+                // if (overlapErrorText != null) ...[
+                //   SizedBox(height: 10),
+                //   LightLabel(text: "Proposed Transaction"),
+                //   OccupationView(
+                //     transactions: [
+                //       GpuTransaction(
+                //         id: '',
+                //         gpuClusterId: widget.gpuCluster.id,
+                //         startDate: startDate!,
+                //         endDate: endDate!,
+                //         consideration: consideration!,
+                //         buyerCompanyId: widget.user!.companyId,
+                //         sellerCompanyId: widget.gpuCluster.companyId,
+                //         createdAt: DateTime.now(),
+                //         datacenterId: widget.datacenter.id,
+                //       ),
+                //     ],
+                //     fromDate: DateTime.now(),
+                //     toDate: DateTime.now().add(Duration(days: 3 * 365)),
+                //   ),
+                //   Container(
+                //     width: double.infinity,
+                //     margin: const EdgeInsets.only(top: 10),
+                //     padding: const EdgeInsets.all(10),
+                //     decoration: BoxDecoration(
+                //       color: Theme.of(context).colorScheme.errorContainer,
+                //       borderRadius: BorderRadius.circular(5),
+                //     ),
+                //     child: Text(
+                //       overlapErrorText!,
+                //       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                //         color: Theme.of(context).colorScheme.error,
+                //       ),
+                //     ),
+                //   ),
+                // ],
                 Divider(height: 20),
-                if (widget.buyers.length > 1) ...[
-                  Text("Select a buyer"),
-                  SizedBox(height: 10),
-                  DropdownButtonFormField<Company>(
-                    items: widget.buyers
-                        .where((buyer) {
-                          return buyer.id != widget.gpuCluster.companyId;
-                        })
-                        .map((buyer) {
-                          return DropdownMenuItem(
-                            value: buyer,
-                            child: Text(buyer.name),
-                          );
-                        })
-                        .toList(),
-                    onChanged: (value) {
-                      buyer = value;
-                    },
-                    validator: (value) {
-                      if (value == null) {
-                        return "Please select a buyer";
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                ],
+
                 Text("Price"),
                 SizedBox(height: 10),
                 Text(consideration.formatted),
@@ -250,19 +233,19 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                           });
                           return;
                         }
-                        widget.onAddTransaction(
-                          GpuTransaction(
-                            id: '',
-                            gpuClusterId: widget.gpuCluster.id,
-                            startDate: startDate!,
-                            endDate: endDate!,
-                            consideration: consideration!,
-                            buyerCompanyId: buyer!.id,
-                            sellerCompanyId: widget.gpuCluster.companyId,
-                            createdAt: DateTime.now(),
-                            datacenterId: widget.datacenter.id,
-                          ),
-                        );
+                        // widget.onAddTransaction(
+                        //   GpuTransaction(
+                        //     id: '',
+                        //     gpuClusterId: widget.gpuCluster.id,
+                        //     startDate: startDate!,
+                        //     endDate: endDate!,
+                        //     consideration: consideration!,
+                        //     buyerCompanyId: ,
+                        //     sellerCompanyId: widget.gpuCluster.companyId,
+                        //     createdAt: DateTime.now(),
+                        //     datacenterId: widget.datacenter.id,
+                        //   ),
+                        // );
 
                         Navigator.of(context).pop();
                       }

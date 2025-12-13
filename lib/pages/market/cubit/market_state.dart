@@ -13,6 +13,12 @@ final class MarketLoaded extends MarketState {
   MarketLoaded({required this.gpuClusters, this.ownCompanyId});
 }
 
+final class MarketLoadedListings extends MarketState {
+  List<Listing> listings;
+  String? ownCompanyId;
+  MarketLoadedListings({required this.listings, this.ownCompanyId});
+}
+
 final class MarketError extends MarketState {
   final String message;
   MarketError({required this.message});

@@ -121,7 +121,9 @@ class GpuClusterListTileView extends StatelessWidget {
               ),
             ),
           OccupationView(
-            transactions: gpuCluster.transactions ?? [],
+            occupiedSlots: gpuCluster.occupiedSlots,
+            listedSlots: gpuCluster.listedSlots,
+            unListedSlots: gpuCluster.unListedSlots,
             fromDate: DateTime.now(),
             toDate: DateTime.now().add(Duration(days: 3 * 365)),
           ),

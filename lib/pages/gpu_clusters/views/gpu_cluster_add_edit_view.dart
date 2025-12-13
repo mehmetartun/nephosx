@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:nephosx/navigation/my_navigator_route.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/datacenter.dart';
@@ -56,7 +58,10 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
   int? numberOfOpenPorts;
   double? diskBandwidthInMbPerSec;
   double? diskStorageAvailableInGb;
-  DateTime? availabilityDate;
+  DateTime? startDate;
+  DateTime? endDate;
+  DateTime? manufactureDate;
+  bool showForm = false;
 
   @override
   void initState() {
@@ -93,7 +98,44 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
     numberOfOpenPorts = widget.gpuCluster?.numberOfOpenPorts;
     diskBandwidthInMbPerSec = widget.gpuCluster?.diskBandwidthInMbPerSec;
     diskStorageAvailableInGb = widget.gpuCluster?.diskStorageAvailableInGb;
-    availabilityDate = widget.gpuCluster?.availabilityDate;
+    startDate = widget.gpuCluster?.startDate;
+    endDate = widget.gpuCluster?.endDate;
+    manufactureDate = widget.gpuCluster?.manufactureDate;
+    if (datacenter == null) {
+      // getDataCenter();
+    } else {
+      showForm = true;
+    }
+  }
+
+  getDataCenter() async {
+    datacenter = await showDialog<Datacenter>(
+      context: context,
+      builder: (context) {
+        List<SimpleDialogOption> options = [];
+        options = widget.datacenters.map((datacenter) {
+          return SimpleDialogOption(
+            child: Text(datacenter.name),
+            onPressed: () {
+              Navigator.pop(context, datacenter);
+            },
+          );
+        }).toList();
+        options.add(
+          SimpleDialogOption(
+            child: Text("Add Datacenter"),
+            onPressed: () {
+              Navigator.pop(context, null);
+              context.goNamed(MyNavigatorRoute.datacenters.name);
+            },
+          ),
+        );
+        return SimpleDialog(
+          title: Text("Select Datacenter"),
+          children: options,
+        );
+      },
+    );
   }
 
   @override
@@ -136,96 +178,14 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Wrap(
-                        spacing: 20,
-                        runSpacing: 20,
+                      if (datacenter == null)
+                        Text(
+                          "Please select a datacenter and create if not listed",
+                        ),
+                      Row(
                         children: [
                           SizedBox(
-                            width: 200,
-                            child: DropdownMenuFormField<String>(
-                              label: Text("GPU Model"),
-                              // decoration: InputDecoration(labelText: "GPU"),
-                              onSelected: (value) {
-                                setState(() {
-                                  deviceId = value;
-                                });
-                              },
-                              initialSelection: deviceId,
-                              // initialValue: deviceId,
-                              validator: (value) {
-                                if (value == null) {
-                                  return "Please select a GPU Model";
-                                }
-                                return null;
-                              },
-                              dropdownMenuEntries: PlatformSettingsService
-                                  .instance
-                                  .platformSettings
-                                  .devices
-                                  .map((device) {
-                                    return DropdownMenuEntry(
-                                      value: device.id,
-                                      label: device.name,
-                                    );
-                                  })
-                                  .toList(),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 200,
-                            child: DropdownMenuFormField<String>(
-                              label: Text("CPU Model"),
-                              // decoration: InputDecoration(labelText: "GPU"),
-                              onSelected: (value) {
-                                setState(() {
-                                  cpuId = value;
-                                });
-                              },
-                              initialSelection: cpuId,
-                              // initialValue: deviceId,
-                              validator: (value) {
-                                if (value == null) {
-                                  return "Please select a CPU Model";
-                                }
-                                return null;
-                              },
-                              dropdownMenuEntries: PlatformSettingsService
-                                  .instance
-                                  .platformSettings
-                                  .cpus
-                                  .map((cpu) {
-                                    return DropdownMenuEntry(
-                                      value: cpu.id,
-                                      label: cpu.name,
-                                    );
-                                  })
-                                  .toList(),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 100,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: quantity?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Quantity",
-                              ),
-                              onSaved: (value) {
-                                quantity = int.tryParse(value!);
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (int.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 250,
+                            width: 400,
                             child: DropdownButtonFormField<Datacenter>(
                               decoration: InputDecoration(
                                 labelText: "Datacenter",
@@ -234,6 +194,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                               onChanged: (value) {
                                 setState(() {
                                   datacenter = value!;
+                                  showForm = true;
                                 });
                               },
                               validator: (value) {
@@ -250,575 +211,773 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                               }).toList(),
                             ),
                           ),
-
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              initialValue: perGpuVramInGb?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Per GPU VRAM (GB)",
-                              ),
-                              validator: (val) {
-                                if (val == null || val.isEmpty) {
-                                  return "Please enter a value";
-                                }
-                                if (double.tryParse(val) == null) {
-                                  return "Please enter a valid number";
-                                }
-                                return null;
-                              },
-                              onSaved: (val) {
-                                perGpuVramInGb = double.tryParse(val!);
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              initialValue: teraFlops?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Teraflops",
-                              ),
-                              validator: (val) {
-                                if (val == null || val.isEmpty) {
-                                  return "Please enter a value";
-                                }
-                                if (double.tryParse(val) == null) {
-                                  return "Please enter a valid number";
-                                }
-                                return null;
-                              },
-                              onSaved: (val) {
-                                teraFlops = double.tryParse(val!);
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              initialValue: deepLearningPerformanceScore
-                                  ?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "DL Perf Score",
-                              ),
-                              validator: (val) {
-                                if (val == null || val.isEmpty) {
-                                  return "Please enter a value";
-                                }
-                                if (double.tryParse(val) == null) {
-                                  return "Please enter a valid number";
-                                }
-                                return null;
-                              },
-                              onSaved: (val) {
-                                teraFlops = double.tryParse(val!);
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 250,
-                            child: DropdownButtonFormField<PcieGeneration>(
-                              decoration: InputDecoration(
-                                labelText: "PCIe Gen",
-                              ),
-                              initialValue: pcieGeneration,
-                              onChanged: (value) {
-                                setState(() {
-                                  pcieGeneration = value!;
-                                });
-                              },
-                              validator: (value) {
-                                if (value == null) {
-                                  return "Please select a GPU type";
-                                }
-                                return null;
-                              },
-                              items: PcieGeneration.values.map((
-                                pcieGeneration,
-                              ) {
-                                return DropdownMenuItem(
-                                  value: pcieGeneration,
-                                  child: Text(pcieGeneration.description),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: pcieLanes?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "PCIe Lanes",
-                              ),
-                              onSaved: (value) {
-                                pcieLanes = int.tryParse(value!);
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (int.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: perGpuPcieBandwidthInGbPerSec
-                                  ?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "PCIe Bandwidth in GB/s",
-                              ),
-                              onSaved: (value) {
-                                perGpuPcieBandwidthInGbPerSec = double.tryParse(
-                                  value!,
-                                );
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (double.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: perGpuMemoryBandwidthInGbPerSec
-                                  ?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Memory Bandwidth in GB/s",
-                              ),
-                              onSaved: (value) {
-                                perGpuMemoryBandwidthInGbPerSec =
-                                    double.tryParse(value!);
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (double.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: perGpuNvLinkBandwidthInGbPerSec
-                                  ?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "NvLink Bandwidth in GB/s",
-                              ),
-                              onSaved: (value) {
-                                perGpuNvLinkBandwidthInGbPerSec =
-                                    double.tryParse(value!);
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (double.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: effectiveRam?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Effective RAM in GB",
-                              ),
-                              onSaved: (value) {
-                                effectiveRam = double.tryParse(value!);
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (double.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: totalRam?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Total RAM in GB",
-                              ),
-                              onSaved: (value) {
-                                totalRam = double.tryParse(value!);
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (double.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: totalCpuCoreCount?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Total CPU Core Count",
-                              ),
-                              onSaved: (value) {
-                                totalCpuCoreCount = int.tryParse(value!);
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (int.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: effectiveCpuCoreCount?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Effective CPU Core Count",
-                              ),
-                              onSaved: (value) {
-                                effectiveCpuCoreCount = int.tryParse(value!);
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (int.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: internetUploadSpeedInMbps
-                                  ?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Internet Upload Speed in Mbps",
-                              ),
-                              onSaved: (value) {
-                                internetUploadSpeedInMbps = double.tryParse(
-                                  value!,
-                                );
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (double.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: internetDownloadSpeedInMbps
-                                  ?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Internet Download Speed in Mbps",
-                              ),
-                              onSaved: (value) {
-                                internetDownloadSpeedInMbps = double.tryParse(
-                                  value!,
-                                );
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (double.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: numberOfOpenPorts?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Number of Open Ports",
-                              ),
-                              onSaved: (value) {
-                                numberOfOpenPorts = int.tryParse(value!);
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (int.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: diskBandwidthInMbPerSec?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Disk Bandwidth in MB/s",
-                              ),
-                              onSaved: (value) {
-                                diskBandwidthInMbPerSec = double.tryParse(
-                                  value!,
-                                );
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (double.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: diskStorageAvailableInGb
-                                  ?.toString(),
-                              decoration: InputDecoration(
-                                labelText: "Disk Storage Available in GB",
-                              ),
-                              onSaved: (value) {
-                                diskStorageAvailableInGb = double.tryParse(
-                                  value!,
-                                );
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a quantity";
-                                }
-                                if (double.tryParse(value) == null) {
-                                  return "Please enter a valid quantity";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: TextFormField(
-                              autocorrect: false,
-                              initialValue: maximumCudaVersionSupported,
-                              decoration: InputDecoration(
-                                labelText: "Max CUDA Version Supported",
-                              ),
-                              onSaved: (value) {
-                                maximumCudaVersionSupported = value;
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter a CUDAversion";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            width: 250,
-                            child: DateTimeFormField(
-                              labelText: "Available From",
-                              initialValue: availabilityDate,
-                              onSaved: (value) {
-                                availabilityDate = value;
-                              },
-                              validator: (value) {
-                                if (value == null) {
-                                  return "Please enter a date";
-                                }
-                                return null;
-                              },
-                            ),
+                          OutlinedButton(
+                            child: Text("Add Datacenter"),
+                            onPressed: () {
+                              widget.onCancel();
+                              context.goNamed(
+                                MyNavigatorRoute.datacenters.name,
+                              );
+                            },
                           ),
                         ],
                       ),
-                      Divider(height: 40),
-                      Text(
-                        "Rental Prices",
-                        style: Theme.of(context).textTheme.titleMedium,
+                      SizedBox(height: 20),
+
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        child: !showForm
+                            ? Container()
+                            : Wrap(
+                                spacing: 20,
+                                runSpacing: 20,
+                                children: [
+                                  SizedBox(
+                                    width: 200,
+                                    child: DropdownMenuFormField<String>(
+                                      label: Text("GPU Model"),
+                                      // decoration: InputDecoration(labelText: "GPU"),
+                                      onSelected: (value) {
+                                        setState(() {
+                                          deviceId = value;
+                                        });
+                                      },
+                                      initialSelection: deviceId,
+                                      // initialValue: deviceId,
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return "Please select a GPU Model";
+                                        }
+                                        return null;
+                                      },
+                                      dropdownMenuEntries:
+                                          PlatformSettingsService
+                                              .instance
+                                              .platformSettings
+                                              .devices
+                                              .map((device) {
+                                                return DropdownMenuEntry(
+                                                  value: device.id,
+                                                  label: device.name,
+                                                );
+                                              })
+                                              .toList(),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 200,
+                                    child: DropdownMenuFormField<String>(
+                                      label: Text("CPU Model"),
+                                      // decoration: InputDecoration(labelText: "GPU"),
+                                      onSelected: (value) {
+                                        setState(() {
+                                          cpuId = value;
+                                        });
+                                      },
+                                      initialSelection: cpuId,
+                                      // initialValue: deviceId,
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return "Please select a CPU Model";
+                                        }
+                                        return null;
+                                      },
+                                      dropdownMenuEntries:
+                                          PlatformSettingsService
+                                              .instance
+                                              .platformSettings
+                                              .cpus
+                                              .map((cpu) {
+                                                return DropdownMenuEntry(
+                                                  value: cpu.id,
+                                                  label: cpu.name,
+                                                );
+                                              })
+                                              .toList(),
+                                    ),
+                                  ),
+                                  // SizedBox(
+                                  //   width: 100,
+                                  //   child: TextFormField(
+                                  //     autocorrect: false,
+                                  //     initialValue: quantity?.toString(),
+                                  //     decoration: InputDecoration(
+                                  //       labelText: "Quantity",
+                                  //     ),
+                                  //     onSaved: (value) {
+                                  //       quantity = int.tryParse(value!);
+                                  //     },
+                                  //     validator: (value) {
+                                  //       if (value == null || value.isEmpty) {
+                                  //         return "Please enter a quantity";
+                                  //       }
+                                  //       if (int.tryParse(value) == null) {
+                                  //         return "Please enter a valid quantity";
+                                  //       }
+                                  //       return null;
+                                  //     },
+                                  //   ),
+                                  // ),
+                                  SizedBox(
+                                    width: 200,
+                                    child: DropdownMenuFormField<int>(
+                                      initialSelection: quantity,
+                                      onSelected: (value) {
+                                        setState(() {
+                                          quantity = value;
+                                        });
+                                      },
+                                      dropdownMenuEntries:
+                                          [1, 2, 4, 8, 16, 32, 64]
+                                              .map(
+                                                (e) => DropdownMenuEntry(
+                                                  value: e,
+                                                  label: e.toString(),
+                                                ),
+                                              )
+                                              .toList(),
+                                    ),
+                                  ),
+
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      initialValue: perGpuVramInGb?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "Per GPU VRAM (GB)",
+                                      ),
+                                      validator: (val) {
+                                        if (val == null || val.isEmpty) {
+                                          return "Please enter a value";
+                                        }
+                                        if (double.tryParse(val) == null) {
+                                          return "Please enter a valid number";
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (val) {
+                                        perGpuVramInGb = double.tryParse(val!);
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      initialValue: teraFlops?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "Teraflops",
+                                      ),
+                                      validator: (val) {
+                                        if (val == null || val.isEmpty) {
+                                          return "Please enter a value";
+                                        }
+                                        if (double.tryParse(val) == null) {
+                                          return "Please enter a valid number";
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (val) {
+                                        teraFlops = double.tryParse(val!);
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      initialValue: deepLearningPerformanceScore
+                                          ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "DL Perf Score",
+                                      ),
+                                      validator: (val) {
+                                        if (val == null || val.isEmpty) {
+                                          return "Please enter a value";
+                                        }
+                                        if (double.tryParse(val) == null) {
+                                          return "Please enter a valid number";
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (val) {
+                                        teraFlops = double.tryParse(val!);
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 250,
+                                    child:
+                                        DropdownButtonFormField<PcieGeneration>(
+                                          decoration: InputDecoration(
+                                            labelText: "PCIe Gen",
+                                          ),
+                                          initialValue: pcieGeneration,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              pcieGeneration = value!;
+                                            });
+                                          },
+                                          validator: (value) {
+                                            if (value == null) {
+                                              return "Please select a GPU type";
+                                            }
+                                            return null;
+                                          },
+                                          items: PcieGeneration.values.map((
+                                            pcieGeneration,
+                                          ) {
+                                            return DropdownMenuItem(
+                                              value: pcieGeneration,
+                                              child: Text(
+                                                pcieGeneration.description,
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: pcieLanes?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "PCIe Lanes",
+                                      ),
+                                      onSaved: (value) {
+                                        pcieLanes = int.tryParse(value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (int.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue:
+                                          perGpuPcieBandwidthInGbPerSec
+                                              ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "PCIe Bandwidth in GB/s",
+                                      ),
+                                      onSaved: (value) {
+                                        perGpuPcieBandwidthInGbPerSec =
+                                            double.tryParse(value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (double.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue:
+                                          perGpuMemoryBandwidthInGbPerSec
+                                              ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "Memory Bandwidth in GB/s",
+                                      ),
+                                      onSaved: (value) {
+                                        perGpuMemoryBandwidthInGbPerSec =
+                                            double.tryParse(value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (double.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue:
+                                          perGpuNvLinkBandwidthInGbPerSec
+                                              ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "NvLink Bandwidth in GB/s",
+                                      ),
+                                      onSaved: (value) {
+                                        perGpuNvLinkBandwidthInGbPerSec =
+                                            double.tryParse(value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (double.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: effectiveRam?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "Effective RAM in GB",
+                                      ),
+                                      onSaved: (value) {
+                                        effectiveRam = double.tryParse(value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (double.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: totalRam?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "Total RAM in GB",
+                                      ),
+                                      onSaved: (value) {
+                                        totalRam = double.tryParse(value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (double.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: totalCpuCoreCount
+                                          ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "Total CPU Core Count",
+                                      ),
+                                      onSaved: (value) {
+                                        totalCpuCoreCount = int.tryParse(
+                                          value!,
+                                        );
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (int.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: effectiveCpuCoreCount
+                                          ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "Effective CPU Core Count",
+                                      ),
+                                      onSaved: (value) {
+                                        effectiveCpuCoreCount = int.tryParse(
+                                          value!,
+                                        );
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (int.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: internetUploadSpeedInMbps
+                                          ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText:
+                                            "Internet Upload Speed in Mbps",
+                                      ),
+                                      onSaved: (value) {
+                                        internetUploadSpeedInMbps =
+                                            double.tryParse(value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (double.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: internetDownloadSpeedInMbps
+                                          ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText:
+                                            "Internet Download Speed in Mbps",
+                                      ),
+                                      onSaved: (value) {
+                                        internetDownloadSpeedInMbps =
+                                            double.tryParse(value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (double.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: numberOfOpenPorts
+                                          ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "Number of Open Ports",
+                                      ),
+                                      onSaved: (value) {
+                                        numberOfOpenPorts = int.tryParse(
+                                          value!,
+                                        );
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (int.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: diskBandwidthInMbPerSec
+                                          ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText: "Disk Bandwidth in MB/s",
+                                      ),
+                                      onSaved: (value) {
+                                        diskBandwidthInMbPerSec =
+                                            double.tryParse(value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (double.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: diskStorageAvailableInGb
+                                          ?.toString(),
+                                      decoration: InputDecoration(
+                                        labelText:
+                                            "Disk Storage Available in GB",
+                                      ),
+                                      onSaved: (value) {
+                                        diskStorageAvailableInGb =
+                                            double.tryParse(value!);
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a quantity";
+                                        }
+                                        if (double.tryParse(value) == null) {
+                                          return "Please enter a valid quantity";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: maximumCudaVersionSupported,
+                                      decoration: InputDecoration(
+                                        labelText: "Max CUDA Version Supported",
+                                      ),
+                                      onSaved: (value) {
+                                        maximumCudaVersionSupported = value;
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a CUDAversion";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+
+                                  // SizedBox(
+                                  //   width: 250,
+                                  //   child: DateTimeFormField(
+                                  //     labelText: "Available From",
+                                  //     initialValue: availabilityDate,
+                                  //     onSaved: (value) {
+                                  //       availabilityDate = value;
+                                  //     },
+                                  //     validator: (value) {
+                                  //       if (value == null) {
+                                  //         return "Please enter a date";
+                                  //       }
+                                  //       return null;
+                                  //     },
+                                  //   ),
+                                  // ),
+                                  SizedBox(
+                                    width: 250,
+                                    child: DateTimeFormField(
+                                      labelText: "Manufacture Date",
+                                      initialValue: manufactureDate,
+                                      onSaved: (value) {
+                                        manufactureDate = value;
+                                      },
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return "Please enter a date";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 250,
+                                    child: DateTimeFormField(
+                                      labelText: "Start Date",
+                                      initialValue: startDate,
+                                      onSaved: (value) {
+                                        startDate = value;
+                                      },
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return "Please enter a date";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 250,
+                                    child: DateTimeFormField(
+                                      labelText: "End Date",
+                                      initialValue: endDate,
+                                      onSaved: (value) {
+                                        endDate = value;
+                                      },
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return "Please enter a date";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                       ),
-                      for (int i = 0; i < numExistingRentalPrices; i++)
-                        RentalPriceFormField(
-                          validator: (value) {
-                            if (value != null) {
-                              return null;
-                            }
-                            return "Please enter a rental price";
-                          },
-                          onSaved: (newValue) {
-                            rentalPricesSubmitted.add(newValue!);
-                          },
-                          initialValue: widget.gpuCluster!.rentalPrices[i],
-                        ),
-                      for (int i = 0; i < numToAddRentalPrices; i++)
-                        RentalPriceFormField(
-                          validator: (value) {
-                            if (value != null) {
-                              return null;
-                            }
-                            return "Please enter a rental price";
-                          },
-                          onSaved: (newValue) {
-                            rentalPricesSubmitted.add(newValue!);
-                          },
-                        ),
+                      // Divider(height: 40),
+                      // Text(
+                      //   "Rental Prices",
+                      //   style: Theme.of(context).textTheme.titleMedium,
+                      // ),
+                      // for (int i = 0; i < numExistingRentalPrices; i++)
+                      //   RentalPriceFormField(
+                      //     validator: (value) {
+                      //       if (value != null) {
+                      //         return null;
+                      //       }
+                      //       return "Please enter a rental price";
+                      //     },
+                      //     onSaved: (newValue) {
+                      //       rentalPricesSubmitted.add(newValue!);
+                      //     },
+                      //     initialValue: widget.gpuCluster!.rentalPrices[i],
+                      //   ),
+                      // for (int i = 0; i < numToAddRentalPrices; i++)
+                      //   RentalPriceFormField(
+                      //     validator: (value) {
+                      //       if (value != null) {
+                      //         return null;
+                      //       }
+                      //       return "Please enter a rental price";
+                      //     },
+                      //     onSaved: (newValue) {
+                      //       rentalPricesSubmitted.add(newValue!);
+                      //     },
+                      //   ),
                       SizedBox(height: 20),
                       Container(
                         width: double.infinity,
                         child: FilledButton(
-                          onPressed: () {
-                            if (formKey.currentState?.validate() ?? false) {
-                              formKey.currentState!.save();
+                          onPressed: !showForm
+                              ? null
+                              : () {
+                                  if (formKey.currentState?.validate() ??
+                                      false) {
+                                    formKey.currentState!.save();
 
-                              rentalPricesSubmitted.sort(
-                                (a, b) => a.numberOfMonths.compareTo(
-                                  b.numberOfMonths,
-                                ),
-                              );
+                                    rentalPricesSubmitted.sort(
+                                      (a, b) => a.numberOfMonths.compareTo(
+                                        b.numberOfMonths,
+                                      ),
+                                    );
 
-                              if (widget.gpuCluster == null) {
-                                widget.onAddGpuCluster(
-                                  GpuCluster(
-                                    deviceId: deviceId!,
-                                    cpuId: cpuId!,
-                                    // type: type!,
-                                    pcieGeneration: pcieGeneration,
-                                    pcieLanes: pcieLanes,
-                                    quantity: quantity!,
-                                    datacenterId: datacenter!.id,
-                                    companyId: datacenter!.companyId,
-                                    id: widget.gpuCluster?.id ?? "",
-                                    rentalPrices: rentalPricesSubmitted,
-                                    teraFlops: teraFlops,
-                                    perGpuVramInGb: perGpuVramInGb,
-                                    maximumCudaVersionSupported:
-                                        maximumCudaVersionSupported,
-                                    internetUploadSpeedInMbps:
-                                        internetUploadSpeedInMbps,
-                                    internetDownloadSpeedInMbps:
-                                        internetDownloadSpeedInMbps,
-                                    numberOfOpenPorts: numberOfOpenPorts,
-                                    perGpuPcieBandwidthInGbPerSec:
-                                        perGpuPcieBandwidthInGbPerSec,
-                                    perGpuMemoryBandwidthInGbPerSec:
-                                        perGpuMemoryBandwidthInGbPerSec,
-                                    perGpuNvLinkBandwidthInGbPerSec:
-                                        perGpuNvLinkBandwidthInGbPerSec,
-                                    effectiveRam: effectiveRam,
-                                    totalRam: totalRam,
-                                    totalCpuCoreCount: totalCpuCoreCount,
-                                    effectiveCpuCoreCount:
-                                        effectiveCpuCoreCount,
-                                    diskBandwidthInMbPerSec:
-                                        diskBandwidthInMbPerSec,
-                                    diskStorageAvailableInGb:
-                                        diskStorageAvailableInGb,
-                                    deepLearningPerformanceScore:
-                                        deepLearningPerformanceScore,
-                                    availabilityDate: availabilityDate,
-                                  ),
-                                );
-                              } else {
-                                widget.onUpdateGpuCluster(
-                                  GpuCluster(
-                                    deviceId: deviceId!,
-                                    // type: type!,
-                                    cpuId: cpuId!,
-                                    pcieGeneration: pcieGeneration,
-                                    pcieLanes: pcieLanes,
-                                    quantity: quantity!,
-                                    datacenterId: datacenter!.id,
-                                    companyId: datacenter!.companyId,
-                                    id: widget.gpuCluster!.id,
-                                    rentalPrices: rentalPricesSubmitted,
-                                    teraFlops: teraFlops,
-                                    perGpuVramInGb: perGpuVramInGb,
-                                    maximumCudaVersionSupported:
-                                        maximumCudaVersionSupported,
-                                    internetUploadSpeedInMbps:
-                                        internetUploadSpeedInMbps,
-                                    internetDownloadSpeedInMbps:
-                                        internetDownloadSpeedInMbps,
-                                    numberOfOpenPorts: numberOfOpenPorts,
-                                    perGpuPcieBandwidthInGbPerSec:
-                                        perGpuPcieBandwidthInGbPerSec,
-                                    perGpuMemoryBandwidthInGbPerSec:
-                                        perGpuMemoryBandwidthInGbPerSec,
-                                    perGpuNvLinkBandwidthInGbPerSec:
-                                        perGpuNvLinkBandwidthInGbPerSec,
-                                    effectiveRam: effectiveRam,
-                                    totalRam: totalRam,
-                                    totalCpuCoreCount: totalCpuCoreCount,
-                                    effectiveCpuCoreCount:
-                                        effectiveCpuCoreCount,
-                                    diskBandwidthInMbPerSec:
-                                        diskBandwidthInMbPerSec,
-                                    diskStorageAvailableInGb:
-                                        diskStorageAvailableInGb,
-                                    deepLearningPerformanceScore:
-                                        deepLearningPerformanceScore,
-                                    availabilityDate: availabilityDate,
-                                  ),
-                                );
-                              }
-                            }
-                          },
+                                    if (widget.gpuCluster == null) {
+                                      widget.onAddGpuCluster(
+                                        GpuCluster(
+                                          deviceId: deviceId!,
+                                          cpuId: cpuId!,
+                                          // type: type!,
+                                          pcieGeneration: pcieGeneration,
+                                          pcieLanes: pcieLanes,
+                                          quantity: quantity!,
+                                          datacenterId: datacenter!.id,
+                                          companyId: datacenter!.companyId,
+                                          id: widget.gpuCluster?.id ?? "",
+                                          rentalPrices: rentalPricesSubmitted,
+                                          teraFlops: teraFlops,
+                                          perGpuVramInGb: perGpuVramInGb,
+                                          maximumCudaVersionSupported:
+                                              maximumCudaVersionSupported,
+                                          internetUploadSpeedInMbps:
+                                              internetUploadSpeedInMbps,
+                                          internetDownloadSpeedInMbps:
+                                              internetDownloadSpeedInMbps,
+                                          numberOfOpenPorts: numberOfOpenPorts,
+                                          perGpuPcieBandwidthInGbPerSec:
+                                              perGpuPcieBandwidthInGbPerSec,
+                                          perGpuMemoryBandwidthInGbPerSec:
+                                              perGpuMemoryBandwidthInGbPerSec,
+                                          perGpuNvLinkBandwidthInGbPerSec:
+                                              perGpuNvLinkBandwidthInGbPerSec,
+                                          effectiveRam: effectiveRam,
+                                          totalRam: totalRam,
+                                          totalCpuCoreCount: totalCpuCoreCount,
+                                          effectiveCpuCoreCount:
+                                              effectiveCpuCoreCount,
+                                          diskBandwidthInMbPerSec:
+                                              diskBandwidthInMbPerSec,
+                                          diskStorageAvailableInGb:
+                                              diskStorageAvailableInGb,
+                                          deepLearningPerformanceScore:
+                                              deepLearningPerformanceScore,
+                                          startDate: startDate!,
+                                          endDate: endDate!,
+                                          manufactureDate: manufactureDate,
+                                        ),
+                                      );
+                                    } else {
+                                      widget.onUpdateGpuCluster(
+                                        GpuCluster(
+                                          deviceId: deviceId!,
+                                          // type: type!,
+                                          cpuId: cpuId!,
+                                          pcieGeneration: pcieGeneration,
+                                          pcieLanes: pcieLanes,
+                                          quantity: quantity!,
+                                          datacenterId: datacenter!.id,
+                                          companyId: datacenter!.companyId,
+                                          id: widget.gpuCluster!.id,
+                                          rentalPrices: rentalPricesSubmitted,
+                                          teraFlops: teraFlops,
+                                          perGpuVramInGb: perGpuVramInGb,
+                                          maximumCudaVersionSupported:
+                                              maximumCudaVersionSupported,
+                                          internetUploadSpeedInMbps:
+                                              internetUploadSpeedInMbps,
+                                          internetDownloadSpeedInMbps:
+                                              internetDownloadSpeedInMbps,
+                                          numberOfOpenPorts: numberOfOpenPorts,
+                                          perGpuPcieBandwidthInGbPerSec:
+                                              perGpuPcieBandwidthInGbPerSec,
+                                          perGpuMemoryBandwidthInGbPerSec:
+                                              perGpuMemoryBandwidthInGbPerSec,
+                                          perGpuNvLinkBandwidthInGbPerSec:
+                                              perGpuNvLinkBandwidthInGbPerSec,
+                                          effectiveRam: effectiveRam,
+                                          totalRam: totalRam,
+                                          totalCpuCoreCount: totalCpuCoreCount,
+                                          effectiveCpuCoreCount:
+                                              effectiveCpuCoreCount,
+                                          diskBandwidthInMbPerSec:
+                                              diskBandwidthInMbPerSec,
+                                          diskStorageAvailableInGb:
+                                              diskStorageAvailableInGb,
+                                          deepLearningPerformanceScore:
+                                              deepLearningPerformanceScore,
+                                          startDate: startDate!,
+                                          endDate: endDate!,
+                                          manufactureDate: manufactureDate,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
                           child: Text("Save GPU Cluster"),
                         ),
                       ),

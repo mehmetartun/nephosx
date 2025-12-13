@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nephosx/pages/market/views/market_view.dart';
+import 'package:nephosx/widgets/views/error_view.dart';
 
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../repositories/database/database.dart';
 import 'cubit/market_cubit.dart';
 import 'views/market_view_2.dart';
+import 'views/market_view_3.dart';
 
 class MarketPage extends StatelessWidget {
   const MarketPage({Key? key}) : super(key: key);
@@ -33,8 +35,16 @@ class MarketPage extends StatelessWidget {
                 validator: marketCubit.transactionValidator,
                 onAddTransaction: marketCubit.addTransaction,
               );
+            case MarketLoadedListings():
+              return MarketView3(
+                listings: state.listings,
+                ownCompanyId: state.ownCompanyId,
+                priceCalculator: marketCubit.priceCalculator,
+                validator: marketCubit.transactionValidator,
+                onAddTransaction: marketCubit.addTransaction,
+              );
             case MarketError():
-              return const Center(child: Text('Error'));
+              return ErrorView(title: 'Error', message: state.message);
           }
         },
       ),

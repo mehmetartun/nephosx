@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
@@ -22,9 +23,11 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
   StreamSubscription<List<GpuCluster>>? gpuClustersSubscription;
   List<GpuCluster> gpuClusters = [];
 
-  void init() async {
-    emit(GpuClustersLoading());
+  HttpsCallable gpuClusterUpdateCheck = FirebaseFunctions.instance
+      .httpsCallable("gpuClusterUpdateCheck");
 
+  void init() async {
+    emit(GpuClustersInitial());
     gpuClustersSubscription?.cancel();
     if (user == null) {
       emit(GpuClustersError(message: "User not found"));
@@ -34,7 +37,9 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
         .getGpuClusterStream(companyId: user?.companyId)
         .listen((gpuClusters) {
           this.gpuClusters = gpuClusters;
-          emit(GpuClustersLoaded(gpuClusters: gpuClusters));
+          if (state is GpuClustersLoaded || state is GpuClustersInitial) {
+            emit(GpuClustersLoaded(gpuClusters: gpuClusters));
+          }
         });
 
     datacenters = await databaseRepository.getDatacenters(
@@ -82,8 +87,18 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
     emit(GpuClustersAddEdit(gpuCluster: null, datacenters: datacenters));
   }
 
-  void updateGpuClusterRequest(GpuCluster gpuCluster) {
-    emit(GpuClustersAddEdit(gpuCluster: gpuCluster, datacenters: datacenters));
+  void updateGpuClusterRequest(GpuCluster gpuCluster) async {
+    emit(GpuClustersLoading());
+    HttpsCallableResult result = await gpuClusterUpdateCheck.call({
+      'gpuClusterId': gpuCluster.id,
+    });
+    if (result.data['update_possible'] == true) {
+      emit(
+        GpuClustersAddEdit(gpuCluster: gpuCluster, datacenters: datacenters),
+      );
+    } else {
+      emit(GpuClustersError(message: "Update not possible"));
+    }
   }
 
   @override

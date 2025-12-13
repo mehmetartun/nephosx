@@ -9,8 +9,10 @@ import 'cpu.dart';
 import 'datacenter.dart';
 import 'device.dart';
 import 'gpu_transaction.dart';
+import 'listing.dart';
 import 'producer.dart';
 import 'rental_price.dart';
+import 'slot.dart';
 
 part 'gpu_cluster.g.dart';
 
@@ -62,12 +64,15 @@ class GpuCluster {
   final String datacenterId;
   @JsonKey(name: "company_id")
   final String companyId;
-  @JsonKey(name: "transactions", includeToJson: false, includeFromJson: true)
-  final List<GpuTransaction>? transactions;
+  @JsonKey(name: "transactions", includeToJson: false, includeFromJson: false)
+  List<GpuTransaction> transactions;
+
   @JsonKey(name: "datacenter", includeToJson: false, includeFromJson: true)
   final Datacenter? datacenter;
   @JsonKey(name: "company", includeToJson: false, includeFromJson: true)
   final Company? company;
+  @JsonKey(name: "listings", includeToJson: false, includeFromJson: false)
+  List<Listing> listings;
   @JsonKey(name: "per_gpu_vram_in_gb")
   final double? perGpuVramInGb;
   @JsonKey(name: "per_gpu_memory_bandwidth_in_gb_per_sec")
@@ -106,9 +111,13 @@ class GpuCluster {
   final double? diskStorageAvailableInGb;
   @JsonKey(name: "deep_learning_performance_score")
   final double? deepLearningPerformanceScore;
-  @JsonKey(name: "availability_date")
+  @JsonKey(name: "start_date")
   @TimestampConverter()
-  final DateTime? availabilityDate;
+  final DateTime startDate;
+  @JsonKey(name: "end_date")
+  @TimestampConverter()
+  final DateTime endDate;
+
   @JsonKey(name: "manufacture_date")
   @TimestampConverter()
   final DateTime? manufactureDate;
@@ -129,7 +138,8 @@ class GpuCluster {
     required this.companyId,
     required this.id,
     this.perGpuVramInGb,
-    this.transactions,
+    this.transactions = const [],
+    this.listings = const [],
     this.datacenter,
     this.company,
     this.teraFlops,
@@ -144,13 +154,39 @@ class GpuCluster {
     this.diskBandwidthInMbPerSec,
     this.diskStorageAvailableInGb,
     this.deepLearningPerformanceScore,
-    this.availabilityDate,
     this.manufactureDate,
+    required this.startDate,
+    required this.endDate,
   });
   factory GpuCluster.fromJson(Map<String, dynamic> json) =>
       _$GpuClusterFromJson(json);
 
   Map<String, dynamic> toJson() => _$GpuClusterToJson(this);
+
+  List<Slot> get occupiedSlots => transactions.map((tx) => tx.slot).toList();
+  List<Slot> get listedSlots => listings.map((ls) => ls.slot).toList();
+
+  void addTransactions(List<GpuTransaction> trx) {
+    Set<GpuTransaction> txSet;
+    txSet = transactions.toSet();
+    for (var tx in trx) {
+      if (tx.gpuClusterId == id) {
+        txSet.add(tx);
+      }
+    }
+    transactions = txSet.toList();
+  }
+
+  void addListings(List<Listing> lst) {
+    Set<Listing> lsSet;
+    lsSet = listings.toSet();
+    for (var ls in lst) {
+      if (ls.gpuClusterId == id) {
+        lsSet.add(ls);
+      }
+    }
+    listings = lsSet.toList();
+  }
 
   GpuCluster copyWith({
     // String? producerId,
@@ -171,6 +207,7 @@ class GpuCluster {
     String? id,
     double? perGpuVramInGb,
     List<GpuTransaction>? transactions,
+    List<Listing>? listings,
     double? teraFlops,
     List<RentalPrice>? rentalPrices,
     double? effectiveRam,
@@ -183,8 +220,9 @@ class GpuCluster {
     double? diskBandwidthInMbPerSec,
     double? diskStorageAvailableInGb,
     double? deepLearningPerformanceScore,
-    DateTime? availabilityDate,
     DateTime? manufactureDate,
+    DateTime? startDate,
+    DateTime? endDate,
   }) {
     return GpuCluster(
       cpuId: cpuId ?? this.cpuId,
@@ -203,6 +241,7 @@ class GpuCluster {
       id: id ?? this.id,
       perGpuVramInGb: perGpuVramInGb ?? this.perGpuVramInGb,
       transactions: transactions ?? this.transactions,
+      listings: listings ?? this.listings,
       datacenter: datacenter ?? this.datacenter,
       company: company ?? this.company,
       teraFlops: teraFlops ?? this.teraFlops,
@@ -229,8 +268,9 @@ class GpuCluster {
           diskStorageAvailableInGb ?? this.diskStorageAvailableInGb,
       deepLearningPerformanceScore:
           deepLearningPerformanceScore ?? this.deepLearningPerformanceScore,
-      availabilityDate: availabilityDate ?? this.availabilityDate,
       manufactureDate: manufactureDate ?? this.manufactureDate,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
     );
   }
 
@@ -278,5 +318,49 @@ class GpuCluster {
     return gpuClusters.firstWhereOrNull((e) {
       return e.id == gpuClusterId;
     });
+  }
+
+  List<Slot> get unListedSlots {
+    List<GpuTransaction> txs = transactions.toList();
+    List<Slot> slots = occupiedSlots.toList();
+    slots.addAll(listedSlots.toList());
+
+    List<Slot> gaps = [];
+    late DateTime sDate;
+    late DateTime eDate;
+    sDate = DateTime.now().isBefore(startDate) ? startDate : DateTime.now();
+    eDate = endDate;
+    slots.sort((a, b) => a.from.compareTo(b.from));
+    slots.removeWhere((slot) => slot.to.isBefore(sDate));
+    slots.removeWhere((slot) => slot.from.isAfter(eDate));
+    if (slots.length > 0) {
+      if (!slots.first.from.isAfter(sDate) && slots.first.to.isAfter(sDate)) {
+        sDate = slots.first.to;
+        slots.removeAt(0);
+      }
+    }
+    if (slots.length > 0) {
+      if (slots.last.to.isAfter(eDate)) {
+        eDate = slots.last.from;
+        slots.removeAt(slots.length - 1);
+      }
+    }
+
+    for (var i = 0; i < slots.length; i++) {
+      if (i == 0) {
+        gaps.add(Slot(from: sDate, to: slots.first.from));
+      } else {
+        gaps.add(Slot(from: slots[i - 1].to, to: slots[i].from));
+      }
+    }
+    if (slots.length > 0) {
+      if (slots.last.to.isBefore(eDate)) {
+        gaps.add(Slot(from: slots.last.to, to: eDate));
+      }
+    }
+    if (slots.length == 0) {
+      gaps.add(Slot(from: sDate, to: eDate));
+    }
+    return gaps;
   }
 }
