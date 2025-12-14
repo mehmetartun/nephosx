@@ -13,7 +13,11 @@ enum MyNavigatorRoute {
   corpAdmin("corp_admin", "corp_admin"),
   corpAdminOnboarding("corp_admin_onboarding", "corp_admin_onboarding"),
   corpAdminUsers("corp_admin_users", "corp_admin_users"),
-
+  corpAdminListings("corp_admin_listings", "corp_admin_listings"),
+  corpAdminGpuClusters("corp_admin_gpu_clusters", "corp_admin_gpu_clusters"),
+  corpAdminDataCenters("corp_admin_data_centers", "corp_admin_data_centers"),
+  corpAdminCompany("corp_admin_company", "corp_admin_company"),
+  corpUserAccept("/corporate_user_accept", "corporate_user_accept"),
   onboarding("onboarding", "onboarding"),
   theme("/theme", "theme"),
   companies("companies", "companies"),

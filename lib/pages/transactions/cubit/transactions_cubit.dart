@@ -5,10 +5,12 @@ import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../model/company.dart';
+import '../../../model/datacenter.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_transaction.dart';
 import '../../../model/user.dart';
 import '../../../repositories/database/database.dart';
+import '../../../services/csv/csv_service.dart';
 
 part 'transactions_state.dart';
 
@@ -22,6 +24,7 @@ class TransactionsCubit extends Cubit<TransactionsState> {
   List<GpuTransaction> transactions = [];
   List<Company> companies = [];
   List<GpuCluster> gpuClusters = [];
+  List<Datacenter> datacenters = [];
 
   void init() async {
     if (user == null) {
@@ -30,6 +33,7 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     _transactionsSubscription?.cancel();
     companies = await databaseRepository.getCompanies();
     gpuClusters = await databaseRepository.getGpuClusters();
+    datacenters = await databaseRepository.getDatacenters();
 
     // _transactionsSubscription =
     //     Rx.combineLatest2(
@@ -56,12 +60,15 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     //     });
 
     _transactionsSubscription = databaseRepository
-        .getGpuTransactionStream(
-          type: TransactionType.buy,
-          companyId: user!.companyId,
-        )
+        .getGpuTransactionStream(companyId: user!.companyId!)
         .listen((transactions) {
           this.transactions = transactions;
+          for (GpuTransaction tx in this.transactions) {
+            tx.addBuyer(companies);
+            tx.addSeller(companies);
+            tx.addGpuCluster(gpuClusters);
+            tx.addDatacenter(datacenters);
+          }
           emit(
             TransactionsLoaded(
               transactions: transactions,
@@ -84,5 +91,9 @@ class TransactionsCubit extends Cubit<TransactionsState> {
   Future<void> close() {
     _transactionsSubscription?.cancel();
     return super.close();
+  }
+
+  void onExport() {
+    CsvService().exportTransactions(transactions);
   }
 }

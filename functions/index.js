@@ -587,7 +587,7 @@ exports.corpAdminAddInvitation = onCall(async (request) => {
       "The function must be called while authenticated."
     );
   }
-  if (!request.data.email || !request.data.displayName || !request.data.companyId || !request.data.companyName || !request.data.message) {
+  if (!request.data.email || !request.data.displayName || !request.data.companyId || !request.data.companyName) {
     throw new HttpsError(
       "invalid-argument",
       "The function must be called with one argument 'email', 'displayName', 'companyId', 'companyName', 'message' containing the company's name, domain, confirmation email, user ID, and user type."
@@ -611,19 +611,20 @@ exports.corpAdminAddInvitation = onCall(async (request) => {
       display_name: request.data.displayName,
       company_id: request.data.companyId,
       company_name: request.data.companyName,
-      message: request.data.message,
       created_at: Timestamp.now(),
       status: 'invited',
     });
+
+    var msg = `Dear ${request.data.displayName}, you have been invited to join ${request.data.companyName} on the NephosX platform. <a href="https://nephosx-dev.web.app/corporate_user_accept?id=${docref.id}">Join NephosX</a> now.`;
     var emailref = await db.collection('mail').add({
       to: request.data.email,
       message: {
         subject: 'Invitation to join ' + request.data.companyName,
-        html: request.data.message,
-        text: 'Invitation to join ' + request.data.companyName,
+        html: msg,
+        text: `You have been invited to join ${request.data.companyName} on the NephosX platform. Copy and paste this link in your browser: https://nephosx-dev.web.app/corporate_user_accept?id=${docref.id}.`,
       }
     })
-    t.update(docref, { id: docref.id, mail_record_id: emailref.id });
+    t.update(docref, { id: docref.id, mail_record_id: emailref.id, message: msg });
   });
   return { 'message': 'Invitation added successfully' };
 });
@@ -819,3 +820,21 @@ exports.gpuClusterUpdateCheck = onCall(async (request) => {
     return { 'update_possible': false };
   }
 });
+
+exports.tempTransactionUpdate = onRequest(
+  async (req, res) => {
+    const db = getFirestore();
+    const qs = db.collection('transactions').get();
+
+    var futs = [];
+    (await qs).forEach((doc) => {
+      futs.push(doc.ref.update(
+        {
+          counterparty_ids:
+            [doc.data()['buyer_company_id'], doc.data()['seller_company_id']]
+        }));
+    })
+    await Promise.all(futs);
+    res.send({ 'message': 'Transaction data updated successfully' });
+  }
+);

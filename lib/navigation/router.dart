@@ -8,6 +8,7 @@ import '../pages/admin_onboarding/admin_onboarding_page.dart';
 import '../pages/companies/companies_page.dart';
 import '../pages/corp_admin_onboarding/corp_admin_onboarding_page.dart';
 import '../pages/corp_admin_users/corp_admin_users_page.dart';
+import '../pages/corp_user_acceptance_page/corp_user_acceptance_page.dart';
 import '../pages/datacenters/datacenters_page.dart';
 import '../pages/generic_page.dart';
 import '../pages/gpu_clusters/gpu_clusters_page.dart';
@@ -107,6 +108,11 @@ class NestedRouter {
             ),
           );
           // return "/splash";
+          if (state.matchedLocation.contains(
+            MyNavigatorRoute.corpUserAccept.path,
+          )) {
+            return null;
+          }
           if (state.matchedLocation.contains(MyNavigatorRoute.signIn.path)) {
             return null;
           } else {
@@ -126,6 +132,12 @@ class NestedRouter {
         name: MyNavigatorRoute.splash.name,
         builder: (BuildContext context, GoRouterState state) =>
             ComputerGridAnimation(),
+      ),
+      GoRoute(
+        path: MyNavigatorRoute.corpUserAccept.path,
+        name: MyNavigatorRoute.corpUserAccept.name,
+        builder: (BuildContext context, GoRouterState state) =>
+            CorpUserAcceptancePage(),
       ),
       GoRoute(
         path: MyNavigatorRoute.theme.path,
@@ -396,6 +408,74 @@ class NestedRouter {
                                       BuildContext context,
                                       GoRouterState state,
                                     ) => const CorpAdminOnboardingPage(),
+                              ),
+                            ],
+                          ),
+                          StatefulShellBranch(
+                            routes: [
+                              GoRoute(
+                                // The screen to display as the root in the third tab of the
+                                // bottom navigation bar.
+                                // name: "settings",
+                                path: MyNavigatorRoute.corpAdminListings.path,
+                                name: MyNavigatorRoute.corpAdminListings.name,
+                                builder:
+                                    (
+                                      BuildContext context,
+                                      GoRouterState state,
+                                    ) => const ListingPage(),
+                              ),
+                            ],
+                          ),
+                          StatefulShellBranch(
+                            routes: [
+                              GoRoute(
+                                // The screen to display as the root in the third tab of the
+                                // bottom navigation bar.
+                                // name: "settings",
+                                path:
+                                    MyNavigatorRoute.corpAdminDataCenters.path,
+                                name:
+                                    MyNavigatorRoute.corpAdminDataCenters.name,
+                                builder:
+                                    (
+                                      BuildContext context,
+                                      GoRouterState state,
+                                    ) => const DatacentersPage(),
+                              ),
+                            ],
+                          ),
+                          StatefulShellBranch(
+                            routes: [
+                              GoRoute(
+                                // The screen to display as the root in the third tab of the
+                                // bottom navigation bar.
+                                // name: "settings",
+                                path:
+                                    MyNavigatorRoute.corpAdminGpuClusters.path,
+                                name:
+                                    MyNavigatorRoute.corpAdminGpuClusters.name,
+                                builder:
+                                    (
+                                      BuildContext context,
+                                      GoRouterState state,
+                                    ) => const GpuClustersPage(),
+                              ),
+                            ],
+                          ),
+                          StatefulShellBranch(
+                            routes: [
+                              GoRoute(
+                                // The screen to display as the root in the third tab of the
+                                // bottom navigation bar.
+                                // name: "settings",
+                                path: MyNavigatorRoute.corpAdminCompany.path,
+                                name: MyNavigatorRoute.corpAdminCompany.name,
+                                builder:
+                                    (
+                                      BuildContext context,
+                                      GoRouterState state,
+                                    ) => const CompaniesPage(),
                               ),
                             ],
                           ),

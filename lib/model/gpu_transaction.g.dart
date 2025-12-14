@@ -24,6 +24,9 @@ GpuTransaction _$GpuTransactionFromJson(Map<String, dynamic> json) =>
       consideration: Consideration.fromJson(
         json['consideration'] as Map<String, dynamic>,
       ),
+      counterpartyIds: (json['counterparty_ids'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       datacenterId: json['datacenter_id'] as String,
     );
 
@@ -39,4 +42,5 @@ Map<String, dynamic> _$GpuTransactionToJson(
   'start_date': const TimestampToEpochConverter().toJson(instance.startDate),
   'end_date': const TimestampToEpochConverter().toJson(instance.endDate),
   'consideration': instance.consideration.toJson(),
+  'counterparty_ids': instance.counterpartyIds,
 };

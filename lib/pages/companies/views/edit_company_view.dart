@@ -42,8 +42,8 @@ class _EditCompanyViewState extends State<EditCompanyView> {
             padding: const EdgeInsets.all(20.0),
             sliver: SliverToBoxAdapter(
               child: MaxWidthBox(
-                alignment: Alignment.topCenter,
-                maxWidth: 500,
+                alignment: Alignment.topLeft,
+                maxWidth: 600,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -139,45 +139,45 @@ class _EditCompanyViewState extends State<EditCompanyView> {
                         );
                       },
                     ),
-                    const SizedBox(height: 20),
-                    Text(
-                      "Users",
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: widget.users.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: Icon(Icons.person),
-                          title: Text(
-                            widget.users[index].displayName ?? "--",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(widget.users[index].email ?? "--"),
-                          selected:
-                              widget.users[index].uid ==
-                                  widget.company.primaryContactId
-                              ? true
-                              : false,
-                          trailing:
-                              widget.users[index].uid ==
-                                  widget.company.primaryContactId
-                              ? const PropertyBadge(text: "Primary")
-                              : widget.setPrimaryContact != null
-                              ? FilledButton.tonal(
-                                  child: Text("Set"),
-                                  onPressed: () {
-                                    widget.setPrimaryContact!(
-                                      widget.users[index],
-                                    );
-                                  },
-                                )
-                              : null,
-                        );
-                      },
-                    ),
+                    // const SizedBox(height: 20),
+                    // Text(
+                    //   "Users",
+                    //   style: Theme.of(context).textTheme.headlineMedium,
+                    // ),
+                    // ListView.builder(
+                    //   shrinkWrap: true,
+                    //   physics: const NeverScrollableScrollPhysics(),
+                    //   itemCount: widget.users.length,
+                    //   itemBuilder: (context, index) {
+                    //     return ListTile(
+                    //       leading: Icon(Icons.person),
+                    //       title: Text(
+                    //         widget.users[index].displayName ?? "--",
+                    //         style: TextStyle(fontWeight: FontWeight.bold),
+                    //       ),
+                    //       subtitle: Text(widget.users[index].email ?? "--"),
+                    //       selected:
+                    //           widget.users[index].uid ==
+                    //               widget.company.primaryContactId
+                    //           ? true
+                    //           : false,
+                    //       trailing:
+                    //           widget.users[index].uid ==
+                    //               widget.company.primaryContactId
+                    //           ? const PropertyBadge(text: "Primary")
+                    //           : widget.setPrimaryContact != null
+                    //           ? FilledButton.tonal(
+                    //               child: Text("Set"),
+                    //               onPressed: () {
+                    //                 widget.setPrimaryContact!(
+                    //                   widget.users[index],
+                    //                 );
+                    //               },
+                    //             )
+                    //           : null,
+                    //     );
+                    //   },
+                    // ),
                   ],
                 ),
               ),

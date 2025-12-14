@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:nephosx/model/company.dart';
 import 'package:nephosx/model/conversions.dart';
 import 'package:nephosx/model/enums.dart';
 import 'package:nephosx/model/enums.dart';
 
 import '../extensions/add_month.dart';
 import 'consideration.dart';
+import 'datacenter.dart';
+import 'gpu_cluster.dart';
 import 'slot.dart';
 
 part 'gpu_transaction.g.dart';
@@ -32,6 +36,16 @@ class GpuTransaction {
   final DateTime endDate;
   @JsonKey(name: "consideration")
   final Consideration consideration;
+  @JsonKey(name: "counterparty_ids")
+  final List<String> counterpartyIds;
+  @JsonKey(name: "buyer_company", includeFromJson: false, includeToJson: false)
+  Company? buyerCompany;
+  @JsonKey(name: "seller_company", includeFromJson: false, includeToJson: false)
+  Company? sellerCompany;
+  @JsonKey(name: "gpu_cluster", includeFromJson: false, includeToJson: false)
+  GpuCluster? gpuCluster;
+  @JsonKey(name: "datacenter", includeFromJson: false, includeToJson: false)
+  Datacenter? datacenter;
 
   GpuTransaction({
     required this.id,
@@ -42,11 +56,44 @@ class GpuTransaction {
     required this.startDate,
     required this.endDate,
     required this.consideration,
+    required this.counterpartyIds,
     required this.datacenterId,
   });
 
+  void addDatacenter(List<Datacenter> datacenters) {
+    datacenter = datacenters.firstWhereOrNull(
+      (element) => element.id == datacenterId,
+    );
+  }
+
+  void addBuyer(List<Company> companies) {
+    buyerCompany = companies.firstWhereOrNull((company) {
+      return company.id == buyerCompanyId;
+    });
+  }
+
+  void addSeller(List<Company> companies) {
+    sellerCompany = companies.firstWhereOrNull((company) {
+      return company.id == sellerCompanyId;
+    });
+  }
+
+  void addGpuCluster(List<GpuCluster> gpuClusters) {
+    gpuCluster = gpuClusters.firstWhereOrNull((gpuCluster) {
+      return gpuCluster.id == gpuClusterId;
+    });
+  }
+
   Consideration get hourlyRate => Consideration(
-    amount: consideration.amount / (endDate.difference(startDate).inHours),
+    amount: endDate.difference(startDate).inSeconds == 0
+        ? 0
+        : consideration.amount /
+              (endDate.difference(startDate).inSeconds / (60 * 60)),
+    currency: consideration.currency,
+  );
+
+  Consideration get dailyRate => Consideration(
+    amount: hourlyRate.amount * 24.0,
     currency: consideration.currency,
   );
 

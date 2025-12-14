@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'rental_price.g.dart';
@@ -10,6 +11,16 @@ class RentalPrice {
   final double priceInUsdPerHour;
 
   RentalPrice({required this.numberOfMonths, required this.priceInUsdPerHour});
+
+  String get priceInUsdPerHourFormatted => NumberFormat.currency(
+    locale: 'en_US',
+    symbol: '\$',
+    decimalDigits: 3,
+  ).format(priceInUsdPerHour);
+
+  String get priceInUsdPerHourFormattedWithMonths {
+    return "${numberOfMonths}m: $priceInUsdPerHourFormatted/hr";
+  }
 
   factory RentalPrice.fromJson(Map<String, dynamic> json) =>
       _$RentalPriceFromJson(json);
@@ -33,7 +44,7 @@ class RentalPrice {
       return 0;
     }
     if (_prices.length > 1) {
-      if (numMonths < _prices.first.numberOfMonths) {
+      if (numMonths <= _prices.first.numberOfMonths) {
         return _prices.first.priceInUsdPerHour *
             Duration.hoursPerDay *
             to.difference(from).inDays;

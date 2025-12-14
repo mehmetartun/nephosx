@@ -6,7 +6,7 @@ import 'conversions.dart';
 part 'invitaton.g.dart';
 
 @JsonEnum(fieldRename: FieldRename.snake)
-enum InvitationStatus { invited, accepted, rejected }
+enum InvitationStatus { invited, accepted, rejected, expired }
 
 @JsonSerializable(explicitToJson: true)
 class Invitation {

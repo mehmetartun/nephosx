@@ -7,6 +7,7 @@ import 'package:nephosx/model/listing.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../widgets/dialogs/add_transaction_dialog.dart';
+import '../widgets/dialogs/add_transaction_dialog_new.dart';
 import '../widgets/gpu_cluster_info.dart';
 import 'enums.dart';
 import 'gpu_transaction.dart';
@@ -135,12 +136,9 @@ class ListingDataSource extends DataTableSource {
                                 user!.type == UserType.corporateAdmin) {
                               if (listing.gpuCluster != null &&
                                   listing.datacenter != null) {
-                                return AddTransactionDialog(
-                                  gpuCluster: listing.gpuCluster!,
-                                  priceCalculator: priceCalculator,
-                                  validator: validator,
-                                  buyers: [user!.company!],
-                                  datacenter: listing.datacenter!,
+                                return AddTransactionDialogNew(
+                                  buyer: user!.company!,
+                                  listing: listing,
                                   onAddTransaction: onAddTransaction,
                                 );
                               } else {

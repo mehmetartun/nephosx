@@ -31,6 +31,8 @@ class CorpAdminUsersCubit extends Cubit<CorpAdminUsersState> {
     init();
   }
 
+  updateUser({required User user}) async {}
+
   addInvitation({required String email, required String displayName}) async {
     emit(CorpAdminUsersInitial());
     try {
@@ -39,10 +41,6 @@ class CorpAdminUsersCubit extends Cubit<CorpAdminUsersState> {
         'displayName': displayName,
         'companyId': user!.companyId,
         'companyName': user!.company!.name,
-        'message':
-            'Dear $displayName, you have been invited'
-            ' to join ${user!.company!.name} on the NephosX platform. '
-            'Click on the link below to join the platform. <a href="https://nephosx.com">NephosX</a>',
       });
     } catch (e) {
       emit(CorpAdminUsersError(error: e.toString()));

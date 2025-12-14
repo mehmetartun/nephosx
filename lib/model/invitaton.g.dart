@@ -37,4 +37,5 @@ const _$InvitationStatusEnumMap = {
   InvitationStatus.invited: 'invited',
   InvitationStatus.accepted: 'accepted',
   InvitationStatus.rejected: 'rejected',
+  InvitationStatus.expired: 'expired',
 };

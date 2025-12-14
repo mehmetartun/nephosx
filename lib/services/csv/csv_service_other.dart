@@ -1,5 +1,6 @@
 import '../../model/datacenter.dart';
 import '../../model/gpu_cluster.dart';
+import '../../model/gpu_transaction.dart';
 
 class CsvService {
   /// Exports the given list of drinks to a CSV file and opens the share dialog.
@@ -14,6 +15,12 @@ class CsvService {
   }
 
   Future<void> exportDatacenters(List<Datacenter> datacentersToExport) async {
+    throw (UnimplementedError());
+  }
+
+  Future<void> exportTransactions(
+    List<GpuTransaction> transactionsToExport,
+  ) async {
     throw (UnimplementedError());
   }
 }

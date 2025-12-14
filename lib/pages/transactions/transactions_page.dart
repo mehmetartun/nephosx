@@ -29,8 +29,7 @@ class TransactionsPage extends StatelessWidget {
             case TransactionsLoaded _:
               return TransactionsView(
                 transactions: state.transactions,
-                companies: state.companies,
-                gpuClusters: state.gpuClusters,
+                onExport: cubit.onExport,
               );
           }
         },

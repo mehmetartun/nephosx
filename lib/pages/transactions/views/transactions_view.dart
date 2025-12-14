@@ -39,12 +39,10 @@ class TransactionsView extends StatefulWidget {
   const TransactionsView({
     super.key,
     required this.transactions,
-    required this.companies,
-    required this.gpuClusters,
+    required this.onExport,
   });
   final List<GpuTransaction> transactions;
-  final List<Company> companies;
-  final List<GpuCluster> gpuClusters;
+  final void Function() onExport;
 
   @override
   State<TransactionsView> createState() => _TransactionsViewState();
@@ -164,6 +162,17 @@ class _TransactionsViewState extends State<TransactionsView> {
           child: Column(
             children: [
               Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text("Transactions List"),
+                  OutlinedButton(
+                    onPressed: widget.onExport,
+                    child: Text("Export"),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Row(
                 children: [
                   DropdownButton<TransactionSort>(
                     value: sort,
@@ -194,31 +203,19 @@ class _TransactionsViewState extends State<TransactionsView> {
               ),
               Container(
                 width: double.infinity,
-                child: TransactionTable(
-                  transactions: transactions,
-                  gpuClusters: widget.gpuClusters,
-                  companies: widget.companies,
-                ),
+                child: TransactionTable(transactions: transactions),
               ),
               SizedBox(height: 20),
               Text("Buying"),
               Container(
                 width: double.infinity,
-                child: TransactionTable(
-                  transactions: buys,
-                  gpuClusters: widget.gpuClusters,
-                  companies: widget.companies,
-                ),
+                child: TransactionTable(transactions: buys),
               ),
               SizedBox(height: 20),
               Text("Selling"),
               Container(
                 width: double.infinity,
-                child: TransactionTable(
-                  transactions: sells,
-                  gpuClusters: widget.gpuClusters,
-                  companies: widget.companies,
-                ),
+                child: TransactionTable(transactions: sells),
               ),
             ],
           ),

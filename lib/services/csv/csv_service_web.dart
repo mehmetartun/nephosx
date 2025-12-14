@@ -7,6 +7,7 @@ import 'dart:js_interop';
 import 'package:csv/csv.dart';
 
 import '../../model/datacenter.dart';
+import '../../model/gpu_transaction.dart';
 
 class CsvService {
   /// Exports the given list of drinks to a CSV file and opens the share dialog.
@@ -121,6 +122,122 @@ class CsvService {
         datacenter.tier.rank,
         datacenter.address.country.description,
         datacenter.address.country.region.description,
+      ]);
+    }
+
+    // Convert the list of lists to a CSV string.
+    final String csvData = const ListToCsvConverter().convert(rows);
+    print(csvData);
+
+    try {
+      // Encode the CSV data to UTF-8
+      final bytes = utf8.encode(csvData);
+      // Create a blob from the bytes
+      final blob = web.Blob(
+        [bytes.toJS].toJS,
+        web.BlobPropertyBag(type: 'text/csv'),
+      );
+
+      // Create a URL for the blob
+      final url = web.URL.createObjectURL(blob);
+
+      // try {
+      //   // Try File System Access API (Save As)
+      //   // Check if showSaveFilePicker exists on window
+      //   if ((html.window as JSObject).has('showSaveFilePicker')) {
+      //     final options = FileSystemSaveFilePickerOptions(
+      //       suggestedName: 'gpu_clusters_export.csv',
+      //       types: [
+      //         FileSystemType(
+      //           description: 'CSV File',
+      //           accept:
+      //               {
+      //                     'text/csv': ['.csv'.toJS].toJS,
+      //                   }.jsify()
+      //                   as JSObject?,
+      //         ),
+      //       ].toJS,
+      //     );
+
+      //     final handle = await html.window.showSaveFilePicker(options).toDart;
+      //     final writable = await handle.createWritable().toDart;
+      //     await writable.write(blob as JSAny).toDart;
+      //     await writable.close().toDart;
+
+      //     html.URL.revokeObjectURL(url);
+      //     return;
+      //   }
+      // } catch (e) {
+      //   print('File System Access API failed or cancelled: $e');
+      //   // Fallback to direct download
+      // }
+
+      // Create an anchor element and trigger a download
+      final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
+      anchor.href = url;
+      anchor.download = 'datacenters_export.csv';
+      anchor.click();
+
+      web.URL.revokeObjectURL(url);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> exportTransactions(
+    List<GpuTransaction> transactionsToExport,
+  ) async {
+    if (transactionsToExport.isEmpty) {
+      return;
+    }
+
+    final List<String> headers = [
+      'GPU ID',
+      'GPU Type',
+      'Data Center Tier',
+      'Data Center Region',
+      'Data Center Country',
+      'Data Center Going Concern Assessment',
+      'Transaction ID',
+      'Transaction Start Date',
+      'Transaction End Date',
+      'Transaction Daily Rate',
+      'Transaction Currency',
+      'Buyer Region',
+      'Buyer Country',
+      'Buyer Industry Code',
+      'Buyer Ratings - S&P',
+      'Buyer Ratings - Moody’s',
+      'Buyer Ratings - Fitch Rating Services',
+      'Buyer Ratings - D-U-N-S Rating Bucket',
+    ];
+
+    List<List<dynamic>> rows = [];
+    rows.add(headers);
+    for (var transaction in transactionsToExport) {
+      rows.add([
+        transaction.gpuClusterId,
+        transaction.gpuCluster?.device?.name,
+        transaction.datacenter?.tier.rank,
+        transaction.datacenter?.address.country.region.description,
+        transaction.datacenter?.address.country.description,
+        "Gg Cncrn Ass.",
+        transaction.id,
+        transaction.startDate.toIso8601String(),
+        transaction.endDate.toIso8601String(),
+        transaction.dailyRate,
+        transaction.consideration.currency.title,
+        (transaction.buyerCompany?.addresses.isNotEmpty ?? false)
+            ? transaction.buyerCompany?.addresses[0].country.region.description
+            : "No Address",
+        (transaction.buyerCompany?.addresses.isNotEmpty ?? false)
+            ? transaction.buyerCompany?.addresses[0].country.description
+            : "No Address",
+        "Buyer Ind. Code",
+        "Buyer Rtg - S&P",
+        "Buyer Rtg - Moody’s",
+        "Buyer Rtg - Fitc",
+        "Buyer Rtg - D-U-N-S",
       ]);
     }
 

@@ -66,67 +66,67 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (user!.canSeeUsers) ...[
-                    navigationShell?.currentIndex == 0
-                        ? FilledButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(0);
-                            },
-                            child: const Text("Users"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(0);
-                            },
-                            child: const Text("Users"),
-                          ),
-                  ],
+                  // if (user!.canSeeUsers) ...[
+                  //   navigationShell?.currentIndex == 0
+                  //       ? FilledButton(
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(0);
+                  //           },
+                  //           child: const Text("Users"),
+                  //         )
+                  //       : TextButton(
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(0);
+                  //           },
+                  //           child: const Text("Users"),
+                  //         ),
+                  // ],
 
-                  if (user!.canSeeCompanies) ...[
-                    navigationShell?.currentIndex == 1
-                        ? FilledButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(1);
-                            },
-                            child: const Text("Companies"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(1);
-                            },
-                            child: const Text("Companies"),
-                          ),
-                  ],
-                  if (user!.canSeeDatacenters) ...[
-                    navigationShell?.currentIndex == 2
-                        ? FilledButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(2);
-                            },
-                            child: const Text("Datacenters"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(2);
-                            },
-                            child: const Text("Datacenters"),
-                          ),
-                  ],
-                  if (user!.canSeeGpuClusters) ...[
-                    navigationShell?.currentIndex == 3
-                        ? FilledButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(3);
-                            },
-                            child: const Text("GPU Clusters"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(3);
-                            },
-                            child: const Text("GPU Clusters"),
-                          ),
-                  ],
+                  // if (user!.canSeeCompanies) ...[
+                  //   navigationShell?.currentIndex == 1
+                  //       ? FilledButton(
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(1);
+                  //           },
+                  //           child: const Text("Companies"),
+                  //         )
+                  //       : TextButton(
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(1);
+                  //           },
+                  //           child: const Text("Companies"),
+                  //         ),
+                  // ],
+                  // if (user!.canSeeDatacenters) ...[
+                  //   navigationShell?.currentIndex == 2
+                  //       ? FilledButton(
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(2);
+                  //           },
+                  //           child: const Text("Datacenters"),
+                  //         )
+                  //       : TextButton(
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(2);
+                  //           },
+                  //           child: const Text("Datacenters"),
+                  //         ),
+                  // ],
+                  // if (user!.canSeeGpuClusters) ...[
+                  //   navigationShell?.currentIndex == 3
+                  //       ? FilledButton(
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(3);
+                  //           },
+                  //           child: const Text("GPU Clusters"),
+                  //         )
+                  //       : TextButton(
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(3);
+                  //           },
+                  //           child: const Text("GPU Clusters"),
+                  //         ),
+                  // ],
                   if (user!.canSeeMarketplace) ...[
                     navigationShell?.currentIndex == 4
                         ? FilledButton(
@@ -142,32 +142,24 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                             child: const Text("Market"),
                           ),
                   ],
-                  if (user!.canSeeSettings) ...[
-                    navigationShell?.currentIndex == 5
+                  if (user.canSeeCorporateAdmin) ...[
+                    navigationShell?.currentIndex == 9
                         ? FilledButton(
                             onPressed: () {
-                              navigationShell?.goBranch(5);
+                              // navigationShell?.goBranch(7);
+                              // context.go("/admin/data");
                             },
-                            child: const Text("Settings"),
-                          )
-                        : user.emailVerified == false
-                        ? TextButton.icon(
-                            icon: Icon(
-                              Icons.warning,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                            onPressed: () {
-                              navigationShell?.goBranch(5);
-                            },
-                            label: const Text("Settings"),
+                            child: const Text("My Listings"),
                           )
                         : TextButton(
                             onPressed: () {
-                              navigationShell?.goBranch(5);
+                              context.goNamed("listing");
+                              // navigationShell?.goBranch(7);
                             },
-                            child: const Text("Settings"),
+                            child: const Text("My Listings"),
                           ),
                   ],
+
                   if (user.canSeeTransactions) ...[
                     navigationShell?.currentIndex == 6
                         ? FilledButton(
@@ -217,21 +209,30 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                             child: const Text("Admin"),
                           ),
                   ],
-                  if (user.canSeeCorporateAdmin) ...[
-                    navigationShell?.currentIndex == 9
+                  if (user!.canSeeSettings) ...[
+                    navigationShell?.currentIndex == 5
                         ? FilledButton(
                             onPressed: () {
-                              // navigationShell?.goBranch(7);
-                              // context.go("/admin/data");
+                              navigationShell?.goBranch(5);
                             },
-                            child: const Text("Listing"),
+                            child: const Text("Settings"),
+                          )
+                        : user.emailVerified == false
+                        ? TextButton.icon(
+                            icon: Icon(
+                              Icons.warning,
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                            onPressed: () {
+                              navigationShell?.goBranch(5);
+                            },
+                            label: const Text("Settings"),
                           )
                         : TextButton(
                             onPressed: () {
-                              context.goNamed("listing");
-                              // navigationShell?.goBranch(7);
+                              navigationShell?.goBranch(5);
                             },
-                            child: const Text("Listing"),
+                            child: const Text("Settings"),
                           ),
                   ],
                 ],

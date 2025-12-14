@@ -9,12 +9,12 @@ class TransactionTable extends StatelessWidget {
   const TransactionTable({
     Key? key,
     required this.transactions,
-    required this.gpuClusters,
-    required this.companies,
+    // required this.gpuClusters,
+    // required this.companies,
   }) : super(key: key);
   final List<GpuTransaction> transactions;
-  final List<GpuCluster> gpuClusters;
-  final List<Company> companies;
+  // final List<GpuCluster> gpuClusters;
+  // final List<Company> companies;
 
   @override
   Widget build(BuildContext context) {
@@ -69,22 +69,12 @@ class TransactionTable extends StatelessWidget {
             // DataCell(Text("Hello")),
             DataCell(
               Text(
-                GpuCluster.getGpuClusterById(
-                      gpuClusters,
-                      tx.gpuClusterId,
-                    )?.device?.name ??
-                    'ERROR',
+                tx.gpuCluster?.device?.name ?? "ERROR",
                 // " ${GpuCluster.getGpuClusterById(gpuClusters, tx.gpuClusterId).quantity}x",
               ),
             ),
-            DataCell(
-              Text(Company.getCompanyFromId(companies, tx.buyerCompanyId).name),
-            ),
-            DataCell(
-              Text(
-                Company.getCompanyFromId(companies, tx.sellerCompanyId).name,
-              ),
-            ),
+            DataCell(Text(tx.buyerCompany?.name ?? "ERROR")),
+            DataCell(Text(tx.sellerCompany?.name ?? "ERROR")),
             DataCell(Text(DateFormat('dd MMM yy').format(tx.startDate))),
             DataCell(Text(DateFormat('dd MMM yy').format(tx.endDate))),
             DataCell(

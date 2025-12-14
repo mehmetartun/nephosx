@@ -253,6 +253,10 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                         widget.onAddTransaction(
                           GpuTransaction(
                             id: '',
+                            counterpartyIds: [
+                              buyer!.id,
+                              widget.gpuCluster.companyId,
+                            ],
                             gpuClusterId: widget.gpuCluster.id,
                             startDate: startDate!,
                             endDate: endDate!,

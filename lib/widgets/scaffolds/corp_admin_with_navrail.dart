@@ -66,7 +66,7 @@ class CorpAdminWithNavrail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "CorpAdmin Panel",
+                        "Corporate Admin",
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Divider(),
@@ -103,7 +103,34 @@ class CorpAdminWithNavrail extends StatelessWidget {
                   ),
                   NavigationRailDestination(
                     icon: Icon(Icons.list),
-                    label: Text('Listing'),
+                    label: Text('Listings'),
+                    disabled:
+                        BlocProvider.of<AuthenticationBloc>(
+                          context,
+                        ).user?.type !=
+                        UserType.corporateAdmin,
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.domain),
+                    label: Text('Data Centers'),
+                    disabled:
+                        BlocProvider.of<AuthenticationBloc>(
+                          context,
+                        ).user?.type !=
+                        UserType.corporateAdmin,
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.computer),
+                    label: Text('Gpu Clusters'),
+                    disabled:
+                        BlocProvider.of<AuthenticationBloc>(
+                          context,
+                        ).user?.type !=
+                        UserType.corporateAdmin,
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.home),
+                    label: Text('Company Data'),
                     disabled:
                         BlocProvider.of<AuthenticationBloc>(
                           context,

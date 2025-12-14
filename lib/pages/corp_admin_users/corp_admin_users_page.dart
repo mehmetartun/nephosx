@@ -35,6 +35,7 @@ class CorpAdminUsersPage extends StatelessWidget {
               return LoadingView(title: "Loading Users");
             case CorpAdminUsersLoaded _:
               return CorpAdminUsersView(
+                updateUser: cubit.updateUser,
                 users: state.users,
                 invitations: state.invitations,
                 addInvitation: cubit.addInvitation,

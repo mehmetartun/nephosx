@@ -23,54 +23,57 @@ class GpuClustersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: MaxWidthBox(
-          alignment: Alignment.topCenter,
-          maxWidth: 500,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "GPU Clusters",
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (BlocProvider.of<AuthenticationBloc>(
-                            context,
-                          ).user?.canSeeGpuClusters ??
-                          false)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10.0),
-                          child: OutlinedButton.icon(
-                            icon: Icon(Icons.add),
-                            label: Text("Add"),
-                            onPressed: addGpuClusterRequest,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: MaxWidthBox(
+            alignment: Alignment.topLeft,
+            maxWidth: 700,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "GPU Clusters",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (BlocProvider.of<AuthenticationBloc>(
+                              context,
+                            ).user?.canSeeGpuClusters ??
+                            false)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: OutlinedButton.icon(
+                              icon: Icon(Icons.add),
+                              label: Text("Add"),
+                              onPressed: addGpuClusterRequest,
+                            ),
                           ),
-                        ),
-                      if (BlocProvider.of<AuthenticationBloc>(
-                            context,
-                          ).user?.canSeeGpuClusters ??
-                          false)
-                        OutlinedButton.icon(
-                          icon: Icon(Icons.download),
-                          label: Text("Export"),
-                          onPressed: () async {
-                            await CsvService().exportGpuClusters(gpuClusters);
-                          },
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Expanded(
-                child: ListView.separated(
+                        if (BlocProvider.of<AuthenticationBloc>(
+                              context,
+                            ).user?.canSeeGpuClusters ??
+                            false)
+                          OutlinedButton.icon(
+                            icon: Icon(Icons.download),
+                            label: Text("Export"),
+                            onPressed: () async {
+                              await CsvService().exportGpuClusters(gpuClusters);
+                            },
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   separatorBuilder: (context, index) =>
                       const Divider(height: 10),
                   itemCount: gpuClusters.length,
@@ -134,8 +137,8 @@ class GpuClustersView extends StatelessWidget {
                     );
                   },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

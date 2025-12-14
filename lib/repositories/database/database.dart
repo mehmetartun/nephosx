@@ -63,10 +63,13 @@ abstract class DatabaseRepository {
   Stream<List<Request>> getRequestsByRequestorIdStream(String requestorId);
 
   Stream<List<GpuTransaction>> getGpuTransactionStream({
-    String? companyId,
-    TransactionType? type,
+    required String companyId,
   });
   Future<PlatformSettings> getPlatformSettings();
+  Future<List<Producer>> getProducers();
+  Future<List<Device>> getDevices();
+  Future<List<Cpu>> getCpus();
+  Future<Invitation?> getInvitation(String id);
 }
 
 class FirestoreDatabaseRepository extends DatabaseRepository {
@@ -309,14 +312,19 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
 
   @override
   Stream<List<GpuTransaction>> getGpuTransactionStream({
-    String? companyId,
-    TransactionType? type,
+    required String companyId,
   }) {
-    return db.collection("transactions").snapshots().map((snapshot) {
-      return snapshot.docs
-          .map((doc) => GpuTransaction.fromJson({...doc.data(), 'id': doc.id}))
-          .toList();
-    });
+    return db
+        .collection("transactions")
+        .where('counterparty_ids', arrayContains: companyId)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map(
+                (doc) => GpuTransaction.fromJson({...doc.data(), 'id': doc.id}),
+              )
+              .toList();
+        });
   }
 
   @override
@@ -420,5 +428,14 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
       );
     }
     return txs;
+  }
+
+  @override
+  Future<Invitation?> getInvitation(String id) async {
+    var qs = await db.collection("invitations").doc(id).get();
+    if (!qs.exists) {
+      return null;
+    }
+    return Invitation.fromJson({...qs.data()!, 'id': qs.id});
   }
 }
