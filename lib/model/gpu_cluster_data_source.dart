@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../blocs/authentication/authentication_bloc.dart';
 import '../widgets/dialogs/add_transaction_dialog.dart';
 import '../widgets/gpu_cluster_info.dart';
 import 'enums.dart';
@@ -13,20 +17,131 @@ class GpuClusterDataSource extends DataTableSource {
   // Generate some dummy dat
 
   final List<GpuCluster> gpuClusters;
-  final User? user;
+  // final User? user;
   final BuildContext context;
-  final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
-  final String? Function(GpuCluster, DateTime, DateTime) validator;
-  final void Function(GpuTransaction) onAddTransaction;
+
+  final void Function(GpuCluster gpuCluster) updateGpuClusterRequest;
+  // final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
+  // final String? Function(GpuCluster, DateTime, DateTime) validator;
+  // final void Function(GpuTransaction) onAddTransaction;
 
   GpuClusterDataSource({
     required this.gpuClusters,
-    this.user,
+    // this.user,
     required this.context,
-    required this.priceCalculator,
-    required this.validator,
-    required this.onAddTransaction,
+    required this.updateGpuClusterRequest,
+    // required this.priceCalculator,
+    // required this.validator,
+    // required this.onAddTransaction,
   });
+
+  List<DataColumn> getColumns({
+    required void Function<T>(
+      Comparable<T> Function(GpuCluster d) getField,
+      int columnIndex,
+      bool ascending,
+    )
+    sortFunction,
+  }) {
+    return [
+      DataColumn(
+        label: Text(
+          'GPU\nType',
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+        onSort: (columnIndex, ascending) {
+          sortFunction<String>(
+            (d) =>
+                "${d.producer?.name ?? 'ERROR'}\n${d.device?.name ?? 'ERROR'}",
+            columnIndex,
+            ascending,
+          );
+        },
+      ),
+      DataColumn(
+        label: Text('GPU\n#', style: Theme.of(context).textTheme.labelMedium),
+        onSort: (columnIndex, ascending) {
+          sortFunction<num>((d) => d.quantity, columnIndex, ascending);
+        },
+      ),
+      DataColumn(
+        label: Text('Region', style: Theme.of(context).textTheme.labelMedium),
+        onSort: (columnIndex, ascending) {
+          sortFunction<String>(
+            (d) => d.datacenter?.address.country.region.description ?? '',
+            columnIndex,
+            ascending,
+          );
+        },
+      ),
+      DataColumn(
+        label: Text('Location', style: Theme.of(context).textTheme.labelMedium),
+        onSort: (columnIndex, ascending) {
+          sortFunction<String>(
+            (d) => d.datacenter?.address.country.description ?? '',
+            columnIndex,
+            ascending,
+          );
+        },
+      ),
+      DataColumn(
+        label: Text('Rel %', style: Theme.of(context).textTheme.labelMedium),
+        onSort: (columnIndex, ascending) {
+          sortFunction<num>(
+            (d) => d.datacenter?.tier.rank ?? 0,
+            columnIndex,
+            ascending,
+          );
+        },
+      ),
+      DataColumn(
+        label: Text('TFlops', style: Theme.of(context).textTheme.labelMedium),
+        onSort: (columnIndex, ascending) {
+          sortFunction<num>((d) => d.teraFlops ?? 0, columnIndex, ascending);
+        },
+      ),
+      DataColumn(
+        label: Text('RAM/GPU', style: Theme.of(context).textTheme.labelMedium),
+        onSort: (columnIndex, ascending) {
+          sortFunction<num>(
+            (d) => d.perGpuVramInGb ?? 0,
+            columnIndex,
+            ascending,
+          );
+        },
+      ),
+      DataColumn(
+        label: Text(
+          'Start\nDate',
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+        onSort: (columnIndex, ascending) {
+          sortFunction<DateTime>((d) => d.startDate, columnIndex, ascending);
+        },
+      ),
+      DataColumn(
+        label: Text(
+          'End\nDate',
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+        onSort: (columnIndex, ascending) {
+          sortFunction<DateTime>((d) => d.endDate, columnIndex, ascending);
+        },
+      ),
+      DataColumn(
+        label: Text('Edit', style: Theme.of(context).textTheme.labelMedium),
+        // onSort: (columnIndex, ascending) {
+        //   sortFunction<DateTime>((d) => d.startDate, columnIndex, ascending);
+        // },
+      ),
+      DataColumn(
+        label: Text('', style: Theme.of(context).textTheme.labelMedium),
+        // onSort: (columnIndex, ascending) {
+        //   sortFunction<DateTime>((d) => d.startDate, columnIndex, ascending);
+        // },
+      ),
+    ];
+  }
 
   // Sorting Logic
   void sort<T>(Comparable<T> Function(GpuCluster d) getField, bool ascending) {
@@ -50,8 +165,20 @@ class GpuClusterDataSource extends DataTableSource {
     return DataRow(
       cells: [
         DataCell(
-          Text(
-            "${gpuCluster.producer?.name ?? 'ERROR'}\n${gpuCluster.device?.name ?? 'ERROR'}",
+          Row(
+            children: [
+              gpuCluster.producer?.base64Image != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 3.0),
+                      child: Image.memory(
+                        base64Decode(gpuCluster.producer!.base64Image!),
+                        width: 16,
+                        height: 16,
+                      ),
+                    )
+                  : Container(),
+              Text(gpuCluster.device?.name ?? 'X'),
+            ],
           ),
         ),
         DataCell(Text(gpuCluster.quantity.toString())),
@@ -63,81 +190,23 @@ class GpuClusterDataSource extends DataTableSource {
 
         DataCell(Text(gpuCluster.teraFlops?.toString() ?? "15200")),
         DataCell(Text("${gpuCluster.perGpuVramInGb?.toString() ?? "80"} GB")),
+        DataCell(Text(DateFormat("dd MMM yy").format(gpuCluster.startDate))),
+        DataCell(Text(DateFormat("dd MMM yy").format(gpuCluster.endDate))),
         DataCell(
-          Text(
-            gpuCluster.startDate == null
-                ? "ERROR"
-                : DateFormat("dd MMM yy").format(gpuCluster.startDate!),
-          ),
-        ),
-        DataCell(
-          user!.canSeePrices
-              ? gpuCluster.rentalPrices.length == 0
-                    ? Text('12 months / \$9.99/hr')
-                    : DropdownButton(
-                        value: gpuCluster.rentalPrices.first,
-                        items: gpuCluster.rentalPrices
-                            .map(
-                              (e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(
-                                  "${e.numberOfMonths} mo @ ${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(e.priceInUsdPerHour)}/hr",
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {},
-                      )
-              : Text("Locked"),
-        ),
-        DataCell(
-          gpuCluster.companyId == user?.companyId
-              ? Text("Own GPU")
-              : Row(
-                  children: [
-                    FilledButton(
-                      onPressed: () async {
-                        await showDialog(
-                          context: context,
-                          builder: (context) {
-                            if (user!.type == UserType.corporateTrader ||
-                                user!.type == UserType.corporateAdmin) {
-                              return AddTransactionDialog(
-                                gpuCluster: gpuCluster,
-                                priceCalculator: priceCalculator,
-                                validator: validator,
-                                buyers: [user!.company!],
-                                datacenter: gpuCluster.datacenter!,
-                                onAddTransaction: onAddTransaction,
-                              );
-                            } else {
-                              return AlertDialog(
-                                title: Text("Not Authorized"),
-                                content: Text(
-                                  "You are currently not authorized to transact on this platform.",
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("OK"),
-                                  ),
-                                ],
-                              );
-                            }
-                          },
-                        );
-                      },
-                      child: Text("Buy"),
-                    ),
-                    OutlinedButton(onPressed: () {}, child: Text("Bid")),
-                  ],
-                ),
+          (BlocProvider.of<AuthenticationBloc>(
+                    context,
+                  ).user?.canUpdateGpuCluster ??
+                  false)
+              ? TextButton(
+                  onPressed: !gpuCluster.canEdit
+                      ? null
+                      : () => updateGpuClusterRequest(gpuCluster),
+                  child: Text(!gpuCluster.canEdit ? "Locked" : "Edit"),
+                )
+              : SizedBox.shrink(),
         ),
         DataCell(
           TextButton(
-            child: Text("More Info"),
             onPressed: () async {
               await showDialog(
                 context: context,
@@ -168,6 +237,7 @@ class GpuClusterDataSource extends DataTableSource {
                 },
               );
             },
+            child: Text("View"),
           ),
         ),
       ],

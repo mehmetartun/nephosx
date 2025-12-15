@@ -27,14 +27,14 @@ class MarketPage extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             case MarketLoading():
               return const Center(child: CircularProgressIndicator());
-            case MarketLoaded():
-              return MarketView2(
-                gpuClusters: state.gpuClusters,
-                ownCompanyId: state.ownCompanyId,
-                priceCalculator: marketCubit.priceCalculator,
-                validator: marketCubit.transactionValidator,
-                onAddTransaction: marketCubit.addTransaction,
-              );
+            // case MarketLoaded():
+            //   return MarketView2(
+            //     gpuClusters: state.gpuClusters,
+            //     ownCompanyId: state.ownCompanyId,
+            //     priceCalculator: marketCubit.priceCalculator,
+            //     validator: marketCubit.transactionValidator,
+            //     onAddTransaction: marketCubit.addTransaction,
+            //   );
             case MarketLoadedListings():
               return MarketView3(
                 listings: state.listings,
@@ -45,6 +45,11 @@ class MarketPage extends StatelessWidget {
               );
             case MarketError():
               return ErrorView(title: 'Error', message: state.message);
+            default:
+              return ErrorView(
+                title: "Error",
+                message: state.runtimeType.toString(),
+              );
           }
         },
       ),

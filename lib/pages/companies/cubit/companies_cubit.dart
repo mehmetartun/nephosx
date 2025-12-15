@@ -121,6 +121,21 @@ class CompaniesCubit extends Cubit<CompaniesState> {
   //   init();
   // }
 
+  void addCompanyCreationRequest(Map<String, dynamic> data) async {
+    emit(CompaniesInitial());
+    await databaseRepository.addDocument(
+      collectionPath: 'requests',
+      data: {
+        'data': data,
+        'status': 'pending',
+        'type': 'create_company',
+        'request_date': Timestamp.now(),
+        'requestor_id': user!.uid,
+      },
+    );
+    init();
+  }
+
   void updateCompany(Company company) async {
     emit(CompaniesInitial());
     await databaseRepository.updateDocument(

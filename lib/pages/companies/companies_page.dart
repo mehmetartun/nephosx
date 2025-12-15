@@ -51,6 +51,7 @@ class CompaniesPage extends StatelessWidget {
             case CompaniesAssign _:
               return CompanyAssignView(
                 user: state.user,
+                addCompanyCreationRequest: cubit.addCompanyCreationRequest,
                 // onRequestCompany: cubit.onRequestCompany,
                 companies: state.companies,
                 request: state.request,

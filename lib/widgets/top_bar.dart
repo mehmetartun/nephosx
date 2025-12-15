@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:nephosx/widgets/brightness_selector.dart';
 
 import '../blocs/authentication/authentication_bloc.dart';
+import '../model/enums.dart';
 import 'user_list_tile.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
@@ -157,6 +158,22 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                               // navigationShell?.goBranch(7);
                             },
                             child: const Text("My Listings"),
+                          ),
+                  ],
+
+                  if (user.type == UserType.public) ...[
+                    navigationShell?.currentIndex == 1
+                        ? FilledButton(
+                            onPressed: () {
+                              // navigationShell?.goBranch(1);
+                            },
+                            child: const Text("Company"),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              navigationShell?.goBranch(1);
+                            },
+                            child: const Text("Company"),
                           ),
                   ],
 

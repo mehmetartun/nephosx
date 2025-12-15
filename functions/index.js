@@ -28,6 +28,7 @@ const {
 } = require('firebase-functions/v2/firestore');
 
 const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
+// const {admin} = require('firebase-admin');
 
 const {
   GoogleGenerativeAI,
@@ -290,14 +291,50 @@ exports.saveUser = beforeUserCreated(async (event) => {
   const db = getFirestore();
   const userRef = db.collection('users').doc(user.uid);
   logger.info(user);
+
+
+  // var data = {
+  //   email: user.email ?? null,
+  //   display_name: user.displayName ?? null,
+  //   photo_url: user.photoURL ?? null,
+  //   created_at: Timestamp.now(),
+  //   uid: user.uid,
+  //   email_verified: user.emailVerified ?? false,
+  //   type: (user.isAnonymous ?? false) ? 'anonymous' : 'public',
+  //   is_anonymous: user.isAnonymous ?? false,
+  // };
+
+  var company = null;
+  var company_id = null;
+  var type = (user.isAnonymous ?? false) ? 'anonymous' : 'public';
+  var display_name = user.displayName ?? null;
+
+  try {
+    var invitation_qs = await db.collection('invitations').where('email', '==', user.email).get();
+    if (invitation_qs.docs.length == 1) {
+      var invitation = invitation_qs.docs[0].data();
+      company_id = invitation.company_id;
+      var company_qs = await db.collection('companies').doc(company_id).get();
+      company = company_qs.data();
+      display_name = invitation.display_name;
+      type = "corporate_viewer";
+      await invitation_qs.docs[0].ref.update({ status: 'accepted', uid: user.uid });
+      await admin.auth().updateUser(user.uid, { displayName: display_name });
+    }
+  } catch (e) {
+    logger.error(e);
+  }
+
   await userRef.set({
     email: user.email ?? null,
-    display_name: user.displayName ?? null,
+    display_name: display_name,
     photo_url: user.photoURL ?? null,
     created_at: Timestamp.now(),
     uid: user.uid,
     email_verified: user.emailVerified ?? false,
-    type: (user.isAnonymous ?? false) ? 'anonymous' : 'public',
+    type: type,
+    company: company,
+    company_id: company_id,
     is_anonymous: user.isAnonymous ?? false,
   }, { merge: true });
 });
@@ -650,6 +687,7 @@ async function getCompanyById(companyId) {
 }
 
 async function getGpuClusterById(gpuClusterId, datacenterId) {
+  console.log(gpuClusterId, datacenterId);
   const db = getFirestore();
   var gpuCluster = await db.collection('datacenters').doc(datacenterId).collection('gpu_clusters').doc(gpuClusterId).get();
   if (!gpuCluster.exists) {
@@ -694,6 +732,7 @@ exports.addTransaction = onCall(async (request) => {
   }
 
   const db = getFirestore();
+  var transaction_id;
 
   await db.runTransaction(async (t) => {
     const sellerCompany = await getCompanyById(request.data.seller_company_id);
@@ -713,10 +752,17 @@ exports.addTransaction = onCall(async (request) => {
       gpu_cluster: gpuCluster,
       seller_company: sellerCompany,
       buyer_company: buyerCompany,
+
     });
+
+    if (request.data.listing_id) {
+      var listing_qs = await db.collection('listings').doc(request.data.listing_id).get();
+      t.update(listing_qs.ref, { transaction_id: txref.id, status: 'traded' });
+    }
     t.update(txref, { id: txref.id });
+    transaction_id = txref.id;
   });
-  return { 'message': 'Transaction added successfully' };
+  return { 'message': 'Transaction added successfully', transaction_id: transaction_id };
 });
 
 exports.testFunc = onCall(async (request) => {

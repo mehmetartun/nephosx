@@ -60,10 +60,12 @@ class CorpAdminWithNavrail extends StatelessWidget {
             ConstrainedBox(
               constraints: BoxConstraints(maxWidth: width),
               child: NavigationRail(
+                scrollable: false,
                 leading: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         "Corporate Admin",
@@ -84,7 +86,7 @@ class CorpAdminWithNavrail extends StatelessWidget {
                 // `navigationShell.route.branches`.
                 destinations: <NavigationRailDestination>[
                   NavigationRailDestination(
-                    icon: Icon(Icons.public),
+                    icon: Icon(Icons.people),
                     label: Text('Users'),
                     disabled:
                         BlocProvider.of<AuthenticationBloc>(
@@ -185,6 +187,7 @@ class CorpAdminWithNavrail extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 0, 0, 10),

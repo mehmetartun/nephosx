@@ -311,8 +311,20 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {
+    var acs = auth.ActionCodeSettings(
+      // The URL to redirect to after they click the email link
+      url: 'https://nephosx-dev.firebaseapp.com/reset-password',
+      handleCodeInApp: true,
+      // Android/iOS settings are required by the SDK type definition,
+      // even if you are only targeting web for now.
+      iOSBundleId: 'com.example.ios',
+      androidPackageName: 'com.example.android',
+      androidInstallApp: true,
+      androidMinimumVersion: '12',
+    );
     return await auth.FirebaseAuth.instance.sendPasswordResetEmail(
       email: email,
+      actionCodeSettings: acs,
     );
   }
 

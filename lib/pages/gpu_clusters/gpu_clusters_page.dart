@@ -7,6 +7,7 @@ import '../../repositories/database/database.dart';
 import '../../widgets/views/loading_view.dart';
 import 'cubit/gpu_clusters_cubit.dart';
 import 'views/gpu_cluster_add_edit_view.dart';
+import 'views/gpu_cluster_view_table.dart';
 import 'views/gpu_clusters_error_view.dart';
 import 'views/gpu_clusters_view.dart';
 
@@ -34,7 +35,7 @@ class GpuClustersPage extends StatelessWidget {
                 onRetry: cubit.init,
               );
             case GpuClustersLoaded _:
-              return GpuClustersView(
+              return GpuClustersViewTable(
                 gpuClusters: state.gpuClusters,
                 addGpuClusterRequest: cubit.addGpuClusterRequest,
                 updateGpuClusterRequest: cubit.updateGpuClusterRequest,

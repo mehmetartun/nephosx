@@ -9,6 +9,7 @@ import '../../widgets/views/error_view.dart';
 import '../../widgets/views/loading_view.dart';
 import 'cubit/datacenters_cubit.dart';
 import 'views/datacenter_add_edit_view.dart';
+import 'views/datacenter_view_table.dart';
 import 'views/datacenters_gpu_clusters_view.dart';
 import 'views/datacenters_view.dart';
 
@@ -55,14 +56,19 @@ class DatacentersPage extends StatelessWidget {
             case DatacentersInitial _:
               return DatacentersLoadingView();
             case DatacentersLoaded _:
-              return DatacentersView(
-                updateDatacenter: cubit.updateDatacenter,
+              return DatacentersViewTable(
                 datacenters: state.datacenters,
                 addDatacenterRequest: cubit.addDatacenterRequest,
-                editDatacenterRequest: cubit.editDatacenterRequest,
-                getGpuClusters: cubit.getGpuClusters,
-                companyId: state.companyId,
+                updateDatacenterRequest: cubit.editDatacenterRequest,
               );
+            // return DatacentersView(
+            //   updateDatacenter: cubit.updateDatacenter,
+            //   datacenters: state.datacenters,
+            //   addDatacenterRequest: cubit.addDatacenterRequest,
+            //   editDatacenterRequest: cubit.editDatacenterRequest,
+            //   getGpuClusters: cubit.getGpuClusters,
+            //   companyId: state.companyId,
+            // );
           }
         },
       ),

@@ -27,8 +27,13 @@ class MarketCubit extends Cubit<MarketState> {
     emit(MarketLoading());
     try {
       gpuClusters = await databaseRepository.getGpuClusters();
-      listings = await databaseRepository.getListings();
+      print("Got GPU Clusters");
+      listings = await databaseRepository.getListings(
+        status: ListingStatus.active,
+      );
+      print("Got Listings");
       datacenters = await databaseRepository.getDatacenters();
+      print("Got Datacenters");
 
       for (var gpuCluster in gpuClusters) {
         gpuCluster.addListings(listings);

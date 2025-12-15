@@ -79,6 +79,12 @@ class AuthenticationBloc
     on<AuthenticationEventSendEmailVerification>((event, emit) async {
       await _handleSendEmailVerification(event, emit);
     });
+    on<AuthenticationEventPasswordResetRequest>((event, emit) {
+      emit(AuthenticationStatePasswordResetRequest());
+    });
+    on<AuthenticationEventCancelPasswordResetRequest>((event, emit) {
+      emit(AuthenticationStateSignedOut());
+    });
   }
   final AuthenticationRepository authenticationRepository;
   final DatabaseRepository databaseRepository;

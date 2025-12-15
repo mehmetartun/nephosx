@@ -48,12 +48,12 @@ abstract class DatabaseRepository {
   Stream<List<User>> getUsersStream();
   Future<List<User>> getUsers({String? companyId});
   Future<List<Invitation>> getInvitations({String? companyId});
-  Future<List<Listing>> getListings({String? companyId});
+  Future<List<Listing>> getListings({String? companyId, ListingStatus? status});
+  Future<List<GpuTransaction>> getGpuTransactions({String? companyId});
   Future<List<Company>> getCompanies();
   Future<List<Datacenter>> getDatacenters({String? companyId});
   Future<List<GpuCluster>> getGpuClusters({String? companyId});
   Future<Company> getCompany(String companyId);
-  Future<List<GpuTransaction>> getGpuTransactions({String? companyId});
 
   Future<List<Request>> getRequestsByRequestorId(String requestorId);
   Future<List<Request>> getRequestsByCompanyId(String companyId);
@@ -391,38 +391,53 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Future<List<Listing>> getListings({String? companyId}) async {
-    var qs = await db
-        .collection("listings")
-        .where("company_id", isEqualTo: companyId)
-        .get();
-    return qs.docs.map((doc) => Listing.fromJson({...doc.data()})).toList();
+  Future<List<Listing>> getListings({
+    String? companyId,
+    ListingStatus? status,
+  }) async {
+    if (companyId != null) {
+      if (status != null) {
+        QuerySnapshot<Map<String, dynamic>> qs = await db
+            .collection('listings')
+            .where('status', isEqualTo: status.name)
+            .where('company_id', isEqualTo: companyId)
+            .get();
+
+        return qs.docs.map((doc) => Listing.fromJson({...doc.data()})).toList();
+      } else {
+        QuerySnapshot<Map<String, dynamic>> qs = await db
+            .collection('listings')
+            .where('company_id', isEqualTo: companyId)
+            .get();
+
+        return qs.docs.map((doc) => Listing.fromJson({...doc.data()})).toList();
+      }
+    } else {
+      if (status != null) {
+        QuerySnapshot<Map<String, dynamic>> qs = await db
+            .collection('listings')
+            .where('status', isEqualTo: status.name)
+            .get();
+
+        return qs.docs.map((doc) => Listing.fromJson({...doc.data()})).toList();
+      } else {
+        QuerySnapshot<Map<String, dynamic>> qs = await db
+            .collection('listings')
+            .get();
+
+        return qs.docs.map((doc) => Listing.fromJson({...doc.data()})).toList();
+      }
+    }
   }
 
   @override
   Future<List<GpuTransaction>> getGpuTransactions({String? companyId}) async {
     List<GpuTransaction> txs = [];
     if (companyId != null) {
-      var buys = await db
+      var qs = await db
           .collection("transactions")
-          .where('buyer_company_id', isEqualTo: companyId)
+          .where("counterparty_ids", arrayContains: companyId)
           .get();
-      var sells = await db
-          .collection("transactions")
-          .where('seller_company_id', isEqualTo: companyId)
-          .get();
-      txs.addAll(
-        buys.docs
-            .map((doc) => GpuTransaction.fromJson({...doc.data()}))
-            .toList(),
-      );
-      txs.addAll(
-        sells.docs
-            .map((doc) => GpuTransaction.fromJson({...doc.data()}))
-            .toList(),
-      );
-    } else {
-      var qs = await db.collectionGroup("transactions").get();
       txs.addAll(
         qs.docs.map((doc) => GpuTransaction.fromJson({...doc.data()})).toList(),
       );

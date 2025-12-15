@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nephosx/pages/sign_in/sign_in_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nephosx/pages/transactions/transactions_page.dart';
@@ -15,6 +16,8 @@ import '../pages/gpu_clusters/gpu_clusters_page.dart';
 import '../pages/listing/listing_page.dart';
 import '../pages/market/market_page.dart';
 import '../pages/profile/profile_page.dart';
+import '../pages/sign_in/views/email_verification_view.dart';
+import '../pages/sign_in/views/new_password_view.dart';
 import '../pages/users/users_page.dart';
 import '../theme/theme_page.dart';
 import '../widgets/animation_widget.dart';
@@ -85,6 +88,10 @@ class NestedRouter {
       print('Path ${state.path}');
       print('Full Path ${state.fullPath}');
 
+      if (state.matchedLocation == "/auth_actions") {
+        return null;
+      }
+
       if (state.matchedLocation == MyNavigatorRoute.splash.path) {
         return null;
       }
@@ -132,6 +139,23 @@ class NestedRouter {
         name: MyNavigatorRoute.splash.name,
         builder: (BuildContext context, GoRouterState state) =>
             ComputerGridAnimation(),
+      ),
+      GoRoute(
+        path: '/auth_actions',
+        builder: (context, state) {
+          // 1. Extract the parameters from the URL
+          // Firebase adds 'oobCode' and 'mode' automatically to the query string
+          final oobCode = state.uri.queryParameters['oobCode'];
+          final mode = state.uri.queryParameters['mode'];
+
+          if (mode == "resetPassword" && oobCode != null) {
+            return ResetPasswordScreen(actionCode: oobCode, mode: mode);
+          } else if (mode == "verifyEmail" && oobCode != null) {
+            return EmailVerificationView(actionCode: oobCode);
+          }
+
+          return SignInPage();
+        },
       ),
       GoRoute(
         path: MyNavigatorRoute.corpUserAccept.path,

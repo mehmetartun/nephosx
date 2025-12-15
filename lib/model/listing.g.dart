@@ -24,6 +24,7 @@ Listing _$ListingFromJson(Map<String, dynamic> json) => Listing(
       .map((e) => RentalPrice.fromJson(e as Map<String, dynamic>))
       .toList(),
   status: $enumDecode(_$ListingStatusEnumMap, json['status']),
+  transactionId: json['transaction_id'] as String?,
 );
 
 Map<String, dynamic> _$ListingToJson(Listing instance) => <String, dynamic>{
@@ -36,6 +37,7 @@ Map<String, dynamic> _$ListingToJson(Listing instance) => <String, dynamic>{
   'gpu_cluster_id': instance.gpuClusterId,
   'rental_prices': instance.rentalPrices.map((e) => e.toJson()).toList(),
   'status': _$ListingStatusEnumMap[instance.status]!,
+  'transaction_id': instance.transactionId,
 };
 
 const _$ListingStatusEnumMap = {

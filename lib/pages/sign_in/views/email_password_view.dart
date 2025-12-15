@@ -181,7 +181,13 @@ class _EmailPasswordViewState extends State<EmailPasswordView> {
                             ),
                             TextButton(
                               child: Text("Forgot Password?"),
-                              onPressed: () {},
+                              onPressed: () {
+                                BlocProvider.of<AuthenticationBloc>(
+                                  context,
+                                ).add(
+                                  AuthenticationEventPasswordResetRequest(),
+                                );
+                              },
                             ),
                           ],
                         ),

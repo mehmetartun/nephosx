@@ -7,6 +7,7 @@ import '../../widgets/splash_screen_new.dart';
 import '../../widgets/views/error_view.dart';
 import 'views/email_password_view.dart';
 import 'views/new_user_view.dart';
+import 'views/password_reset_view.dart';
 import 'views/sign_in_with_google_web_view/sign_in_with_google_web_view.dart';
 
 class SignInPage extends StatelessWidget {
@@ -26,6 +27,19 @@ class SignInPage extends StatelessWidget {
               onRetry: () => authenticationBloc.add(
                 AuthenticationEventCancelNewUserRequest(),
               ),
+            );
+          case AuthenticationStatePasswordResetRequest _:
+            return PasswordResetView(
+              onPasswordReset: (String email) {
+                authenticationBloc.add(
+                  AuthenticationEventSendPasswordResetEmail(email: email),
+                );
+              },
+              onCancel: () {
+                authenticationBloc.add(
+                  AuthenticationEventCancelPasswordResetRequest(),
+                );
+              },
             );
           case AuthenticationStateNewUserRequest _:
             return NewUserView(

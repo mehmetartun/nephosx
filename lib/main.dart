@@ -30,7 +30,7 @@ void main() async {
   );
   await Future.wait(initialize);
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+  // FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   // HttpsCallableResult res;
   // res = await FirebaseFunctions.instance.httpsCallable('helloWorld').call();
   usePathUrlStrategy();

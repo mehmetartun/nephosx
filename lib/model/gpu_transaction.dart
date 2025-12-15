@@ -38,6 +38,8 @@ class GpuTransaction {
   final Consideration consideration;
   @JsonKey(name: "counterparty_ids")
   final List<String> counterpartyIds;
+  @JsonKey(name: "listing_id")
+  final String? listingId;
   @JsonKey(name: "buyer_company", includeFromJson: false, includeToJson: false)
   Company? buyerCompany;
   @JsonKey(name: "seller_company", includeFromJson: false, includeToJson: false)
@@ -57,6 +59,7 @@ class GpuTransaction {
     required this.endDate,
     required this.consideration,
     required this.counterpartyIds,
+    this.listingId,
     required this.datacenterId,
   });
 

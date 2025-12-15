@@ -42,6 +42,8 @@ class Listing {
   final List<RentalPrice> rentalPrices;
   @JsonKey(name: "status")
   final ListingStatus status;
+  @JsonKey(name: "transaction_id")
+  final String? transactionId;
 
   Listing({
     required this.id,
@@ -54,6 +56,7 @@ class Listing {
     this.gpuCluster,
     required this.rentalPrices,
     required this.status,
+    this.transactionId,
   });
 
   Listing copyWith({
@@ -67,6 +70,7 @@ class Listing {
     GpuCluster? gpuCluster,
     List<RentalPrice>? rentalPrices,
     ListingStatus? status,
+    String? transactionId,
   }) {
     return Listing(
       id: id ?? this.id,
@@ -79,6 +83,7 @@ class Listing {
       gpuCluster: gpuCluster ?? this.gpuCluster,
       rentalPrices: rentalPrices ?? this.rentalPrices,
       status: status ?? this.status,
+      transactionId: transactionId ?? this.transactionId,
     );
   }
 

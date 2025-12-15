@@ -13,6 +13,7 @@ class CompanyAssignView extends StatefulWidget {
   // final void Function(Company company) onRequestCompany;
   final Request? request;
   // final void Function(Request request) onWithdrawRequest;
+  final void Function(Map<String, dynamic>) addCompanyCreationRequest;
 
   final List<Company> companies;
   const CompanyAssignView({
@@ -22,6 +23,7 @@ class CompanyAssignView extends StatefulWidget {
     required this.companies,
     // required this.onRequestCompany,
     this.request,
+    required this.addCompanyCreationRequest,
     // required this.onWithdrawRequest,
   });
 
@@ -149,6 +151,18 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
                               ? () {
                                   if (formKey.currentState!.validate()) {
                                     formKey.currentState!.save();
+                                    widget.addCompanyCreationRequest({
+                                      'company_name': companyName,
+                                      'company_domain': companyWebsite,
+                                      'company_phone': phoneNumber,
+                                      'requesting_user_id': widget.user.uid,
+                                      'requesting_uid': widget.user.uid,
+                                      'requesting_user_email':
+                                          widget.user.email,
+                                      'requesting_user_name':
+                                          widget.user.displayName,
+                                      'user': widget.user.toJson(),
+                                    });
                                   }
                                 }
                               : null,

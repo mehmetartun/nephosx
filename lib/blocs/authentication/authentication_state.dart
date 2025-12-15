@@ -16,6 +16,9 @@ final class AuthenticationStateError extends AuthenticationState {
       );
 }
 
+final class AuthenticationStatePasswordResetRequest
+    extends AuthenticationState {}
+
 final class AuthenticationStateWaiting extends AuthenticationState {}
 
 final class AuthenticationStateNewUserRequest extends AuthenticationState {}

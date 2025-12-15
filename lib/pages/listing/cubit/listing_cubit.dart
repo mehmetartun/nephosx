@@ -32,7 +32,10 @@ class ListingCubit extends Cubit<ListingState> {
   final User? user;
   final DatabaseRepository databaseRepository;
   void init() async {
-    listings = await databaseRepository.getListings(companyId: user?.companyId);
+    listings = await databaseRepository.getListings(
+      companyId: user?.companyId,
+      status: ListingStatus.active,
+    );
     gpuClusters = await databaseRepository.getGpuClusters(
       companyId: user?.companyId,
     );

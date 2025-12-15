@@ -106,8 +106,9 @@ class _CorpAdminUsersViewState extends State<CorpAdminUsersView> {
                                       TextButton(
                                         onPressed:
                                             user.uid ==
-                                                context
-                                                    .watch<AuthenticationBloc>()
+                                                BlocProvider.of<
+                                                      AuthenticationBloc
+                                                    >(context)
                                                     .user
                                                     ?.uid
                                             ? null

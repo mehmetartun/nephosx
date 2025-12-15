@@ -274,6 +274,19 @@ class GpuCluster {
     );
   }
 
+  bool get canEdit {
+    if (transactions.isEmpty &&
+        listings
+            .where((element) {
+              return element.status == ListingStatus.active;
+            })
+            .toList()
+            .isEmpty) {
+      return true;
+    }
+    return false;
+  }
+
   Device? get device {
     return PlatformSettingsService.instance.platformSettings.devices
         .firstWhereOrNull((e) {

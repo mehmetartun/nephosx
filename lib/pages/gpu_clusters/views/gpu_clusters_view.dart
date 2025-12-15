@@ -6,6 +6,7 @@ import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../services/csv/csv_service.dart';
+import '../../../widgets/gpu_cluster_info.dart';
 import '../../../widgets/gpu_cluster_list_tile.dart';
 import '../../../widgets/property_badge.dart';
 
@@ -71,6 +72,7 @@ class GpuClustersView extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 20),
+
                 ListView.separated(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -123,17 +125,61 @@ class GpuClustersView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      trailing:
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
                           (BlocProvider.of<AuthenticationBloc>(
-                                context,
-                              ).user?.canUpdateGpuCluster ??
-                              false)
-                          ? IconButton(
-                              onPressed: () =>
-                                  updateGpuClusterRequest(gpuCluster),
-                              icon: Icon(Icons.edit),
-                            )
-                          : SizedBox.shrink(),
+                                    context,
+                                  ).user?.canUpdateGpuCluster ??
+                                  false)
+                              ? TextButton(
+                                  onPressed: !gpuCluster.canEdit
+                                      ? null
+                                      : () =>
+                                            updateGpuClusterRequest(gpuCluster),
+                                  child: Text(
+                                    !gpuCluster.canEdit ? "Locked" : "Edit",
+                                  ),
+                                )
+                              : SizedBox.shrink(),
+                          SizedBox(width: 5),
+                          TextButton(
+                            onPressed: () async {
+                              await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return MaxWidthBox(
+                                    maxWidth: 800,
+                                    child: Dialog(
+                                      child: Stack(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: GpuClusterInfo(
+                                              gpuCluster: gpuCluster,
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 10,
+                                            right: 10,
+                                            child: IconButton(
+                                              icon: Icon(Icons.close),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Text("View"),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),

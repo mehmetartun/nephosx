@@ -12,6 +12,11 @@ class AuthenticationEventSignInWithEmailAndPassword
   });
 }
 
+class AuthenticationEventCancelPasswordResetRequest
+    extends AuthenticationEvent {}
+
+class AuthenticationEventPasswordResetRequest extends AuthenticationEvent {}
+
 class AuthenticationEventDestinationCleared extends AuthenticationEvent {}
 
 class AuthenticationDestinationAfterSignInEvent extends AuthenticationEvent {

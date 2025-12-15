@@ -7,7 +7,10 @@ import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
 
+import '../../../model/company.dart';
 import '../../../model/datacenter.dart';
+import '../../../model/gpu_transaction.dart';
+import '../../../model/listing.dart';
 import '../../../model/user.dart';
 import '../../../repositories/database/database.dart';
 import 'dart:math' as math;
@@ -22,33 +25,45 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
   List<Datacenter> datacenters = [];
   StreamSubscription<List<GpuCluster>>? gpuClustersSubscription;
   List<GpuCluster> gpuClusters = [];
-
+  List<GpuTransaction> transactions = [];
+  List<Company> companies = [];
+  List<Listing> listings = [];
   HttpsCallable gpuClusterUpdateCheck = FirebaseFunctions.instance
       .httpsCallable("gpuClusterUpdateCheck");
 
   void init() async {
     emit(GpuClustersInitial());
-    gpuClustersSubscription?.cancel();
+    // gpuClustersSubscription?.cancel();
     if (user == null) {
       emit(GpuClustersError(message: "User not found"));
       return;
     }
-    gpuClustersSubscription = databaseRepository
-        .getGpuClusterStream(companyId: user?.companyId)
-        .listen((gpuClusters) {
-          this.gpuClusters = gpuClusters;
-          if (state is GpuClustersLoaded || state is GpuClustersInitial) {
-            emit(GpuClustersLoaded(gpuClusters: gpuClusters));
-          }
-        });
-
+    // gpuClustersSubscription = databaseRepository
+    //     .getGpuClusterStream(companyId: user?.companyId)
+    //     .listen((gpuClusters) {
+    //       this.gpuClusters = gpuClusters;
+    //       if (state is GpuClustersLoaded || state is GpuClustersInitial) {
+    //         emit(GpuClustersLoaded(gpuClusters: gpuClusters));
+    //       }
+    //     });
+    companies = await databaseRepository.getCompanies();
     datacenters = await databaseRepository.getDatacenters(
       companyId: user!.companyId,
     );
-    // final gpuClusters = await databaseRepository.getGpuClusters(
-    //   companyId: user!.companyId,
-    // );
-    // emit(GpuClustersLoaded(gpuClusters: gpuClusters));
+    transactions = await databaseRepository.getGpuTransactions(
+      companyId: user!.companyId,
+    );
+    listings = await databaseRepository.getListings(companyId: user!.companyId);
+    gpuClusters = await databaseRepository.getGpuClusters(
+      companyId: user!.companyId,
+    );
+
+    for (var gpuCluster in gpuClusters) {
+      gpuCluster.addListings(listings);
+      gpuCluster.addTransactions(transactions);
+    }
+    print(gpuClusters.length);
+    emit(GpuClustersLoaded(gpuClusters: gpuClusters));
   }
 
   void cancelAddGpuCluster() {
