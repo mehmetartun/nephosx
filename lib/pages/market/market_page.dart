@@ -39,7 +39,7 @@ class MarketPage extends StatelessWidget {
               return MarketView3(
                 listings: state.listings,
                 ownCompanyId: state.ownCompanyId,
-                priceCalculator: marketCubit.priceCalculator,
+
                 validator: marketCubit.transactionValidator,
                 onAddTransaction: marketCubit.addTransaction,
               );

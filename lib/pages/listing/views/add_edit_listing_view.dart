@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nephosx/model/enums.dart';
 import 'package:nephosx/widgets/occupation_view_paint.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../../model/consideration.dart';
 import '../../../model/datacenter.dart';
 import '../../../model/device.dart';
 import '../../../model/gpu_cluster.dart';
@@ -47,10 +49,22 @@ class _ListingAddEditViewState extends State<ListingAddEditView> {
     rentalPrices =
         widget.listing?.rentalPrices ??
         [
-          RentalPrice(numberOfMonths: 1, priceInUsdPerHour: 100),
-          RentalPrice(numberOfMonths: 3, priceInUsdPerHour: 200),
-          RentalPrice(numberOfMonths: 6, priceInUsdPerHour: 300),
-          RentalPrice(numberOfMonths: 12, priceInUsdPerHour: 400),
+          RentalPrice(
+            numberOfUnits: 1,
+            pricePerHour: Consideration(amount: 1, currency: Currency.usd),
+          ),
+          RentalPrice(
+            numberOfUnits: 3,
+            pricePerHour: Consideration(amount: 2, currency: Currency.usd),
+          ),
+          RentalPrice(
+            numberOfUnits: 6,
+            pricePerHour: Consideration(amount: 3, currency: Currency.usd),
+          ),
+          RentalPrice(
+            numberOfUnits: 12,
+            pricePerHour: Consideration(amount: 4, currency: Currency.usd),
+          ),
         ];
   }
 
@@ -152,9 +166,8 @@ class _ListingAddEditViewState extends State<ListingAddEditView> {
                               formKey.currentState!.save();
 
                               rentalPrices.sort(
-                                (a, b) => a.numberOfMonths.compareTo(
-                                  b.numberOfMonths,
-                                ),
+                                (a, b) =>
+                                    a.numberOfDays.compareTo(b.numberOfDays),
                               );
 
                               if (widget.listing == null) {
@@ -163,7 +176,7 @@ class _ListingAddEditViewState extends State<ListingAddEditView> {
                                     id: "123",
                                     startDate: widget.slot!.from,
                                     endDate: widget.slot!.to,
-                                    createdAt: DateTime.now(),
+                                    createdAt: DateTime.timestamp(),
                                     gpuClusterId: widget.gpuCluster!.id,
                                     status: ListingStatus.active,
 

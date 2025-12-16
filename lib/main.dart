@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:nephosx/blocs/notifications/bloc/notifications_bloc.dart';
 import 'package:nephosx/blocs/requests/bloc/requests_bloc.dart';
@@ -45,6 +46,32 @@ void main() async {
   //     "endDate": FieldValue.delete(),
   //     "createdAt": FieldValue.delete(),
   //   });
+  // }
+
+  // var qs = await FirebaseFirestore.instance
+  //     .collectionGroup("gpu_clusters")
+  //     .get();
+  // for (var doc in qs.docs) {
+  //   // DateTime manufactureDate = (doc.data()['manufacture_date'] as Timestamp)
+  //   //     .toDate();
+  //   // DateTime startDate = (doc.data()['start_date'] as Timestamp).toDate();
+  //   // DateTime endDate = (doc.data()['end_date'] as Timestamp).toDate();
+  //   // manufactureDate = DateTime.utc(
+  //   //   manufactureDate.year,
+  //   //   manufactureDate.month,
+  //   //   manufactureDate.day,
+  //   // );
+  //   // startDate = DateTime.utc(startDate.year, startDate.month, startDate.day);
+  //   // endDate = DateTime.utc(endDate.year, endDate.month, endDate.day);
+  //   // await doc.reference.update({
+  //   //   "manufacture_date": Timestamp.fromDate(manufactureDate),
+  //   //   "start_date": Timestamp.fromDate(startDate),
+  //   //   "end_date": Timestamp.fromDate(endDate),
+  //   // });
+  //   // await doc.reference.update({
+  //   //   'rental_prices': FieldValue.delete(),
+  //   //   'availability_date': FieldValue.delete(),
+  //   // });
   // }
 
   if (password == "TopSecret123") {

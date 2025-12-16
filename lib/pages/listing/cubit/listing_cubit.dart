@@ -36,15 +36,19 @@ class ListingCubit extends Cubit<ListingState> {
       companyId: user?.companyId,
       status: ListingStatus.active,
     );
+    print("Got Listings");
     gpuClusters = await databaseRepository.getGpuClusters(
       companyId: user?.companyId,
     );
+    print("Got GpuClusters");
     datacenters = await databaseRepository.getDatacenters(
       companyId: user?.companyId,
     );
+    print("Got Datacenters");
     transactions = await databaseRepository.getGpuTransactions(
       companyId: user?.companyId,
     );
+    print("Got Transactions");
     for (var gpuCluster in gpuClusters) {
       gpuCluster.addTransactions(transactions);
       gpuCluster.addListings(listings);

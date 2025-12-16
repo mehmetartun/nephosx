@@ -26,12 +26,10 @@ class MarketView3 extends StatefulWidget {
     Key? key,
     required this.listings,
     this.ownCompanyId,
-    required this.priceCalculator,
     required this.validator,
   }) : super(key: key);
   final List<Listing> listings;
   final String? ownCompanyId;
-  final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
   final String? Function(GpuCluster, DateTime, DateTime) validator;
   final void Function(GpuTransaction) onAddTransaction;
 
@@ -66,7 +64,6 @@ class _MarketView3State extends State<MarketView3> {
       user: user,
       listings: widget.listings,
       context: context,
-      priceCalculator: widget.priceCalculator,
       validator: widget.validator,
       onAddTransaction: widget.onAddTransaction,
     );
@@ -106,7 +103,7 @@ class _MarketView3State extends State<MarketView3> {
           })
           .toList(),
       context: context,
-      priceCalculator: widget.priceCalculator,
+
       validator: widget.validator,
       onAddTransaction: widget.onAddTransaction,
     );

@@ -24,8 +24,9 @@ class CsvService {
   }
 
   Future<void> exportTransactions(
-    List<GpuTransaction> transactionsToExport,
-  ) async {
+    List<GpuTransaction> transactionsToExport, {
+    String prefix = "transactions",
+  }) async {
     throw (UnimplementedError());
   }
   // Future<void> exportDrinks(List<Drink> drinksToExport) async {

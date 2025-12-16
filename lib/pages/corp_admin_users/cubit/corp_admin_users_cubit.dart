@@ -31,7 +31,18 @@ class CorpAdminUsersCubit extends Cubit<CorpAdminUsersState> {
     init();
   }
 
-  updateUser({required User user}) async {}
+  updateUser({required User user}) async {
+    emit(CorpAdminUsersInitial());
+    try {
+      await databaseRepository.updateDocument(
+        docPath: "users/${user.uid}",
+        data: user.toJson(),
+      );
+    } catch (e) {
+      emit(CorpAdminUsersError(error: e.toString()));
+    }
+    init();
+  }
 
   addInvitation({required String email, required String displayName}) async {
     emit(CorpAdminUsersInitial());

@@ -19,7 +19,7 @@ class ListingDataSource extends DataTableSource {
   final List<Listing> listings;
   final User? user;
   final BuildContext context;
-  final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
+
   final String? Function(GpuCluster, DateTime, DateTime) validator;
   final void Function(GpuTransaction) onAddTransaction;
 
@@ -27,7 +27,7 @@ class ListingDataSource extends DataTableSource {
     required this.listings,
     this.user,
     required this.context,
-    required this.priceCalculator,
+
     required this.validator,
     required this.onAddTransaction,
   });
@@ -112,9 +112,7 @@ class ListingDataSource extends DataTableSource {
                             .map(
                               (e) => DropdownMenuItem(
                                 value: e,
-                                child: Text(
-                                  "${e.numberOfMonths} mo @ ${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(e.priceInUsdPerHour)}/hr",
-                                ),
+                                child: Text(e.pricePerHourFormattedWithUnits),
                               ),
                             )
                             .toList(),

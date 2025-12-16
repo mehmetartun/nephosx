@@ -744,6 +744,7 @@ exports.addTransaction = onCall(async (request) => {
       end_date: Timestamp.fromMillis(request.data.end_date),
       seller_company_id: request.data.seller_company_id,
       buyer_company_id: request.data.buyer_company_id,
+      counterparty_ids: [request.data.buyer_company_id, request.data.seller_company_id],
       gpu_cluster_id: request.data.gpu_cluster_id,
       consideration: request.data.consideration,
       created_at: Timestamp.now(),

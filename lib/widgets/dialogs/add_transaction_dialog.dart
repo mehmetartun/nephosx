@@ -23,14 +23,14 @@ class AddTransactionDialog extends StatefulWidget {
     required this.buyers,
     required this.datacenter,
     required this.validator,
-    required this.priceCalculator,
+    // required this.priceCalculator,
   }) : super(key: key);
   final void Function(GpuTransaction) onAddTransaction;
   final Datacenter datacenter;
   final GpuCluster gpuCluster;
   final List<Company> buyers;
   final String? Function(GpuCluster, DateTime, DateTime) validator;
-  final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
+  // final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
 
   @override
   State<AddTransactionDialog> createState() => _AddTransactionDialogState();
@@ -57,18 +57,12 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
     maxDate = DateTime(minDate.year + 3, 12, 31);
     startDate = widget.gpuCluster.startDate!;
     endDate = widget.gpuCluster.endDate!;
-    consideration = Consideration(
-      amount: widget.priceCalculator(widget.gpuCluster, startDate, endDate),
-      currency: Currency.usd,
-    );
+    consideration = Consideration(amount: 0, currency: Currency.usd);
   }
 
   void adjustPricing() {
     setState(() {
-      consideration = Consideration(
-        amount: widget.priceCalculator(widget.gpuCluster, startDate, endDate),
-        currency: Currency.usd,
-      );
+      consideration = Consideration(amount: 0, currency: Currency.usd);
     });
   }
 
@@ -116,7 +110,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       children: [
                         for (var i in widget.gpuCluster.rentalPrices)
                           Text(
-                            "${i.numberOfMonths} months: \$${i.priceInUsdPerHour}",
+                            i.pricePerHourFormattedWithUnits,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                       ],
@@ -228,11 +222,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                     onPressed: () {
                       if (formKey.currentState?.validate() ?? false) {
                         formKey.currentState?.save();
-                        double? price = widget.priceCalculator(
-                          widget.gpuCluster,
-                          startDate!,
-                          endDate!,
-                        );
+                        double? price = 0;
 
                         consideration = Consideration(
                           amount: price,
@@ -263,7 +253,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                             consideration: consideration!,
                             buyerCompanyId: buyer!.id,
                             sellerCompanyId: widget.gpuCluster.companyId,
-                            createdAt: DateTime.now(),
+                            createdAt: DateTime.timestamp(),
                             datacenterId: widget.datacenter.id,
                           ),
                         );

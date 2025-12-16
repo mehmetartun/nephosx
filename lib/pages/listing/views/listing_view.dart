@@ -55,7 +55,7 @@ class _ListingViewState extends State<ListingView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Listings",
+                  "Current Listings",
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
 
@@ -84,10 +84,10 @@ class _ListingViewState extends State<ListingView> {
                           (listing) => DataRow(
                             cells: [
                               DataCell(Text(listing.gpuClusterId)),
-                              DataCell(Text(listing.datacenter?.name ?? "N/A")),
                               DataCell(
                                 Text(listing.gpuCluster?.device?.name ?? "N/A"),
                               ),
+                              DataCell(Text(listing.datacenter?.name ?? "N/A")),
 
                               DataCell(
                                 Text(
@@ -106,7 +106,9 @@ class _ListingViewState extends State<ListingView> {
                               DataCell(
                                 listing.rentalPrices.length > 0
                                     ? Text(
-                                        "${listing.rentalPrices[0].numberOfMonths}m @ \$${NumberFormat("0.000").format(listing.rentalPrices[0].priceInUsdPerHour)}",
+                                        listing
+                                            .rentalPrices[0]
+                                            .pricePerHourFormattedWithUnits,
                                       )
                                     : Text("N/A"),
                               ),
@@ -114,21 +116,27 @@ class _ListingViewState extends State<ListingView> {
                               DataCell(
                                 listing.rentalPrices.length > 1
                                     ? Text(
-                                        "${listing.rentalPrices[1].numberOfMonths}m @ \$${NumberFormat("0.000").format(listing.rentalPrices[1].priceInUsdPerHour)}",
+                                        listing
+                                            .rentalPrices[1]
+                                            .pricePerHourFormattedWithUnits,
                                       )
                                     : Text("N/A"),
                               ),
                               DataCell(
                                 listing.rentalPrices.length > 2
                                     ? Text(
-                                        "${listing.rentalPrices[2].numberOfMonths}m @ \$${NumberFormat("0.000").format(listing.rentalPrices[2].priceInUsdPerHour)}",
+                                        listing
+                                            .rentalPrices[2]
+                                            .pricePerHourFormattedWithUnits,
                                       )
                                     : Text("N/A"),
                               ),
                               DataCell(
                                 listing.rentalPrices.length > 3
                                     ? Text(
-                                        "${listing.rentalPrices[3].numberOfMonths}m @ \$${NumberFormat("0.000").format(listing.rentalPrices[3].priceInUsdPerHour)}",
+                                        listing
+                                            .rentalPrices[3]
+                                            .pricePerHourFormattedWithUnits,
                                       )
                                     : Text("N/A"),
                               ),

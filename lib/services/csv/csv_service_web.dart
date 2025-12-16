@@ -8,6 +8,7 @@ import 'package:csv/csv.dart';
 
 import '../../model/datacenter.dart';
 import '../../model/gpu_transaction.dart';
+import 'helpers.dart';
 
 class CsvService {
   /// Exports the given list of drinks to a CSV file and opens the share dialog.
@@ -15,10 +16,10 @@ class CsvService {
   /// The CSV file will be named `drinks_export.csv` and stored in a temporary
   /// directory before being shared.
   Future<void> exportGpuClusters(List<GpuCluster> gpuClustersToExport) async {
-    if (gpuClustersToExport.isEmpty) {
-      // In a real app, you might want to return a status or show a notification.
-      return;
-    }
+    // if (gpuClustersToExport.isEmpty) {
+    //   // In a real app, you might want to return a status or show a notification.
+    //   return;
+    // }
 
     // Define CSV headers.
     // The `imageBase64` is excluded as it's very large.
@@ -93,7 +94,7 @@ class CsvService {
       // Create an anchor element and trigger a download
       final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
       anchor.href = url;
-      anchor.download = 'gpu_clusters_export.csv';
+      anchor.download = fileNameCreator("gpu_clusters", "CompID");
       anchor.click();
 
       web.URL.revokeObjectURL(url);
@@ -103,10 +104,10 @@ class CsvService {
   }
 
   Future<void> exportDatacenters(List<Datacenter> datacentersToExport) async {
-    if (datacentersToExport.isEmpty) {
-      // In a real app, you might want to return a status or show a notification.
-      return;
-    }
+    // if (datacentersToExport.isEmpty) {
+    //   // In a real app, you might want to return a status or show a notification.
+    //   return;
+    // }
 
     // Define CSV headers.
     // The `imageBase64` is excluded as it's very large.
@@ -175,7 +176,7 @@ class CsvService {
       // Create an anchor element and trigger a download
       final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
       anchor.href = url;
-      anchor.download = 'datacenters_export.csv';
+      anchor.download = fileNameCreator("data_centers", "CompID");
       anchor.click();
 
       web.URL.revokeObjectURL(url);
@@ -185,11 +186,12 @@ class CsvService {
   }
 
   Future<void> exportTransactions(
-    List<GpuTransaction> transactionsToExport,
-  ) async {
-    if (transactionsToExport.isEmpty) {
-      return;
-    }
+    List<GpuTransaction> transactionsToExport, {
+    String prefix = "All Transactions",
+  }) async {
+    // if (transactionsToExport.isEmpty) {
+    //   return;
+    // }
 
     final List<String> headers = [
       'GPU ID',
@@ -223,9 +225,9 @@ class CsvService {
         transaction.datacenter?.address.country.description,
         "Gg Cncrn Ass.",
         transaction.id,
-        transaction.startDate.toIso8601String(),
-        transaction.endDate.toIso8601String(),
-        transaction.dailyRate,
+        dateStringCreator(transaction.startDate),
+        dateStringCreator(transaction.endDate),
+        transaction.dailyRate.amount,
         transaction.consideration.currency.title,
         (transaction.buyerCompany?.addresses.isNotEmpty ?? false)
             ? transaction.buyerCompany?.addresses[0].country.region.description
@@ -291,7 +293,7 @@ class CsvService {
       // Create an anchor element and trigger a download
       final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
       anchor.href = url;
-      anchor.download = 'datacenters_export.csv';
+      anchor.download = fileNameCreator(prefix, "CompID");
       anchor.click();
 
       web.URL.revokeObjectURL(url);

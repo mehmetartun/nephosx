@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:rxdart/rxdart.dart';
@@ -27,9 +28,21 @@ class TransactionsCubit extends Cubit<TransactionsState> {
   List<Datacenter> datacenters = [];
 
   void init() async {
+    // var qs = await FirebaseFirestore.instance.collection('transactions').get();
+    // for (var doc in qs.docs) {
+    //   await doc.reference.update({
+    //     'counterparty_ids': [
+    //       doc.data()['buyer_company_id'],
+    //       doc.data()['seller_company_id'],
+    //     ],
+    //   });
+    // }
+
     if (user == null) {
       emit(TransactionErrorState(message: "User cannot be null"));
     }
+    print("User ${user!.email}");
+    print("User ${user!.companyId}");
     _transactionsSubscription?.cancel();
     companies = await databaseRepository.getCompanies();
     gpuClusters = await databaseRepository.getGpuClusters();
@@ -93,7 +106,7 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     return super.close();
   }
 
-  void onExport() {
-    CsvService().exportTransactions(transactions);
+  void onExport(List<GpuTransaction> txs, {String prefix = "transactions"}) {
+    CsvService().exportTransactions(txs, prefix: prefix);
   }
 }

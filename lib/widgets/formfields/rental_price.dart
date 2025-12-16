@@ -6,6 +6,7 @@ import '../../model/consideration.dart';
 import '../../model/enums.dart';
 import '../../model/rental_price.dart';
 import '../../services/responsive_utils.dart';
+import 'consideration_form_field.dart';
 
 class RentalPriceFormField extends FormField<RentalPrice> {
   RentalPriceFormField({
@@ -30,14 +31,17 @@ class _RentalPriceFormField extends StatefulWidget {
 
 class __RentalPriceFormFieldState extends State<_RentalPriceFormField> {
   RentalPrice? value;
-  int? numberOfMonths;
-  double? priceInUsdPerHour;
+  int? numberOfUnits;
+  Consideration? pricePerHour;
+  RentalPriceType rentalPriceType = RentalPriceType.monthly;
+
   @override
   void initState() {
     super.initState();
     value = widget.state.value;
-    numberOfMonths = value?.numberOfMonths;
-    priceInUsdPerHour = value?.priceInUsdPerHour;
+    numberOfUnits = value?.numberOfUnits;
+    pricePerHour = value?.pricePerHour;
+    rentalPriceType = value?.rentalPriceType ?? RentalPriceType.monthly;
   }
 
   @override
@@ -53,18 +57,21 @@ class __RentalPriceFormFieldState extends State<_RentalPriceFormField> {
               border: InputBorder.none,
               labelText: "Duration",
             ),
-            initialValue: numberOfMonths,
+            initialValue: numberOfUnits,
             onSaved: (val) {
-              numberOfMonths = val;
+              numberOfUnits = val;
             },
             onChanged: (val) {
               setState(() {
-                numberOfMonths = val;
-                if (numberOfMonths != null && priceInUsdPerHour != null) {
+                numberOfUnits = val;
+                if (numberOfUnits != null &&
+                    pricePerHour != null &&
+                    rentalPriceType != null) {
                   widget.state.didChange(
                     RentalPrice(
-                      numberOfMonths: numberOfMonths!,
-                      priceInUsdPerHour: priceInUsdPerHour!,
+                      numberOfUnits: numberOfUnits!,
+                      pricePerHour: pricePerHour!,
+                      rentalPriceType: rentalPriceType!,
                     ),
                   );
                 }
@@ -83,34 +90,35 @@ class __RentalPriceFormFieldState extends State<_RentalPriceFormField> {
         ),
         const SizedBox(width: 16),
         SizedBox(
-          width: 150,
-          child: TextFormField(
-            decoration: InputDecoration(labelText: "USD per hour"),
-            keyboardType: TextInputType.number,
-            initialValue: priceInUsdPerHour?.toString(),
+          width: 400,
+          child: ConsiderationFormField(
+            // decoration: InputDecoration(labelText: "USD per hour"),
+            // keyboardType: TextInputType.number,
+            initialValue: pricePerHour,
             onSaved: (val) {
-              priceInUsdPerHour = double.tryParse(val!);
+              pricePerHour = val;
             },
             onChanged: (val) {
               setState(() {
-                priceInUsdPerHour = double.tryParse(val);
-                if (numberOfMonths != null && priceInUsdPerHour != null) {
+                pricePerHour = val;
+                if (numberOfUnits != null &&
+                    pricePerHour != null &&
+                    rentalPriceType != null) {
                   widget.state.didChange(
                     RentalPrice(
-                      numberOfMonths: numberOfMonths!,
-                      priceInUsdPerHour: priceInUsdPerHour!,
+                      numberOfUnits: numberOfUnits!,
+                      pricePerHour: pricePerHour!,
+                      rentalPriceType: rentalPriceType!,
                     ),
                   );
                 }
               });
             },
             validator: (val) {
-              if (val == null || val.isEmpty) {
+              if (val == null) {
                 return "Please enter an amount";
               }
-              if (double.tryParse(val) == null) {
-                return "Please enter a valid amount";
-              }
+
               return null;
             },
           ),

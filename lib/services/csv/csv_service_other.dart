@@ -19,8 +19,9 @@ class CsvService {
   }
 
   Future<void> exportTransactions(
-    List<GpuTransaction> transactionsToExport,
-  ) async {
+    List<GpuTransaction> transactionsToExport, {
+    String prefix = "transactions",
+  }) async {
     throw (UnimplementedError());
   }
 }

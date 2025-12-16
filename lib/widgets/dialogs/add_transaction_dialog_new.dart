@@ -57,25 +57,19 @@ class _AddTransactionDialogNewState extends State<AddTransactionDialogNew> {
     if (endDate.isAfter(widget.listing.endDate)) {
       endDate = widget.listing.endDate;
     }
-    consideration = Consideration(
-      amount: RentalPrice.calculatePrice(
-        widget.listing.rentalPrices,
-        startDate,
-        endDate,
-      ),
-      currency: Currency.usd,
+    consideration = RentalPrice.calculatePrice(
+      widget.listing.rentalPrices,
+      startDate,
+      endDate,
     );
   }
 
   void adjustPricing() {
     setState(() {
-      consideration = Consideration(
-        amount: RentalPrice.calculatePrice(
-          widget.listing.rentalPrices,
-          startDate,
-          endDate,
-        ),
-        currency: Currency.usd,
+      consideration = RentalPrice.calculatePrice(
+        widget.listing.rentalPrices,
+        startDate,
+        endDate,
       );
     });
   }
@@ -135,7 +129,7 @@ class _AddTransactionDialogNewState extends State<AddTransactionDialogNew> {
                       children: [
                         for (var i in widget.listing.rentalPrices)
                           Text(
-                            i.priceInUsdPerHourFormattedWithMonths,
+                            i.pricePerHourFormattedWithUnits,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                       ],
@@ -254,7 +248,7 @@ class _AddTransactionDialogNewState extends State<AddTransactionDialogNew> {
                             consideration: consideration,
                             buyerCompanyId: buyer!.id,
                             sellerCompanyId: widget.listing.companyId,
-                            createdAt: DateTime.now(),
+                            createdAt: DateTime.timestamp(),
                             datacenterId: widget.listing.datacenterId,
                           ),
                         );

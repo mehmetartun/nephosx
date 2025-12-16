@@ -794,6 +794,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                     child: DateTimeFormField(
                                       labelText: "Manufacture Date",
                                       initialValue: manufactureDate,
+
                                       onSaved: (value) {
                                         manufactureDate = value;
                                       },
@@ -882,8 +883,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                     formKey.currentState!.save();
 
                                     rentalPricesSubmitted.sort(
-                                      (a, b) => a.numberOfMonths.compareTo(
-                                        b.numberOfMonths,
+                                      (a, b) => a.numberOfDays.compareTo(
+                                        b.numberOfDays,
                                       ),
                                     );
 

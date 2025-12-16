@@ -319,11 +319,10 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .where('counterparty_ids', arrayContains: companyId)
         .snapshots()
         .map((snapshot) {
-          return snapshot.docs
-              .map(
-                (doc) => GpuTransaction.fromJson({...doc.data(), 'id': doc.id}),
-              )
-              .toList();
+          return snapshot.docs.map((doc) {
+            print(doc.data());
+            return GpuTransaction.fromJson({...doc.data(), 'id': doc.id});
+          }).toList();
         });
   }
 
@@ -439,7 +438,11 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
           .where("counterparty_ids", arrayContains: companyId)
           .get();
       txs.addAll(
-        qs.docs.map((doc) => GpuTransaction.fromJson({...doc.data()})).toList(),
+        qs.docs
+            .map(
+              (doc) => GpuTransaction.fromJson({...doc.data(), 'id': doc.id}),
+            )
+            .toList(),
       );
     }
     return txs;

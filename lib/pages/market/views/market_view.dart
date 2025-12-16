@@ -803,7 +803,7 @@ class _MarketViewState extends State<MarketView> {
                                                       (e) => DropdownMenuItem(
                                                         value: e,
                                                         child: Text(
-                                                          "${e.numberOfMonths} mo @ ${NumberFormat.currency(locale: 'en_US', symbol: '\$').format(e.priceInUsdPerHour)}/hr",
+                                                          e.pricePerHourFormattedWithUnits,
                                                         ),
                                                       ),
                                                     )
@@ -824,8 +824,8 @@ class _MarketViewState extends State<MarketView> {
                                                           return AddTransactionDialog(
                                                             gpuCluster:
                                                                 gpuCluster,
-                                                            priceCalculator: widget
-                                                                .priceCalculator,
+                                                            // priceCalculator: widget
+                                                            //     .priceCalculator,
                                                             validator: widget
                                                                 .validator,
                                                             buyers: [

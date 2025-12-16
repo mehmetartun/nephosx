@@ -23,6 +23,8 @@ enum TransactionSort {
   const TransactionSort(this.title);
 }
 
+enum TransactionType { all, buy, sell }
+
 enum TransactionFilter {
   all("All"),
   today("Today"),
@@ -42,7 +44,7 @@ class TransactionsView extends StatefulWidget {
     required this.onExport,
   });
   final List<GpuTransaction> transactions;
-  final void Function() onExport;
+  final void Function(List<GpuTransaction>, {String prefix}) onExport;
 
   @override
   State<TransactionsView> createState() => _TransactionsViewState();
@@ -54,6 +56,8 @@ class _TransactionsViewState extends State<TransactionsView> {
   late List<GpuTransaction> transactions;
   late List<GpuTransaction> buys;
   late List<GpuTransaction> sells;
+
+  TransactionType? selectedTransactions = null;
 
   late User? user;
   @override
@@ -161,14 +165,55 @@ class _TransactionsViewState extends State<TransactionsView> {
           maxWidth: 900,
           child: Column(
             children: [
+              SizedBox(height: 20),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text("Transactions List"),
-                  OutlinedButton(
-                    onPressed: widget.onExport,
-                    child: Text("Export"),
+                  Text(
+                    "Transactions List",
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
+                  Spacer(),
+                  DropdownMenuFormField<TransactionType>(
+                    label: Text("Export"),
+                    initialSelection: selectedTransactions,
+                    dropdownMenuEntries: [
+                      DropdownMenuEntry(
+                        value: TransactionType.all,
+                        label: "All",
+                      ),
+                      DropdownMenuEntry(
+                        value: TransactionType.buy,
+                        label: "Buys",
+                      ),
+                      DropdownMenuEntry(
+                        value: TransactionType.sell,
+                        label: "Sells",
+                      ),
+                    ],
+                    onSelected: (val) {
+                      switch (val) {
+                        case TransactionType.all:
+                          widget.onExport(
+                            transactions,
+                            prefix: "All_Transactions",
+                          );
+                          return;
+                        case TransactionType.buy:
+                          widget.onExport(buys, prefix: "Buy_Transactions");
+                          return;
+                        case TransactionType.sell:
+                          widget.onExport(sells, prefix: "Sell_Transactions");
+                          return;
+                        default:
+                          return;
+                      }
+                    },
+                  ),
+                  // OutlinedButton(
+                  //   onPressed: () => widget.onExport(transactions),
+                  //   child: Text("Export"),
+                  // ),
                 ],
               ),
               SizedBox(height: 20),

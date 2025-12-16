@@ -63,7 +63,7 @@ class TimestampToEpochConverter implements JsonConverter<DateTime, Object> {
 
     // Optional: Handle the case where the data is already an int (e.g., re-reading local cache)
     if (json is int) {
-      return DateTime.fromMillisecondsSinceEpoch(json);
+      return DateTime.fromMillisecondsSinceEpoch(json, isUtc: true);
     }
 
     throw ArgumentError.value(json, 'json', 'Expected Timestamp or int');

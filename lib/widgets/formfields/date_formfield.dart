@@ -14,6 +14,7 @@ class DateTimeFormField extends FormField<DateTime> {
     bool readOnly = false,
     Widget? trailing,
     bool clearButton = false,
+    bool isUtc = true,
     // Date Picker Constraints
     DateTime? firstDate,
     DateTime? lastDate,
@@ -25,7 +26,7 @@ class DateTimeFormField extends FormField<DateTime> {
   }) : super(
          builder: (FormFieldState<DateTime> state) {
            Future<void> pickDate(BuildContext context) async {
-             final DateTime? picked = await showDatePicker(
+             DateTime? picked = await showDatePicker(
                context: context,
                initialDate: state.value ?? DateTime.now(),
                firstDate: firstDate ?? DateTime(1900),
@@ -33,6 +34,9 @@ class DateTimeFormField extends FormField<DateTime> {
              );
 
              if (picked != null) {
+               if (isUtc) {
+                 picked = DateTime.utc(picked.year, picked.month, picked.day);
+               }
                state.didChange(picked); // Update the FormField state
                onChanged?.call(picked);
              }
@@ -66,7 +70,7 @@ class DateTimeFormField extends FormField<DateTime> {
                          },
                        )
                      : null,
-                 labelText: labelText,
+                 labelText: isUtc ? "$labelText (UTC)" : labelText,
                  prefixIcon: Icon(icon),
                  errorText: state.errorText, // Standard Form error display
                  //  border: const OutlineInputBorder(), // Matches TextFormField

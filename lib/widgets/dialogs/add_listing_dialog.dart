@@ -113,7 +113,7 @@ class _AddListingDialogState extends State<AddListingDialog> {
                       children: [
                         for (var i in widget.gpuCluster.rentalPrices)
                           Text(
-                            "${i.numberOfMonths} months: \$${i.priceInUsdPerHour}",
+                            i.pricePerHourFormattedWithUnits,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                       ],

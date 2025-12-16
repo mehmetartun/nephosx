@@ -12,16 +12,18 @@ class ConsiderationFormField extends FormField<Consideration> {
     super.validator,
     super.onSaved,
     super.initialValue,
+    void Function(Consideration)? onChanged,
   }) : super(
          builder: (state) {
-           return _ConsiderationFormField(state: state);
+           return _ConsiderationFormField(state: state, onChanged: onChanged);
          },
        );
 }
 
 class _ConsiderationFormField extends StatefulWidget {
-  const _ConsiderationFormField({required this.state});
+  const _ConsiderationFormField({required this.state, this.onChanged});
   final FormFieldState<Consideration> state;
+  final void Function(Consideration)? onChanged;
 
   @override
   State<_ConsiderationFormField> createState() =>
@@ -64,6 +66,9 @@ class __ConsiderationFormFieldState extends State<_ConsiderationFormField> {
                       widget.state.didChange(
                         Consideration(currency: currency!, amount: amount!),
                       );
+                      widget.onChanged?.call(
+                        Consideration(currency: currency!, amount: amount!),
+                      );
                     }
                   });
                 },
@@ -99,6 +104,9 @@ class __ConsiderationFormFieldState extends State<_ConsiderationFormField> {
                     amount = double.tryParse(val);
                     if (currency != null && amount != null) {
                       widget.state.didChange(
+                        Consideration(currency: currency!, amount: amount!),
+                      );
+                      widget.onChanged?.call(
                         Consideration(currency: currency!, amount: amount!),
                       );
                     }

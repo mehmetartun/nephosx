@@ -47,11 +47,11 @@ class GpuClusterListTile extends StatelessWidget {
                     onAddTransaction: addTransaction,
                     buyers: buyers,
                     validator: validator,
-                    priceCalculator: (gpuCluster, fromDate, toDate) {
-                      return BlocProvider.of<MarketCubit>(
-                        context,
-                      ).priceCalculator(gpuCluster, fromDate, toDate);
-                    },
+                    // priceCalculator: (gpuCluster, fromDate, toDate) {
+                    //   return BlocProvider.of<MarketCubit>(
+                    //     context,
+                    //   ).priceCalculator(gpuCluster, fromDate, toDate);
+                    // },
                     datacenter: datacenter,
                   );
                 },

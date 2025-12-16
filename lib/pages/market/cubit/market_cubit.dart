@@ -70,18 +70,18 @@ class MarketCubit extends Cubit<MarketState> {
     }
   }
 
-  double priceCalculator(
-    GpuCluster gpuCluster,
-    DateTime fromDate,
-    DateTime toDate,
-  ) {
-    final amount = RentalPrice.calculatePrice(
-      gpuCluster.rentalPrices,
-      fromDate,
-      toDate,
-    );
-    return amount;
-  }
+  // double priceCalculator(
+  //   GpuCluster gpuCluster,
+  //   DateTime fromDate,
+  //   DateTime toDate,
+  // ) {
+  //   final amount = RentalPrice.calculatePrice(
+  //     gpuCluster.rentalPrices,
+  //     fromDate,
+  //     toDate,
+  //   );
+  //   return amount;
+  // }
 
   String? transactionValidator(
     GpuCluster gpuCluster,
