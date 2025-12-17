@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:nephosx/services/mock.dart';
 
 import 'address.dart';
-import 'user.dart';
 
 part 'company.g.dart';
 

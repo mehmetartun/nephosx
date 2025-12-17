@@ -10,7 +10,7 @@ import 'views/corp_admin_users_error_view.dart';
 import 'views/corp_admin_users_view.dart';
 
 class CorpAdminUsersPage extends StatelessWidget {
-  const CorpAdminUsersPage({Key? key}) : super(key: key);
+  const CorpAdminUsersPage({super.key});
 
   @override
   Widget build(BuildContext context) {

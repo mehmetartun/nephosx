@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/enums.dart';
-import '../../../model/platform_settings.dart';
 
 class AdminDataCountryView extends StatefulWidget {
   final Set<Country> selectedCountries;

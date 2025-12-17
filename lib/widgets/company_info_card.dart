@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nephosx/model/company.dart';
 import 'package:nephosx/widgets/company_onboarding_status.dart';
-import 'package:nephosx/widgets/dialogs/add_edit_company_dialog.dart';
 
 import '../model/light_label.dart';
-import 'dialogs/edit_company_dialog.dart';
 
 class CompanyInfoCard extends StatelessWidget {
   const CompanyInfoCard({

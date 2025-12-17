@@ -24,6 +24,8 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
   final DatabaseRepository databaseRepository;
   List<Datacenter> datacenters = [];
   StreamSubscription<List<GpuCluster>>? gpuClustersSubscription;
+  StreamSubscription<List<GpuTransaction>>? transactionsSubscription;
+  StreamSubscription<List<Listing>>? listingsSubscription;
   List<GpuCluster> gpuClusters = [];
   List<GpuTransaction> transactions = [];
   List<Company> companies = [];
@@ -31,13 +33,20 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
   HttpsCallable gpuClusterUpdateCheck = FirebaseFunctions.instance
       .httpsCallable("gpuClusterUpdateCheck");
 
-  void init() async {
+  void init({String? gpuClusterId}) async {
     emit(GpuClustersInitial());
+
+    gpuClustersSubscription ??= databaseRepository
+        .gpuClustersStream(companyId: user?.companyId)
+        .listen((e) {
+          gpuClusters = e;
+        });
     // gpuClustersSubscription?.cancel();
     if (user == null) {
       emit(GpuClustersError(message: "User not found"));
       return;
     }
+
     // gpuClustersSubscription = databaseRepository
     //     .getGpuClusterStream(companyId: user?.companyId)
     //     .listen((gpuClusters) {
@@ -46,10 +55,11 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
     //         emit(GpuClustersLoaded(gpuClusters: gpuClusters));
     //       }
     //     });
-    companies = await databaseRepository.getCompanies();
-    datacenters = await databaseRepository.getDatacenters(
-      companyId: user!.companyId,
-    );
+
+    // companies = await databaseRepository.getCompanies();
+    // datacenters = await databaseRepository.getDatacenters(
+    //   companyId: user!.companyId,
+    // );
     transactions = await databaseRepository.getGpuTransactions(
       companyId: user!.companyId,
     );
@@ -62,12 +72,31 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
       gpuCluster.addListings(listings);
       gpuCluster.addTransactions(transactions);
     }
-    print(gpuClusters.length);
+
+    if (gpuClusterId != null) {
+      GpuCluster? gpuCluster = gpuClusters.firstWhereOrNull(
+        (element) => element.id == gpuClusterId,
+      );
+      if (gpuCluster != null) {
+        emit(GpuClusterDetail(gpuCluster: gpuCluster));
+        return;
+      }
+    }
+
     emit(GpuClustersLoaded(gpuClusters: gpuClusters));
   }
 
   void cancelAddGpuCluster() {
     init();
+  }
+
+  void gpuClusterDetailRequest(GpuCluster gpuCluster) {
+    emit(GpuClustersLoading());
+    init(gpuClusterId: gpuCluster.id);
+  }
+
+  void showGpuClusters() {
+    emit(GpuClustersLoaded(gpuClusters: gpuClusters));
   }
 
   void addGpuCluster(GpuCluster gpuCluster) {

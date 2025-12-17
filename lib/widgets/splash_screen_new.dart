@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'animation_widget.dart';
 
 class SpashScreenNew extends StatelessWidget {
-  const SpashScreenNew({Key? key}) : super(key: key);
+  const SpashScreenNew({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,6 @@ import 'package:responsive_framework/responsive_framework.dart';
 import '../../model/enums.dart';
 import '../brightness_selector.dart';
 import '../top_bar.dart';
-import '../user_profile_card.dart';
 
 /// Builds the "shell" for the app by building a Scaffold with a
 /// BottomNavigationBar, where [child] is placed in the body of the Scaffold.
@@ -28,23 +27,6 @@ class ScaffoldWithNavRail extends StatelessWidget {
   // #docregion configuration-custom-shell
   @override
   Widget build(BuildContext context) {
-    AppBar appBar = AppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-      foregroundColor: Theme.of(context).colorScheme.onSurface,
-      title: Text('Drinks Diary'),
-      centerTitle: true,
-      actions: [
-        // TextButton(child: Text("About"), onPressed: () {}),
-        // TextButton(child: Text("Help"), onPressed: () {}),
-        // TextButton(child: Text("Settings"), onPressed: () {}),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: FittedBox(child: UserProfileCard()),
-        ),
-      ],
-    );
-
     return PopScope(
       canPop: false,
       child: Scaffold(

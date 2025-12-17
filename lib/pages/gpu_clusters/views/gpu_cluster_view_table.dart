@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import 'package:nephosx/pages/market/cubit/market_cubit.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../model/datacenter.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../model/gpu_cluster_data_source.dart';
-import '../../../model/gpu_transaction.dart';
 import '../../../model/user.dart';
 import '../../../services/platform_settings/platform_settings_service.dart';
-import '../../../widgets/dialogs/add_transaction_dialog.dart';
-import '../../../widgets/filter_container.dart';
-import '../../../widgets/filter_range_slider.dart';
 import '../../../widgets/formfields/date_formfield.dart';
-import '../../../widgets/gpu_cluster_info.dart';
 
 class GpuClustersViewTable extends StatefulWidget {
   const GpuClustersViewTable({
@@ -24,10 +15,12 @@ class GpuClustersViewTable extends StatefulWidget {
     required this.gpuClusters,
     required this.addGpuClusterRequest,
     required this.updateGpuClusterRequest,
+    required this.gpuClusterDetailRequest,
   }) : super(key: key);
   final List<GpuCluster> gpuClusters;
-  final Function() addGpuClusterRequest;
-  final Function(GpuCluster) updateGpuClusterRequest;
+  final void Function() addGpuClusterRequest;
+  final void Function(GpuCluster) updateGpuClusterRequest;
+  final void Function(GpuCluster) gpuClusterDetailRequest;
 
   @override
   State<GpuClustersViewTable> createState() => _GpuClustersViewTableState();
@@ -59,6 +52,7 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
       gpuClusters: widget.gpuClusters,
       context: context,
       updateGpuClusterRequest: widget.updateGpuClusterRequest,
+      gpuClusterDetailRequest: widget.gpuClusterDetailRequest,
     );
   }
 
@@ -83,11 +77,11 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
           })
           .where((gpuCluster) {
             if (availabilityFrom == null) return true;
-            return gpuCluster.startDate?.isAfter(availabilityFrom!) ?? true;
+            return gpuCluster.startDate.isAfter(availabilityFrom!);
           })
           .where((gpuCluster) {
             if (availabilityTo == null) return true;
-            return gpuCluster.startDate?.isBefore(availabilityTo!) ?? true;
+            return gpuCluster.startDate.isBefore(availabilityTo!);
           })
           .where((element) {
             if (tier == null) return true;
@@ -96,6 +90,7 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
           .toList(),
       context: context,
       updateGpuClusterRequest: widget.updateGpuClusterRequest,
+      gpuClusterDetailRequest: widget.gpuClusterDetailRequest,
     );
   }
 
@@ -152,15 +147,31 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
         slivers: [
           SliverToBoxAdapter(
             child: MaxWidthBox(
-              maxWidth: 1200,
+              maxWidth: 1100,
               child: FittedBox(
                 child: SizedBox(
-                  width: 1200,
+                  width: 1100,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Text(
+                              "GPU Clusters",
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                            Spacer(),
+                            OutlinedButton.icon(
+                              onPressed: widget.addGpuClusterRequest,
+                              icon: Icon(Icons.add),
+                              label: Text("Add GPU Cluster"),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
                         Container(
                           padding: const EdgeInsets.all(20.0),
                           decoration: BoxDecoration(

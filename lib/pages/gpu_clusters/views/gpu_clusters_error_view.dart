@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nephosx/widgets/gpu_cluster_list_tile.dart';
 
 class GpuClustersErrorView extends StatelessWidget {
   final String title;

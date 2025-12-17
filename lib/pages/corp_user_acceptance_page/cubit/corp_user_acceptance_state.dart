@@ -1,6 +1,5 @@
 part of 'corp_user_acceptance_cubit.dart';
 
-@immutable
 sealed class CorpUserAcceptanceState {}
 
 final class CorpUserAcceptanceInitial extends CorpUserAcceptanceState {}

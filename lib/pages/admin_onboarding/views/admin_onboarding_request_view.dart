@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nephosx/model/enums.dart';
-import 'package:nephosx/widgets/dialogs/add_edit_company_dialog.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/request.dart';

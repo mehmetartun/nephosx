@@ -3,11 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
-import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../services/csv/csv_service.dart';
-import '../../../widgets/gpu_cluster_info.dart';
-import '../../../widgets/gpu_cluster_list_tile.dart';
+import '../../../widgets/views/gpu_cluster_info_view.dart';
 import '../../../widgets/property_badge.dart';
 
 class GpuClustersView extends StatelessWidget {
@@ -155,7 +153,7 @@ class GpuClustersView extends StatelessWidget {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(20.0),
-                                            child: GpuClusterInfo(
+                                            child: GpuClusterInfoView(
                                               gpuCluster: gpuCluster,
                                             ),
                                           ),

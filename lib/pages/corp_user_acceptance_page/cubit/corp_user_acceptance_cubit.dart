@@ -1,5 +1,4 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nephosx/model/invitaton.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';

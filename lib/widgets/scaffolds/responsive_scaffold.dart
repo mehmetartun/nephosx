@@ -4,7 +4,6 @@ import 'package:nephosx/widgets/scaffolds/scaffold_with_navtopbar.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import 'scaffold_with_navbar.dart';
-import 'scaffold_with_navrail.dart';
 
 class ResponsiveScaffold extends StatelessWidget {
   const ResponsiveScaffold({super.key, required this.navigationShell});

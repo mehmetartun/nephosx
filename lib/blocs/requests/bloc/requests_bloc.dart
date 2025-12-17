@@ -40,11 +40,11 @@ class RequestsBloc extends Bloc<RequestsEvent, RequestsState> {
       add(RequestsEventRequestsUpdated([]));
       return;
     }
-    userRequestsStream = databaseRepository.getRequestsByRequestorIdStream(
+    userRequestsStream = databaseRepository.requestsByRequestorIdStream(
       event.user!.uid,
     );
     if (event.user!.companyId != null) {
-      companyRequestsStream = databaseRepository.getRequestsByCompanyIdStream(
+      companyRequestsStream = databaseRepository.requestsByCompanyIdStream(
         event.user!.companyId!,
       );
     } else {

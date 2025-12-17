@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nephosx/extensions/capitalize.dart';
-import 'package:nephosx/pages/datacenters/views/datacenters_view.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
-import '../../../model/company.dart';
 import '../../../model/datacenter.dart';
 import '../../../services/csv/csv_service.dart';
-import '../../../widgets/company_list_tile.dart';
 import '../../../widgets/datacenter_list_tile.dart';
-import '../../../widgets/dialogs/add_edit_company_dialog.dart';
-import '../../../widgets/dialogs/add_edit_datacenter_dialog.dart';
 
 class DatacentersView extends StatefulWidget {
   const DatacentersView({

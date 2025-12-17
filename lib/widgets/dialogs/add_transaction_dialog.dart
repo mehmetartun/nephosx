@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:nephosx/model/enums.dart';
 import 'package:nephosx/model/slot.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -11,20 +9,19 @@ import '../../model/datacenter.dart';
 import '../../model/gpu_cluster.dart';
 import '../../model/gpu_transaction.dart';
 import '../../model/light_label.dart';
-import '../formfields/consideration_form_field.dart';
 import '../formfields/date_formfield.dart';
 import '../occupation_view_paint.dart';
 
 class AddTransactionDialog extends StatefulWidget {
   const AddTransactionDialog({
-    Key? key,
+    super.key,
     required this.onAddTransaction,
     required this.gpuCluster,
     required this.buyers,
     required this.datacenter,
     required this.validator,
     // required this.priceCalculator,
-  }) : super(key: key);
+  });
   final void Function(GpuTransaction) onAddTransaction;
   final Datacenter datacenter;
   final GpuCluster gpuCluster;
@@ -55,8 +52,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
     }
     minDate = DateTime.now();
     maxDate = DateTime(minDate.year + 3, 12, 31);
-    startDate = widget.gpuCluster.startDate!;
-    endDate = widget.gpuCluster.endDate!;
+    startDate = widget.gpuCluster.startDate;
+    endDate = widget.gpuCluster.endDate;
     consideration = Consideration(amount: 0, currency: Currency.usd);
   }
 
@@ -92,7 +89,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${widget.datacenter.name}",
+                          widget.datacenter.name,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
@@ -129,7 +126,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   SizedBox(height: 10),
                   LightLabel(text: "Proposed Transaction"),
                   OccupationView(
-                    occupiedSlots: [Slot(from: startDate!, to: endDate!)],
+                    occupiedSlots: [Slot(from: startDate, to: endDate)],
                     fromDate: DateTime.now(),
                     toDate: DateTime.now().add(Duration(days: 3 * 365)),
                   ),
@@ -200,8 +197,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 SizedBox(height: 10),
                 DateTimeFormField(
                   firstDate: widget.gpuCluster.startDate,
-                  lastDate: widget.gpuCluster.endDate!.add(Duration(days: 730)),
-                  initialValue: widget.gpuCluster.startDate!.add(
+                  lastDate: widget.gpuCluster.endDate.add(Duration(days: 730)),
+                  initialValue: widget.gpuCluster.startDate.add(
                     Duration(days: 30),
                   ),
                   // readOnly: true,
@@ -209,14 +206,14 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                     endDate = value!;
                   },
                   onChanged: (value) {
-                    endDate = value!;
+                    endDate = value;
                     adjustPricing();
                   },
                   labelText: 'End Date',
                 ),
                 SizedBox(height: 10),
                 SizedBox(height: 10),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
@@ -230,8 +227,8 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                         );
                         String? res = widget.validator(
                           widget.gpuCluster,
-                          startDate!,
-                          endDate!,
+                          startDate,
+                          endDate,
                         );
 
                         if (res != null) {
@@ -248,9 +245,9 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                               widget.gpuCluster.companyId,
                             ],
                             gpuClusterId: widget.gpuCluster.id,
-                            startDate: startDate!,
-                            endDate: endDate!,
-                            consideration: consideration!,
+                            startDate: startDate,
+                            endDate: endDate,
+                            consideration: consideration,
                             buyerCompanyId: buyer!.id,
                             sellerCompanyId: widget.gpuCluster.companyId,
                             createdAt: DateTime.timestamp(),

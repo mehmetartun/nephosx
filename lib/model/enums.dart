@@ -1,7 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'enums.dart';
-
 @JsonEnum(fieldRename: FieldRename.snake)
 enum EntityType { company, datacenter }
 

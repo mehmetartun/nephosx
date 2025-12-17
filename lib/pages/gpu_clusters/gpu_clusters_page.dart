@@ -4,22 +4,22 @@ import 'package:nephosx/pages/gpu_clusters/views/gpu_clusters_loading_view.dart'
 
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../repositories/database/database.dart';
-import '../../widgets/views/loading_view.dart';
 import 'cubit/gpu_clusters_cubit.dart';
 import 'views/gpu_cluster_add_edit_view.dart';
+import 'views/gpu_cluster_detail_view.dart';
 import 'views/gpu_cluster_view_table.dart';
 import 'views/gpu_clusters_error_view.dart';
-import 'views/gpu_clusters_view.dart';
 
 class GpuClustersPage extends StatelessWidget {
-  const GpuClustersPage({Key? key}) : super(key: key);
+  const GpuClustersPage({Key? key, this.gpuClusterId}) : super(key: key);
+  final String? gpuClusterId;
 
   @override
   Widget build(BuildContext context) {
     final GpuClustersCubit cubit = GpuClustersCubit(
       RepositoryProvider.of<DatabaseRepository>(context),
       user: BlocProvider.of<AuthenticationBloc>(context).user,
-    )..init();
+    )..init(gpuClusterId: gpuClusterId);
     return BlocProvider(
       create: (context) => cubit,
       child: BlocBuilder<GpuClustersCubit, GpuClustersState>(
@@ -30,7 +30,7 @@ class GpuClustersPage extends StatelessWidget {
               return GpuClustersLoadingView();
             case GpuClustersError _:
               return GpuClustersErrorView(
-                title: "Gpu Clusters Error",
+                title: "GPU Clusters Error",
                 message: state.message,
                 onRetry: cubit.init,
               );
@@ -39,6 +39,7 @@ class GpuClustersPage extends StatelessWidget {
                 gpuClusters: state.gpuClusters,
                 addGpuClusterRequest: cubit.addGpuClusterRequest,
                 updateGpuClusterRequest: cubit.updateGpuClusterRequest,
+                gpuClusterDetailRequest: cubit.gpuClusterDetailRequest,
               );
             case GpuClustersAddEdit _:
               return GpuClusterAddEditView(
@@ -48,8 +49,12 @@ class GpuClustersPage extends StatelessWidget {
                 onUpdateGpuCluster: cubit.updateGpuCluster,
                 onCancel: cubit.cancelAddGpuCluster,
               );
-            default:
-              return Container(child: null);
+            case GpuClusterDetail _:
+              return GpuClusterDetailView(
+                gpuCluster: state.gpuCluster,
+                onBack: cubit.showGpuClusters,
+                user: BlocProvider.of<AuthenticationBloc>(context).user!,
+              );
           }
         },
       ),

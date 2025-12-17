@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CorpAdminOnboardingPage extends StatelessWidget {
-  const CorpAdminOnboardingPage({Key? key}) : super(key: key);
+  const CorpAdminOnboardingPage({super.key});
 
   @override
   Widget build(BuildContext context) {

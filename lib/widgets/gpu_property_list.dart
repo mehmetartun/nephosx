@@ -5,14 +5,14 @@ class GpuPropertyList extends StatelessWidget {
   final String title;
   final List<KeyValuePair> properties;
   const GpuPropertyList({
-    Key? key,
+    super.key,
     required this.title,
     required this.properties,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 300,
       child: Column(
         mainAxisSize: MainAxisSize.min,

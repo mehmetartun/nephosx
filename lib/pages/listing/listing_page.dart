@@ -11,7 +11,7 @@ import 'views/listing_error_view.dart';
 import 'views/listing_view.dart';
 
 class ListingPage extends StatelessWidget {
-  const ListingPage({Key? key}) : super(key: key);
+  const ListingPage({super.key});
 
   @override
   Widget build(BuildContext context) {

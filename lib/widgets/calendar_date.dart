@@ -11,7 +11,6 @@ class CalendarDate extends StatefulWidget {
 }
 
 class _CalendarDateState extends State<CalendarDate> {
-  late bool _selected;
   @override
   void initState() {
     super.initState();

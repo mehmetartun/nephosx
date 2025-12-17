@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import '../model/gpu_transaction.dart';
 import '../model/slot.dart';
 
 class OccupationView extends StatelessWidget {
@@ -21,25 +20,23 @@ class OccupationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return CustomPaint(
-            size: Size(constraints.maxWidth, 17),
-            painter: _SplitRectPainter(
-              occupiedSlots: occupiedSlots,
-              listedSlots: listedSlots,
-              unListedSlots: unListedSlots,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return CustomPaint(
+          size: Size(constraints.maxWidth, 17),
+          painter: _SplitRectPainter(
+            occupiedSlots: occupiedSlots,
+            listedSlots: listedSlots,
+            unListedSlots: unListedSlots,
 
-              fromDate: fromDate,
-              toDate: DateTime(toDate.year, 12, 31),
-              foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              textColor: Theme.of(context).colorScheme.onPrimaryContainer,
-            ),
-          );
-        },
-      ),
+            fromDate: fromDate,
+            toDate: DateTime(toDate.year, 12, 31),
+            foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            textColor: Theme.of(context).colorScheme.onPrimaryContainer,
+          ),
+        );
+      },
     );
   }
 }

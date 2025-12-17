@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:nephosx/pages/market/cubit/market_cubit.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
@@ -12,10 +11,8 @@ import '../../../model/gpu_transaction.dart';
 import '../../../model/user.dart';
 import '../../../services/platform_settings/platform_settings_service.dart';
 import '../../../widgets/dialogs/add_transaction_dialog.dart';
-import '../../../widgets/filter_container.dart';
-import '../../../widgets/filter_range_slider.dart';
 import '../../../widgets/formfields/date_formfield.dart';
-import '../../../widgets/gpu_cluster_info.dart';
+import '../../../widgets/views/gpu_cluster_info_view.dart';
 
 enum SortKey {
   gpuModel,
@@ -147,7 +144,7 @@ class _MarketViewState extends State<MarketView> {
           break;
         case SortKey.startDate:
           widget.gpuClusters.sort((a, b) {
-            return a.startDate?.compareTo(b.startDate ?? DateTime.now()) ?? 0;
+            return a.startDate.compareTo(b.startDate);
           });
           break;
         default:
@@ -196,7 +193,7 @@ class _MarketViewState extends State<MarketView> {
           break;
         case SortKey.startDate:
           widget.gpuClusters.sort((b, a) {
-            return a.startDate?.compareTo(b.startDate ?? DateTime.now()) ?? 0;
+            return a.startDate.compareTo(b.startDate);
           });
           break;
         default:
@@ -868,7 +865,7 @@ class _MarketViewState extends State<MarketView> {
                                                                   20.0,
                                                                 ),
                                                             child:
-                                                                GpuClusterInfo(
+                                                                GpuClusterInfoView(
                                                                   gpuCluster:
                                                                       gpuCluster,
                                                                 ),

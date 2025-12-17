@@ -22,3 +22,8 @@ final class GpuClustersAddEdit extends GpuClustersState {
   final List<Datacenter> datacenters;
   GpuClustersAddEdit({this.gpuCluster, required this.datacenters});
 }
+
+final class GpuClusterDetail extends GpuClustersState {
+  final GpuCluster gpuCluster;
+  GpuClusterDetail({required this.gpuCluster});
+}

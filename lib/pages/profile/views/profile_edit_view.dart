@@ -142,7 +142,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                           value!.isEmpty ? 'Please enter a display name' : null,
                     ),
                     const SizedBox(height: 16),
-                    FilledButton(child: Text("Save"), onPressed: _saveProfile),
+                    FilledButton(onPressed: _saveProfile, child: Text("Save")),
                   ],
                 ),
               ),

@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:nephosx/model/consideration.dart';
@@ -9,9 +7,9 @@ import 'enums.dart';
 part 'rental_price.g.dart';
 
 enum RentalPriceType {
-  monthly("monthly", "/m", 30),
-  weekly("weekly", "/wk", 7),
-  daily("daily", "/d", 1);
+  monthly("monthly", "m", 30),
+  weekly("weekly", "w", 7),
+  daily("daily", "d", 1);
 
   final String title;
   final String formatSymbol;
@@ -74,7 +72,7 @@ class RentalPrice {
   }
 
   String get pricePerHourFormattedWithUnits {
-    return pricePerHourFormatted + rentalPriceType.formatSymbol;
+    return "$numberOfUnits${rentalPriceType.formatSymbol}@$pricePerHourFormatted/h";
   }
 
   // String get priceInUsdPerHourFormattedWithMonths {

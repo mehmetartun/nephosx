@@ -62,6 +62,8 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
     json['start_date'] as Timestamp,
   ),
   endDate: const TimestampConverter().fromJson(json['end_date'] as Timestamp),
+  serialNumber: json['serial_number'] as String?,
+  assetTag: json['asset_tag'] as String?,
 );
 
 Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
@@ -96,6 +98,8 @@ Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
       'deep_learning_performance_score': instance.deepLearningPerformanceScore,
       'start_date': const TimestampConverter().toJson(instance.startDate),
       'end_date': const TimestampConverter().toJson(instance.endDate),
+      'serial_number': instance.serialNumber,
+      'asset_tag': instance.assetTag,
       'manufacture_date': _$JsonConverterToJson<Timestamp, DateTime>(
         instance.manufactureDate,
         const TimestampConverter().toJson,

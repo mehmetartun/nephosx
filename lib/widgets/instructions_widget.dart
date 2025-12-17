@@ -17,7 +17,6 @@ class _InstructionsWidgetState extends State<InstructionsWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -88,7 +87,7 @@ class _InstructionsWidgetState extends State<InstructionsWidget> {
       ),
       body: Stack(
         children: [
-          Container(width: double.infinity, height: double.infinity),
+          SizedBox(width: double.infinity, height: double.infinity),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 500),
             transitionBuilder: (Widget child, Animation<double> animation) {

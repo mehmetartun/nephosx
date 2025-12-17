@@ -1,13 +1,7 @@
-import 'package:nephosx/blocs/authentication/authentication_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
-import '../../model/enums.dart';
-import '../brightness_selector.dart';
 import '../top_bar.dart';
-import '../user_profile_card.dart';
 
 /// Builds the "shell" for the app by building a Scaffold with a
 /// BottomNavigationBar, where [child] is placed in the body of the Scaffold.

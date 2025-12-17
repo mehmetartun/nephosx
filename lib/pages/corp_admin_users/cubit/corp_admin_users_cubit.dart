@@ -1,6 +1,5 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:meta/meta.dart';
 import 'package:nephosx/model/invitaton.dart';
 import 'package:nephosx/repositories/database/database.dart';
 

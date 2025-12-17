@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import '../../model/datacenter.dart';
 import '../../model/gpu_cluster.dart';
 import '../../services/platform_settings/platform_settings_service.dart';
 
 class EditGpuClusterDialog extends StatefulWidget {
   const EditGpuClusterDialog({
-    Key? key,
+    super.key,
     required this.onUpdateGpuCluster,
     required this.gpuCluster,
-  }) : super(key: key);
+  });
   final void Function(GpuCluster) onUpdateGpuCluster;
   final GpuCluster gpuCluster;
 

@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:nephosx/model/company.dart';
 import 'package:nephosx/model/conversions.dart';
-import 'package:nephosx/model/enums.dart';
-import 'package:nephosx/model/enums.dart';
 
 import '../extensions/add_month.dart';
 import 'consideration.dart';

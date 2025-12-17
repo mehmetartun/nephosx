@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../model/consideration.dart';
-import '../../model/enums.dart';
-import '../../model/gpu_transaction.dart';
-import '../occupation_view_paint.dart';
-
 class ErrorView extends StatelessWidget {
   final String title;
   final String message;

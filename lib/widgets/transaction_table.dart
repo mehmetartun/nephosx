@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../model/company.dart';
-import '../model/gpu_cluster.dart';
 import '../model/gpu_transaction.dart';
 
 class TransactionTable extends StatelessWidget {
   const TransactionTable({
-    Key? key,
+    super.key,
     required this.transactions,
     // required this.gpuClusters,
     // required this.companies,
-  }) : super(key: key);
+  });
   final List<GpuTransaction> transactions;
   // final List<GpuCluster> gpuClusters;
   // final List<Company> companies;

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class AddInvitationDialog extends StatefulWidget {
-  const AddInvitationDialog({Key? key, required this.onAddInvitation})
-    : super(key: key);
+  const AddInvitationDialog({super.key, required this.onAddInvitation});
 
   final void Function({required String email, required String displayName})
   onAddInvitation;

@@ -16,7 +16,7 @@ import 'slot.dart';
 
 part 'gpu_cluster.g.dart';
 
-enum GpuType { H100, H200, A100, B200, MI300X, Gaudi3 }
+// enum GpuType { H100, H200, A100, B200, MI300X, Gaudi3 }
 
 @JsonEnum(fieldRename: FieldRename.snake)
 enum PcieGeneration {
@@ -117,6 +117,10 @@ class GpuCluster {
   @JsonKey(name: "end_date")
   @TimestampConverter()
   final DateTime endDate;
+  @JsonKey(name: "serial_number")
+  final String? serialNumber;
+  @JsonKey(name: "asset_tag")
+  final String? assetTag;
 
   @JsonKey(name: "manufacture_date")
   @TimestampConverter()
@@ -157,6 +161,8 @@ class GpuCluster {
     this.manufactureDate,
     required this.startDate,
     required this.endDate,
+    this.serialNumber,
+    this.assetTag,
   });
   factory GpuCluster.fromJson(Map<String, dynamic> json) =>
       _$GpuClusterFromJson(json);
@@ -223,6 +229,8 @@ class GpuCluster {
     DateTime? manufactureDate,
     DateTime? startDate,
     DateTime? endDate,
+    String? serialNumber,
+    String? assetTag,
   }) {
     return GpuCluster(
       cpuId: cpuId ?? this.cpuId,
@@ -271,6 +279,8 @@ class GpuCluster {
       manufactureDate: manufactureDate ?? this.manufactureDate,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
+      serialNumber: serialNumber ?? this.serialNumber,
+      assetTag: assetTag ?? this.assetTag,
     );
   }
 
@@ -346,13 +356,13 @@ class GpuCluster {
     slots.sort((a, b) => a.from.compareTo(b.from));
     slots.removeWhere((slot) => slot.to.isBefore(sDate));
     slots.removeWhere((slot) => slot.from.isAfter(eDate));
-    if (slots.length > 0) {
+    if (slots.isNotEmpty) {
       if (!slots.first.from.isAfter(sDate) && slots.first.to.isAfter(sDate)) {
         sDate = slots.first.to;
         slots.removeAt(0);
       }
     }
-    if (slots.length > 0) {
+    if (slots.isNotEmpty) {
       if (slots.last.to.isAfter(eDate)) {
         eDate = slots.last.from;
         slots.removeAt(slots.length - 1);
@@ -366,12 +376,12 @@ class GpuCluster {
         gaps.add(Slot(from: slots[i - 1].to, to: slots[i].from));
       }
     }
-    if (slots.length > 0) {
+    if (slots.isNotEmpty) {
       if (slots.last.to.isBefore(eDate)) {
         gaps.add(Slot(from: slots.last.to, to: eDate));
       }
     }
-    if (slots.length == 0) {
+    if (slots.isEmpty) {
       gaps.add(Slot(from: sDate, to: eDate));
     }
     return gaps;

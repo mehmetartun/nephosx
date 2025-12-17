@@ -7,11 +7,7 @@ import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../blocs/authentication/authentication_bloc.dart';
-import '../widgets/dialogs/add_transaction_dialog.dart';
-import '../widgets/gpu_cluster_info.dart';
-import 'enums.dart';
-import 'gpu_transaction.dart';
-import 'user.dart';
+import '../widgets/views/gpu_cluster_info_view.dart';
 
 class GpuClusterDataSource extends DataTableSource {
   // Generate some dummy dat
@@ -21,6 +17,9 @@ class GpuClusterDataSource extends DataTableSource {
   final BuildContext context;
 
   final void Function(GpuCluster gpuCluster) updateGpuClusterRequest;
+  final void Function(GpuCluster gpuCluster) gpuClusterDetailRequest;
+  final bool showSerialNumber;
+
   // final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
   // final String? Function(GpuCluster, DateTime, DateTime) validator;
   // final void Function(GpuTransaction) onAddTransaction;
@@ -30,6 +29,8 @@ class GpuClusterDataSource extends DataTableSource {
     // this.user,
     required this.context,
     required this.updateGpuClusterRequest,
+    required this.gpuClusterDetailRequest,
+    this.showSerialNumber = true,
     // required this.priceCalculator,
     // required this.validator,
     // required this.onAddTransaction,
@@ -44,6 +45,16 @@ class GpuClusterDataSource extends DataTableSource {
     sortFunction,
   }) {
     return [
+      if (showSerialNumber)
+        DataColumn(
+          label: Text(
+            'Serial\nNumber',
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
+          // onSort: (columnIndex, ascending) {
+          //   sortFunction<String>((d) => d.serialNumber, columnIndex, ascending);
+          // },
+        ),
       DataColumn(
         label: Text(
           'GPU\nType',
@@ -58,12 +69,14 @@ class GpuClusterDataSource extends DataTableSource {
           );
         },
       ),
+
       DataColumn(
         label: Text('GPU\n#', style: Theme.of(context).textTheme.labelMedium),
         onSort: (columnIndex, ascending) {
           sortFunction<num>((d) => d.quantity, columnIndex, ascending);
         },
       ),
+
       DataColumn(
         label: Text('Region', style: Theme.of(context).textTheme.labelMedium),
         onSort: (columnIndex, ascending) {
@@ -164,6 +177,27 @@ class GpuClusterDataSource extends DataTableSource {
 
     return DataRow(
       cells: [
+        if (showSerialNumber)
+          DataCell(
+            InkWell(
+              onTap: () {
+                gpuClusterDetailRequest(gpuCluster);
+              },
+              child: Container(
+                padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                ),
+                child: Text(
+                  gpuCluster.serialNumber ?? 'ABC123456XY',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+            ),
+          ),
         DataCell(
           Row(
             children: [
@@ -182,6 +216,7 @@ class GpuClusterDataSource extends DataTableSource {
           ),
         ),
         DataCell(Text(gpuCluster.quantity.toString())),
+
         DataCell(
           Text(gpuCluster.datacenter?.address.country.region.description ?? ''),
         ),
@@ -218,7 +253,7 @@ class GpuClusterDataSource extends DataTableSource {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(20.0),
-                            child: GpuClusterInfo(gpuCluster: gpuCluster),
+                            child: GpuClusterInfoView(gpuCluster: gpuCluster),
                           ),
                           Positioned(
                             top: 10,

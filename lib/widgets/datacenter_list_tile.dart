@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nephosx/model/datacenter.dart';
 
-import 'dialogs/edit_datacenter_dialog.dart';
 import 'property_badge.dart';
-import 'tier_widget.dart';
 
 class DatacenterListTile extends StatelessWidget {
   const DatacenterListTile({
@@ -33,7 +31,7 @@ class DatacenterListTile extends StatelessWidget {
       subtitle: Row(
         children: [
           Text("${datacenter.address.country.flagUnicode} "),
-          Text("${datacenter.address.country.description}"),
+          Text(datacenter.address.country.description),
         ],
       ),
       trailing: onUpdateDatacenter == null

@@ -5,14 +5,10 @@ import 'package:nephosx/widgets/occupation_view_paint.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/consideration.dart';
-import '../../../model/datacenter.dart';
-import '../../../model/device.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../model/listing.dart';
 import '../../../model/rental_price.dart';
 import '../../../model/slot.dart';
-import '../../../services/platform_settings/platform_settings_service.dart';
-import '../../../widgets/formfields/date_formfield.dart';
 import '../../../widgets/formfields/rental_price.dart';
 
 class ListingAddEditView extends StatefulWidget {
@@ -177,7 +173,7 @@ class _ListingAddEditViewState extends State<ListingAddEditView> {
                                     startDate: widget.slot!.from,
                                     endDate: widget.slot!.to,
                                     createdAt: DateTime.timestamp(),
-                                    gpuClusterId: widget.gpuCluster!.id,
+                                    gpuClusterId: widget.gpuCluster.id,
                                     status: ListingStatus.active,
 
                                     datacenterId:

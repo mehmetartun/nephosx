@@ -1,10 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nephosx/pages/companies/cubit/companies_cubit.dart';
 
 import '../../../model/company.dart';
-import '../../../model/consideration.dart';
 import '../../../model/datacenter.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../model/gpu_transaction.dart';
@@ -119,11 +115,8 @@ class DatacentersCubit extends Cubit<DatacentersState> {
     DateTime fromDate,
     DateTime toDate,
   ) {
-    if (gpuCluster.transactions == null) {
-      return null;
-    }
-    String? errorText = null;
-    for (var transaction in gpuCluster.transactions!) {
+    String? errorText;
+    for (var transaction in gpuCluster.transactions) {
       if (fromDate.isAfter(transaction.endDate) ||
           toDate.isBefore(transaction.startDate)) {
       } else {

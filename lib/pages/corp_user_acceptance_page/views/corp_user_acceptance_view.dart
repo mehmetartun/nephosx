@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
-import '../../../model/company.dart';
 import '../../../model/invitaton.dart';
 
 class CorpUserAcceptanceView extends StatefulWidget {

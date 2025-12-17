@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nephosx/pages/sign_in/sign_in_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nephosx/pages/transactions/transactions_page.dart';
@@ -11,7 +10,7 @@ import '../pages/corp_admin_onboarding/corp_admin_onboarding_page.dart';
 import '../pages/corp_admin_users/corp_admin_users_page.dart';
 import '../pages/corp_user_acceptance_page/corp_user_acceptance_page.dart';
 import '../pages/datacenters/datacenters_page.dart';
-import '../pages/generic_page.dart';
+
 import '../pages/gpu_clusters/gpu_clusters_page.dart';
 import '../pages/listing/listing_page.dart';
 import '../pages/market/market_page.dart';
@@ -172,7 +171,7 @@ class NestedRouter {
         path: MyNavigatorRoute.home.path,
         name: MyNavigatorRoute.home.name,
         builder: (BuildContext context, GoRouterState state) =>
-            const GenericPage(),
+            Scaffold(appBar: AppBar(title: Text("Error"))),
         routes: [
           StatefulShellRoute.indexedStack(
             // parentNavigatorKey: _rootNavigatorKey,

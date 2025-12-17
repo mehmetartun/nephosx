@@ -5,10 +5,10 @@ import '../../model/company.dart';
 
 class EditCompanyDialog extends StatefulWidget {
   const EditCompanyDialog({
-    Key? key,
+    super.key,
     required this.onUpdateCompany,
     required this.company,
-  }) : super(key: key);
+  });
   final void Function(Company) onUpdateCompany;
   final Company company;
 
@@ -89,7 +89,7 @@ class _EditCompanyDialogState extends State<EditCompanyDialog> {
                 //   },
                 // ),
                 SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {

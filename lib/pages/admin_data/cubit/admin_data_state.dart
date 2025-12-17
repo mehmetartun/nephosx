@@ -1,6 +1,5 @@
 part of 'admin_data_cubit.dart';
 
-@immutable
 sealed class AdminDataState {}
 
 final class AdminDataInitial extends AdminDataState {}

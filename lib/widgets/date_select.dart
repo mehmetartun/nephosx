@@ -126,14 +126,12 @@ class _DateSelectState extends State<DateSelect> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  child: Text(
-                    DateFormat("MMM").format(dates[i]).toUpperCase(),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: dates[i] == selectedDate
-                          ? Theme.of(context).colorScheme.onPrimary
-                          : Theme.of(context).colorScheme.onSurface,
-                    ),
+                Text(
+                  DateFormat("MMM").format(dates[i]).toUpperCase(),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: dates[i] == selectedDate
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 Text(

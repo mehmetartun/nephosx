@@ -5,7 +5,6 @@ import 'package:nephosx/widgets/brightness_selector.dart';
 
 import '../blocs/authentication/authentication_bloc.dart';
 import '../model/enums.dart';
-import 'user_list_tile.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -226,7 +225,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                             child: const Text("Admin"),
                           ),
                   ],
-                  if (user!.canSeeSettings) ...[
+                  if (user.canSeeSettings) ...[
                     navigationShell?.currentIndex == 5
                         ? FilledButton(
                             onPressed: () {

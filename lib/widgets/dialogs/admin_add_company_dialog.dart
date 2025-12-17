@@ -3,13 +3,13 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 class AdminAddCompanyDialog extends StatefulWidget {
   const AdminAddCompanyDialog({
-    Key? key,
+    super.key,
     required this.onAddCompany,
     required this.companyName,
     required this.companyDomain,
     required this.confirmationEmail,
     required this.userId,
-  }) : super(key: key);
+  });
   final void Function({
     required String companyName,
     required String companyDomain,

@@ -6,10 +6,10 @@ import '../../model/enums.dart';
 
 class EditDatacenterDialog extends StatefulWidget {
   const EditDatacenterDialog({
-    Key? key,
+    super.key,
     required this.onUpdateDatacenter,
     required this.datacenter,
-  }) : super(key: key);
+  });
   final void Function(Datacenter) onUpdateDatacenter;
   final Datacenter datacenter;
 
@@ -131,7 +131,7 @@ class _EditDatacenterDialogState extends State<EditDatacenterDialog> {
                   }).toList(),
                 ),
                 SizedBox(height: 20),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../model/datacenter.dart';
 
 class TierWidget extends StatelessWidget {
-  const TierWidget({Key? key, required this.tier}) : super(key: key);
+  const TierWidget({super.key, required this.tier});
   final DatacenterTier tier;
 
   @override

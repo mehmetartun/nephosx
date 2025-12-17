@@ -5,7 +5,6 @@ import 'package:nephosx/pages/users/views/users_loading_view.dart';
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../repositories/database/database.dart';
 import '../../widgets/views/error_view.dart';
-import '../../widgets/views/loading_view.dart';
 import 'cubit/users_cubit.dart';
 import 'views/users_view.dart';
 

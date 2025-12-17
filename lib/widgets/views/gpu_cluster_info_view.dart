@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:nephosx/widgets/gpu_property_list.dart';
 
-import '../model/gpu_cluster.dart';
-import '../model/key_value_pair.dart';
-import 'labeled_text.dart';
+import '../../model/gpu_cluster.dart';
+import '../../model/key_value_pair.dart';
 
-class GpuClusterInfo extends StatelessWidget {
+class GpuClusterInfoView extends StatelessWidget {
   final GpuCluster gpuCluster;
-  const GpuClusterInfo({super.key, required this.gpuCluster});
+  const GpuClusterInfoView({super.key, required this.gpuCluster});
 
   @override
   Widget build(BuildContext context) {
@@ -272,17 +271,13 @@ class GpuClusterInfo extends StatelessWidget {
                 properties: [
                   KeyValuePair(
                     key: "Earliest Start",
-                    value: gpuCluster.startDate == null
-                        ? ""
-                        : DateFormat(
-                            "yyyy-MM-dd",
-                          ).format(gpuCluster.startDate!),
+                    value: DateFormat(
+                      "yyyy-MM-dd",
+                    ).format(gpuCluster.startDate),
                   ),
                   KeyValuePair(
                     key: "Latest End",
-                    value: gpuCluster.endDate == null
-                        ? ""
-                        : DateFormat("yyyy-MM-dd").format(gpuCluster.endDate!),
+                    value: DateFormat("yyyy-MM-dd").format(gpuCluster.endDate),
                   ),
                   KeyValuePair(
                     key: "Reliability (%)",

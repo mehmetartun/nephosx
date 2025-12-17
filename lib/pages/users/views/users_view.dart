@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:nephosx/widgets/dialogs/update_user_company_dialog.dart';
 import 'package:nephosx/widgets/user_avatar.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/company.dart';
 import '../../../model/enums.dart';
 import '../../../model/user.dart';
-import '../../../widgets/user_list_tile.dart';
 
 class UsersView extends StatefulWidget {
   const UsersView({
-    Key? key,
+    super.key,
     required this.users,
     required this.companies,
     required this.onUpdateUser,
-  }) : super(key: key);
+  });
   final List<User> users;
   final List<Company> companies;
   final void Function(Company, User) onUpdateUser;
@@ -29,7 +27,6 @@ class _UsersViewState extends State<UsersView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     _hideAnonymous = false;
     _users = widget.users;
     super.initState();

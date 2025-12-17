@@ -73,7 +73,7 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     //     });
 
     _transactionsSubscription = databaseRepository
-        .getGpuTransactionStream(companyId: user!.companyId!)
+        .gpuTransactionsStream(companyId: user!.companyId!)
         .listen((transactions) {
           this.transactions = transactions;
           for (GpuTransaction tx in this.transactions) {

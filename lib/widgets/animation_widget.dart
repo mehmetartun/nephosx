@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 class ComputerGridAnimation extends StatefulWidget {
   const ComputerGridAnimation({super.key});
@@ -11,18 +10,14 @@ class ComputerGridAnimation extends StatefulWidget {
 
 class _ComputerGridAnimationState extends State<ComputerGridAnimation>
     with TickerProviderStateMixin {
-  late AnimationController _controller;
   late AnimationController _textController;
-  late Animation<double> _animation;
   late AnimationController _progressController;
   final List<_IconItem> _icons = [];
   final Random _random = Random();
   Size? _lastSize;
-  bool _hasRunForwardOnce = false;
 
   // Configuration
   static const double _iconSize = 50.0;
-  static const double _padding = 0.0;
   static const Duration _totalDuration = Duration(seconds: 30);
   static const Duration _flightDuration = Duration(milliseconds: 200);
 
@@ -156,7 +151,7 @@ class _ComputerGridAnimationState extends State<ComputerGridAnimation>
           return Stack(
             alignment: Alignment.center,
             children: [
-              Container(width: double.infinity, height: double.infinity),
+              SizedBox(width: double.infinity, height: double.infinity),
 
               // AnimatedBuilder(
               //   animation: _controller,
@@ -242,7 +237,7 @@ class _ComputerGridAnimationState extends State<ComputerGridAnimation>
               ),
               Positioned(
                 bottom: constraints.maxHeight * 0.25,
-                child: Container(
+                child: SizedBox(
                   width: constraints.maxWidth * 0.3,
                   height: 6,
                   child: AnimatedBuilder(

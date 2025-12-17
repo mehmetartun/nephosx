@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import 'package:nephosx/pages/market/cubit/market_cubit.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
 import '../../../model/datacenter.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
-import '../../../model/gpu_cluster_data_source.dart';
 import '../../../model/gpu_transaction.dart';
 import '../../../model/listing.dart';
 import '../../../model/listing_data_source.dart';
 import '../../../model/user.dart';
 import '../../../services/platform_settings/platform_settings_service.dart';
-import '../../../widgets/dialogs/add_transaction_dialog.dart';
-import '../../../widgets/filter_container.dart';
-import '../../../widgets/filter_range_slider.dart';
 import '../../../widgets/formfields/date_formfield.dart';
-import '../../../widgets/gpu_cluster_info.dart';
 
 class MarketView3 extends StatefulWidget {
   const MarketView3({
@@ -61,7 +54,7 @@ class _MarketView3State extends State<MarketView3> {
     });
     user = context.read<AuthenticationBloc>().user;
     listingDataSource = ListingDataSource(
-      user: user,
+      user: user!,
       listings: widget.listings,
       context: context,
       validator: widget.validator,
@@ -71,7 +64,7 @@ class _MarketView3State extends State<MarketView3> {
 
   void updateSource() {
     listingDataSource = ListingDataSource(
-      user: user,
+      user: user!,
       listings: widget.listings
           .where((element) {
             if (selectedDeviceId == null) return true;

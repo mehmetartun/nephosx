@@ -6,9 +6,8 @@ import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:nephosx/model/listing.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import '../widgets/dialogs/add_transaction_dialog.dart';
 import '../widgets/dialogs/add_transaction_dialog_new.dart';
-import '../widgets/gpu_cluster_info.dart';
+import '../widgets/views/gpu_cluster_info_view.dart';
 import 'enums.dart';
 import 'gpu_transaction.dart';
 import 'user.dart';
@@ -17,7 +16,7 @@ class ListingDataSource extends DataTableSource {
   // Generate some dummy dat
 
   final List<Listing> listings;
-  final User? user;
+  final User user;
   final BuildContext context;
 
   final String? Function(GpuCluster, DateTime, DateTime) validator;
@@ -25,7 +24,7 @@ class ListingDataSource extends DataTableSource {
 
   ListingDataSource({
     required this.listings,
-    this.user,
+    required this.user,
     required this.context,
 
     required this.validator,
@@ -70,7 +69,7 @@ class ListingDataSource extends DataTableSource {
                   : Container(),
               Text(
                 // "${listing.gpuCluster?.producer?.name ?? 'X'}\n${listing.gpuCluster?.device?.name ?? 'X'}",
-                "${listing.gpuCluster?.device?.name ?? 'X'}",
+                listing.gpuCluster?.device?.name ?? 'X',
               ),
             ],
           ),
@@ -183,7 +182,7 @@ class ListingDataSource extends DataTableSource {
                             padding: const EdgeInsets.all(20.0),
                             child: listing.gpuCluster == null
                                 ? Container()
-                                : GpuClusterInfo(
+                                : GpuClusterInfoView(
                                     gpuCluster: listing.gpuCluster!,
                                   ),
                           ),

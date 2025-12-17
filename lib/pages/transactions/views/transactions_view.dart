@@ -5,37 +5,11 @@ import 'package:nephosx/widgets/transaction_table.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
-import '../../../model/company.dart';
-import '../../../model/gpu_cluster.dart';
 import '../../../model/gpu_transaction.dart';
+import '../../../model/transactions_data_source.dart';
 import '../../../model/user.dart';
 
-enum TransactionSort {
-  startDateAscending("Start Date ascending"),
-  startDateDescending("Start Date descending"),
-  durationAscending("Duration Ascending"),
-  durationDescending("Duration Descending"),
-  transactionDateAscending("Transaction Date Ascending"),
-  transactionDateDescending("Transaction Date Descending");
-
-  final String title;
-
-  const TransactionSort(this.title);
-}
-
 enum TransactionType { all, buy, sell }
-
-enum TransactionFilter {
-  all("All"),
-  today("Today"),
-  yesterday("Yesterday"),
-  thisWeek("This Week"),
-  thisMonth("This Month"),
-  thisYear("This Year");
-
-  final String title;
-  const TransactionFilter(this.title);
-}
 
 class TransactionsView extends StatefulWidget {
   const TransactionsView({
@@ -51,15 +25,29 @@ class TransactionsView extends StatefulWidget {
 }
 
 class _TransactionsViewState extends State<TransactionsView> {
-  late TransactionSort sort;
-  late TransactionFilter filter;
   late List<GpuTransaction> transactions;
   late List<GpuTransaction> buys;
   late List<GpuTransaction> sells;
+  late TransactionsDataSource transactionsDataSource;
 
   TransactionType? selectedTransactions = null;
 
   late User? user;
+  bool? _sortAscending;
+  int? _sortColumnIndex;
+
+  void _sort<T>(
+    Comparable<T> Function(GpuTransaction d) getField,
+    int columnIndex,
+    bool ascending,
+  ) {
+    setState(() {
+      transactionsDataSource.sort<T>(getField, ascending);
+      _sortColumnIndex = columnIndex;
+      _sortAscending = ascending;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -71,90 +59,12 @@ class _TransactionsViewState extends State<TransactionsView> {
     sells = widget.transactions.where((e) {
       return user!.companyId == e.sellerCompanyId;
     }).toList();
-    sort = TransactionSort.transactionDateDescending;
-    filter = TransactionFilter.all;
-    filterTransactions();
-    sortTransactions();
-  }
 
-  void filterTransactions() {
-    switch (filter) {
-      case TransactionFilter.all:
-        transactions = widget.transactions.toList();
-        break;
-      case TransactionFilter.thisYear:
-        transactions = widget.transactions.where((tx) {
-          return tx.createdAt.year == DateTime.now().year;
-        }).toList();
-        break;
-      case TransactionFilter.thisMonth:
-        transactions = widget.transactions.where((tx) {
-          return (tx.createdAt.year == DateTime.now().year &&
-              tx.createdAt.month == DateTime.now().month);
-        }).toList();
-        break;
-      case TransactionFilter.today:
-        transactions = widget.transactions.where((tx) {
-          return (tx.createdAt.year == DateTime.now().year &&
-              tx.createdAt.month == DateTime.now().month &&
-              tx.createdAt.day == DateTime.now().day);
-        }).toList();
-        break;
-      case TransactionFilter.yesterday:
-        transactions = widget.transactions.where((tx) {
-          return (tx.createdAt.subtract(Duration(days: 1)).year ==
-                  DateTime.now().subtract(Duration(days: 1)).year &&
-              tx.createdAt.subtract(Duration(days: 1)).month ==
-                  DateTime.now().subtract(Duration(days: 1)).month &&
-              tx.createdAt.subtract(Duration(days: 1)).day ==
-                  DateTime.now().subtract(Duration(days: 1)).day);
-        }).toList();
-        break;
-      case TransactionFilter.thisWeek:
-        DateTime now = DateTime.now();
-        int wkd = now.weekday;
-        DateTime weekStart = now.subtract(Duration(days: wkd - 1));
-        weekStart = DateTime(weekStart.year, weekStart.month, weekStart.day);
-        transactions = widget.transactions.where((tx) {
-          return (tx.createdAt.isAfter(weekStart));
-        }).toList();
-        break;
-    }
-  }
-
-  void sortTransactions() {
-    switch (sort) {
-      case TransactionSort.startDateAscending:
-        transactions.sort((a, b) {
-          return a.startDate.compareTo(b.startDate);
-        });
-      case TransactionSort.startDateDescending:
-        transactions.sort((b, a) {
-          return a.startDate.compareTo(b.startDate);
-        });
-
-      case TransactionSort.durationAscending:
-        transactions.sort((a, b) {
-          return a.endDate
-              .difference(a.startDate)
-              .compareTo(b.endDate.difference(b.startDate));
-        });
-
-      case TransactionSort.durationDescending:
-        transactions.sort((b, a) {
-          return a.endDate
-              .difference(a.startDate)
-              .compareTo(b.endDate.difference(b.startDate));
-        });
-      case TransactionSort.transactionDateAscending:
-        transactions.sort((a, b) {
-          return a.createdAt.compareTo(b.createdAt);
-        });
-      case TransactionSort.transactionDateDescending:
-        transactions.sort((b, a) {
-          return a.createdAt.compareTo(b.createdAt);
-        });
-    }
+    transactionsDataSource = TransactionsDataSource(
+      transactions: transactions,
+      user: user!,
+      context: context,
+    );
   }
 
   @override
@@ -217,50 +127,42 @@ class _TransactionsViewState extends State<TransactionsView> {
                 ],
               ),
               SizedBox(height: 20),
-              Row(
-                children: [
-                  DropdownButton<TransactionSort>(
-                    value: sort,
-                    items: TransactionSort.values.map((e) {
-                      return DropdownMenuItem(value: e, child: Text(e.title));
-                    }).toList(),
-                    onChanged: (val) {
-                      setState(() {
-                        val != null ? sort = val : null;
-                        sortTransactions();
-                      });
-                    },
-                  ),
-                  SizedBox(width: 20),
-                  DropdownButton<TransactionFilter>(
-                    value: filter,
-                    items: TransactionFilter.values.map((e) {
-                      return DropdownMenuItem(value: e, child: Text(e.title));
-                    }).toList(),
-                    onChanged: (val) {
-                      setState(() {
-                        val != null ? filter = val : null;
-                        filterTransactions();
-                      });
-                    },
-                  ),
-                ],
-              ),
-              Container(
+
+              SizedBox(
                 width: double.infinity,
                 child: TransactionTable(transactions: transactions),
               ),
               SizedBox(height: 20),
               Text("Buying"),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: TransactionTable(transactions: buys),
               ),
               SizedBox(height: 20),
               Text("Selling"),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: TransactionTable(transactions: sells),
+              ),
+              PaginatedDataTable(
+                sortColumnIndex: _sortColumnIndex,
+                sortAscending: _sortAscending ?? true,
+                header: Text("All Transactions"),
+                columns: transactionsDataSource.getColumns(
+                  sortFunction:
+                      <T>(
+                        Comparable<T> Function(GpuTransaction d) getField,
+                        int columnIndex,
+                        bool ascending,
+                      ) {
+                        setState(() {
+                          transactionsDataSource.sort<T>(getField, ascending);
+                          _sortColumnIndex = columnIndex;
+                          _sortAscending = ascending;
+                        });
+                      },
+                ),
+                source: transactionsDataSource,
               ),
             ],
           ),

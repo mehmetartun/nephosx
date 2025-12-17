@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import '../../model/datacenter.dart';
-import '../../model/gpu_cluster.dart';
-
 class AddGpuClusterDialog extends StatefulWidget {
   const AddGpuClusterDialog({Key? key, required this.onAddGpuCluster})
     : super(key: key);
@@ -15,7 +12,7 @@ class AddGpuClusterDialog extends StatefulWidget {
 
 class _AddGpuClusterDialogState extends State<AddGpuClusterDialog> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  GpuType? type;
+
   int? quantity;
   @override
   Widget build(BuildContext context) {
@@ -29,25 +26,25 @@ class _AddGpuClusterDialogState extends State<AddGpuClusterDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                DropdownButtonFormField<GpuType>(
-                  onChanged: (value) {
-                    setState(() {
-                      type = value!;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return "Please select a GPU type";
-                    }
-                    return null;
-                  },
-                  items: GpuType.values.map((type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(type.name),
-                    );
-                  }).toList(),
-                ),
+                // DropdownButtonFormField<GpuType>(
+                //   onChanged: (value) {
+                //     setState(() {
+                //       type = value!;
+                //     });
+                //   },
+                //   validator: (value) {
+                //     if (value == null) {
+                //       return "Please select a GPU type";
+                //     }
+                //     return null;
+                //   },
+                //   items: GpuType.values.map((type) {
+                //     return DropdownMenuItem(
+                //       value: type,
+                //       child: Text(type.name),
+                //     );
+                //   }).toList(),
+                // ),
                 TextFormField(
                   autocorrect: false,
                   decoration: InputDecoration(labelText: "Quantity"),
@@ -65,12 +62,12 @@ class _AddGpuClusterDialogState extends State<AddGpuClusterDialog> {
                   },
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(
+                FilledButton(
                   onPressed: () {
                     if (formKey.currentState?.validate() ?? false) {
                       formKey.currentState!.save();
                       widget.onAddGpuCluster({
-                        "type": type!.name,
+                        // "type": type!.name,
                         "quantity": quantity,
                       });
                       Navigator.pop(context);

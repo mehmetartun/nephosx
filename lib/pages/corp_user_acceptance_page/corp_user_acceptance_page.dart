@@ -6,7 +6,6 @@ import 'package:nephosx/pages/corp_user_acceptance_page/views/corp_user_acceptan
 import 'package:nephosx/pages/corp_user_acceptance_page/views/corp_user_acceptance_loading_view.dart';
 
 import '../../blocs/authentication/authentication_bloc.dart';
-import '../../model/company.dart';
 import '../../repositories/database/database.dart';
 import 'views/corp_user_acceptance_view.dart';
 

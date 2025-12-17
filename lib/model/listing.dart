@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:nephosx/model/company.dart';
@@ -100,6 +99,8 @@ class Listing {
   }
 
   Slot get slot => Slot(from: startDate, to: endDate);
+
+  int get numberOfDays => endDate.difference(startDate).inDays;
 
   factory Listing.fromJson(Map<String, dynamic> json) =>
       _$ListingFromJson(json);

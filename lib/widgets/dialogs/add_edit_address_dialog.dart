@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nephosx/widgets/formfields/address_form_field.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../model/address.dart';
-import '../../model/company.dart';
-import '../../model/enums.dart';
 import '../../services/platform_settings/platform_settings_service.dart';
 import '../formfields/address_form_field_new.dart';
 

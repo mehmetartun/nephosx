@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:nephosx/model/producer.dart';
 
 part 'cpu.g.dart';
 

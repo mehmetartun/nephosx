@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nephosx/pages/admin_onboarding/admin_onboarding_page.dart';
 import 'package:nephosx/pages/listing/listing_page.dart';
-import 'package:nephosx/pages/market/market_page.dart';
 
 import 'blocs/authentication/authentication_bloc.dart';
 import 'blocs/notifications/bloc/notifications_bloc.dart';
@@ -17,7 +14,6 @@ import 'services/platform_settings/platform_settings_service.dart';
 import 'theme/cubit/theme_cubit.dart';
 import 'theme/theme_black.dart';
 import 'theme/util.dart';
-import 'dart:math' as math;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -51,7 +51,7 @@ class ImageUtils {
 
   static void printImageDimensions(Uint8List imageBytes) {
     try {
-      final decodedImage = img.decodeImage(imageBytes);
+      img.decodeImage(imageBytes);
     } catch (e) {
       Logs.instance.error('Error decoding image: $e');
     }

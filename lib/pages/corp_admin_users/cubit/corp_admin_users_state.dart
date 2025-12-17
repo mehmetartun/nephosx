@@ -1,6 +1,5 @@
 part of 'corp_admin_users_cubit.dart';
 
-@immutable
 sealed class CorpAdminUsersState {}
 
 final class CorpAdminUsersInitial extends CorpAdminUsersState {}

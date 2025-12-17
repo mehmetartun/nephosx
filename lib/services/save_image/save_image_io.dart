@@ -8,7 +8,7 @@ class SaveImage {
   static Future<String> saveImageToGallery(XFile file) async {
     Directory directory = await getApplicationDocumentsDirectory();
 
-    String result = await FileSaver.instance.saveFile(
+    await FileSaver.instance.saveFile(
       name: "testFile_${DateTime.now().millisecondsSinceEpoch}.jpg",
       file: File(file.path),
       mimeType: MimeType.jpeg,

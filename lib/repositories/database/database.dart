@@ -42,10 +42,17 @@ abstract class DatabaseRepository {
   });
   Future<void> delete({required String path});
 
-  Stream<User?> getUserStream(String uid);
+  Stream<User?> userStream(String uid);
+  Stream<List<GpuCluster>> gpuClustersStream({String? companyId});
+  Stream<List<User>> usersStream();
+  Stream<List<Request>> requestsByCompanyIdStream(String companyId);
+  Stream<List<Request>> requestsByRequestorIdStream(String requestorId);
+  Stream<List<GpuTransaction>> gpuTransactionsStream({
+    required String companyId,
+  });
+  Stream<List<Listing>> listingsStream({String? companyId});
+  Stream<List<Listing>> activeListingsStream({String? companyId});
 
-  Stream<List<GpuCluster>> getGpuClusterStream({String? companyId});
-  Stream<List<User>> getUsersStream();
   Future<List<User>> getUsers({String? companyId});
   Future<List<Invitation>> getInvitations({String? companyId});
   Future<List<Listing>> getListings({String? companyId, ListingStatus? status});
@@ -59,12 +66,6 @@ abstract class DatabaseRepository {
   Future<List<Request>> getRequestsByCompanyId(String companyId);
   Future<List<Request>> getRequests();
 
-  Stream<List<Request>> getRequestsByCompanyIdStream(String companyId);
-  Stream<List<Request>> getRequestsByRequestorIdStream(String requestorId);
-
-  Stream<List<GpuTransaction>> getGpuTransactionStream({
-    required String companyId,
-  });
   Future<PlatformSettings> getPlatformSettings();
   Future<List<Producer>> getProducers();
   Future<List<Device>> getDevices();
@@ -166,7 +167,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Stream<List<User>> getUsersStream() {
+  Stream<List<User>> usersStream() {
     return db.collection('users').snapshots().map<List<User>>((snapshot) {
       return snapshot.docs.map((doc) {
         return User.fromJson(doc.data());
@@ -216,7 +217,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Stream<User?> getUserStream(String uid) {
+  Stream<User?> userStream(String uid) {
     return db
         .collection('users')
         .where('uid', isEqualTo: uid)
@@ -272,7 +273,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Stream<List<Request>> getRequestsByCompanyIdStream(String companyId) {
+  Stream<List<Request>> requestsByCompanyIdStream(String companyId) {
     return db
         .collectionGroup("requests")
         .where("target_company_id", isEqualTo: companyId)
@@ -285,7 +286,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Stream<List<Request>> getRequestsByRequestorIdStream(String requestorId) {
+  Stream<List<Request>> requestsByRequestorIdStream(String requestorId) {
     return db
         .collectionGroup("requests")
         .where("requestor_id", isEqualTo: requestorId)
@@ -298,7 +299,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Stream<List<GpuCluster>> getGpuClusterStream({String? companyId}) {
+  Stream<List<GpuCluster>> gpuClustersStream({String? companyId}) {
     return db
         .collectionGroup("gpu_clusters")
         .where("company_id", isEqualTo: companyId)
@@ -311,7 +312,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Stream<List<GpuTransaction>> getGpuTransactionStream({
+  Stream<List<GpuTransaction>> gpuTransactionsStream({
     required String companyId,
   }) {
     return db
@@ -354,25 +355,28 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
     }
   }
 
+  @override
   Future<List<Producer>> getProducers() async {
-    var producers_query = await db
+    var producersQuery = await db
         .collection("settings/settings/producers")
         .get();
-    return producers_query.docs
+    return producersQuery.docs
         .map((doc) => Producer.fromJson({...doc.data(), 'id': doc.id}))
         .toList();
   }
 
+  @override
   Future<List<Device>> getDevices() async {
-    var devices_query = await db.collection("settings/settings/devices").get();
-    return devices_query.docs
+    var devicesQuery = await db.collection("settings/settings/devices").get();
+    return devicesQuery.docs
         .map((doc) => Device.fromJson({...doc.data(), 'id': doc.id}))
         .toList();
   }
 
+  @override
   Future<List<Cpu>> getCpus() async {
-    var cpus_query = await db.collection("settings/settings/cpus").get();
-    return cpus_query.docs
+    var cpusQuery = await db.collection("settings/settings/cpus").get();
+    return cpusQuery.docs
         .map((doc) => Cpu.fromJson({...doc.data(), 'id': doc.id}))
         .toList();
   }
@@ -455,5 +459,50 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
       return null;
     }
     return Invitation.fromJson({...qs.data()!, 'id': qs.id});
+  }
+
+  @override
+  Stream<List<Listing>> listingsStream({String? companyId}) {
+    if (companyId != null) {
+      return db
+          .collection("listings")
+          .where("company_id", isEqualTo: companyId)
+          .snapshots()
+          .map((snapshot) {
+            return snapshot.docs
+                .map((doc) => Listing.fromJson({...doc.data()}))
+                .toList();
+          });
+    }
+    return db.collection("listings").snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Listing.fromJson({...doc.data()}))
+          .toList();
+    });
+  }
+
+  @override
+  Stream<List<Listing>> activeListingsStream({String? companyId}) {
+    if (companyId != null) {
+      return db
+          .collection("listings")
+          .where("company_id", isEqualTo: companyId)
+          .where("status", isEqualTo: ListingStatus.active.name)
+          .snapshots()
+          .map((snapshot) {
+            return snapshot.docs
+                .map((doc) => Listing.fromJson({...doc.data()}))
+                .toList();
+          });
+    }
+    return db
+        .collection("listings")
+        .where("status", isEqualTo: ListingStatus.active.name)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => Listing.fromJson({...doc.data()}))
+              .toList();
+        });
   }
 }

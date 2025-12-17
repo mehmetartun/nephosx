@@ -1,6 +1,5 @@
 part of 'admin_onboarding_cubit.dart';
 
-@immutable
 sealed class AdminOnboardingState {}
 
 final class AdminOnboardingInitial extends AdminOnboardingState {}

@@ -4,12 +4,10 @@ import 'package:nephosx/navigation/my_navigator_route.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/datacenter.dart';
-import '../../../model/device.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../model/rental_price.dart';
 import '../../../services/platform_settings/platform_settings_service.dart';
 import '../../../widgets/formfields/date_formfield.dart';
-import '../../../widgets/formfields/rental_price.dart';
 
 class GpuClusterAddEditView extends StatefulWidget {
   final GpuCluster? gpuCluster;
@@ -62,6 +60,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
   DateTime? endDate;
   DateTime? manufactureDate;
   bool showForm = false;
+  String? serialNumber;
+  String? assetTag;
 
   @override
   void initState() {
@@ -101,6 +101,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
     startDate = widget.gpuCluster?.startDate;
     endDate = widget.gpuCluster?.endDate;
     manufactureDate = widget.gpuCluster?.manufactureDate;
+    serialNumber = widget.gpuCluster?.serialNumber;
+    assetTag = widget.gpuCluster?.assetTag;
     if (datacenter == null) {
       // getDataCenter();
     } else {
@@ -183,15 +185,17 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                           "Please select a datacenter and create if not listed",
                         ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
                             width: 400,
-                            child: DropdownButtonFormField<Datacenter>(
-                              decoration: InputDecoration(
-                                labelText: "Datacenter",
-                              ),
-                              initialValue: datacenter,
-                              onChanged: (value) {
+                            child: DropdownMenuFormField<Datacenter>(
+                              label: Text("Data Center"),
+                              // decoration: InputDecoration(
+                              //   labelText: "Datacenter",
+                              // ),
+                              initialSelection: datacenter,
+                              onSelected: (value) {
                                 setState(() {
                                   datacenter = value!;
                                   showForm = true;
@@ -203,14 +207,17 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                 }
                                 return null;
                               },
-                              items: widget.datacenters.map((datacenter) {
-                                return DropdownMenuItem(
+                              dropdownMenuEntries: widget.datacenters.map((
+                                datacenter,
+                              ) {
+                                return DropdownMenuEntry(
                                   value: datacenter,
-                                  child: Text(datacenter.name),
+                                  label: datacenter.name,
                                 );
                               }).toList(),
                             ),
                           ),
+                          Spacer(),
                           OutlinedButton(
                             child: Text("Add Datacenter"),
                             onPressed: () {
@@ -322,6 +329,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                     width: 200,
                                     child: DropdownMenuFormField<int>(
                                       initialSelection: quantity,
+                                      label: Text("Quantity"),
                                       onSelected: (value) {
                                         setState(() {
                                           quantity = value;
@@ -770,6 +778,52 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                         }
                                         return null;
                                       },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: serialNumber,
+                                      decoration: InputDecoration(
+                                        labelText: "Serial No",
+                                      ),
+                                      onSaved: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          serialNumber = null;
+                                        } else {
+                                          serialNumber = value;
+                                        }
+                                      },
+                                      // validator: (value) {
+                                      //   if (value == null || value.isEmpty) {
+                                      //     return "Please enter a Serial No";
+                                      //   }
+                                      //   return null;
+                                      // },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: TextFormField(
+                                      autocorrect: false,
+                                      initialValue: assetTag,
+                                      decoration: InputDecoration(
+                                        labelText: "Asset Tag",
+                                      ),
+                                      onSaved: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          assetTag = null;
+                                        } else {
+                                          assetTag = value;
+                                        }
+                                      },
+                                      // validator: (value) {
+                                      //   if (value == null || value.isEmpty) {
+                                      //     return "Please enter a CUDAversion";
+                                      //   }
+                                      //   return null;
+                                      // },
                                     ),
                                   ),
 

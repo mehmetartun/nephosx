@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class FilterRangeSlider extends StatefulWidget {
   const FilterRangeSlider({
-    Key? key,
+    super.key,
     required this.title,
     required this.initialRangeValues,
-  }) : super(key: key);
+  });
   final String title;
   final RangeValues initialRangeValues;
 

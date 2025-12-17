@@ -6,14 +6,14 @@ import '../../model/company.dart';
 
 class AddEditCompanyDialog extends StatefulWidget {
   const AddEditCompanyDialog({
-    Key? key,
+    super.key,
     this.onAddCompany,
     this.onUpdateCompany,
     this.company,
     this.companyName,
     this.companyDomain,
     this.confirmationEmail,
-  }) : super(key: key);
+  });
   final void Function(Map<String, dynamic>)? onAddCompany;
   final void Function(Company)? onUpdateCompany;
   final Company? company;
@@ -152,7 +152,7 @@ class _AddEditCompanyDialogState extends State<AddEditCompanyDialog> {
                   initialValue: businessTaxId,
                   decoration: InputDecoration(labelText: "Business Tax ID"),
                   onSaved: (value) {
-                    if (value == null || value!.isEmpty) {
+                    if (value == null || value.isEmpty) {
                       businessTaxId = null;
                     } else {
                       businessTaxId = value;

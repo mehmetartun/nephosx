@@ -6,10 +6,10 @@ class LightLabel extends StatelessWidget {
   final String text;
   final LabelPosition position;
   const LightLabel({
-    Key? key,
+    super.key,
     required this.text,
     this.position = LabelPosition.right,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,31 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:nephosx/model/enums.dart';
-import 'package:nephosx/model/slot.dart';
 import 'package:nephosx/widgets/labeled_text.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../model/company.dart';
 import '../../model/consideration.dart';
-import '../../model/datacenter.dart';
-import '../../model/gpu_cluster.dart';
 import '../../model/gpu_transaction.dart';
 import '../../model/light_label.dart';
 import '../../model/listing.dart';
 import '../../model/rental_price.dart';
-import '../formfields/consideration_form_field.dart';
 import '../formfields/date_formfield.dart';
-import '../occupation_view_paint.dart';
 
 class AddTransactionDialogNew extends StatefulWidget {
   const AddTransactionDialogNew({
-    Key? key,
+    super.key,
     required this.onAddTransaction,
 
     required this.buyer,
     required this.listing,
-  }) : super(key: key);
+  });
   final void Function(GpuTransaction) onAddTransaction;
   final Company buyer;
   final Listing listing;
@@ -111,7 +103,7 @@ class _AddTransactionDialogNewState extends State<AddTransactionDialogNew> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${widget.listing.datacenter?.name ?? 'X'}",
+                          widget.listing.datacenter?.name ?? 'X',
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         Text(
@@ -199,14 +191,14 @@ class _AddTransactionDialogNewState extends State<AddTransactionDialogNew> {
                     endDate = value!;
                   },
                   onChanged: (value) {
-                    endDate = value!;
+                    endDate = value;
                     adjustPricing();
                   },
                   labelText: 'End Date',
                 ),
                 SizedBox(height: 10),
                 SizedBox(height: 10),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {

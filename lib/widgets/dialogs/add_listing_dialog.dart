@@ -1,16 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:nephosx/model/enums.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import '../../model/company.dart';
 import '../../model/consideration.dart';
 import '../../model/datacenter.dart';
 import '../../model/gpu_cluster.dart';
-import '../../model/gpu_transaction.dart';
 import '../../model/light_label.dart';
-import '../formfields/consideration_form_field.dart';
 import '../formfields/date_formfield.dart';
 import '../occupation_view_paint.dart';
 
@@ -52,8 +47,8 @@ class _AddListingDialogState extends State<AddListingDialog> {
     // }
     minDate = DateTime.now();
     maxDate = DateTime(minDate.year + 3, 12, 31);
-    startDate = widget.gpuCluster.startDate!;
-    endDate = widget.gpuCluster.endDate!;
+    startDate = widget.gpuCluster.startDate;
+    endDate = widget.gpuCluster.endDate;
     consideration = Consideration(
       amount: widget.priceCalculator(widget.gpuCluster, startDate, endDate),
       currency: Currency.usd,
@@ -189,8 +184,8 @@ class _AddListingDialogState extends State<AddListingDialog> {
                 SizedBox(height: 10),
                 DateTimeFormField(
                   firstDate: widget.gpuCluster.startDate,
-                  lastDate: widget.gpuCluster.endDate!.add(Duration(days: 730)),
-                  initialValue: widget.gpuCluster.startDate!.add(
+                  lastDate: widget.gpuCluster.endDate.add(Duration(days: 730)),
+                  initialValue: widget.gpuCluster.startDate.add(
                     Duration(days: 30),
                   ),
                   // readOnly: true,
@@ -198,7 +193,7 @@ class _AddListingDialogState extends State<AddListingDialog> {
                     endDate = value!;
                   },
                   onChanged: (value) {
-                    endDate = value!;
+                    endDate = value;
                     adjustPricing();
                   },
                   labelText: 'End Date',
@@ -213,8 +208,8 @@ class _AddListingDialogState extends State<AddListingDialog> {
                         formKey.currentState?.save();
                         double? price = widget.priceCalculator(
                           widget.gpuCluster,
-                          startDate!,
-                          endDate!,
+                          startDate,
+                          endDate,
                         );
 
                         consideration = Consideration(
@@ -223,8 +218,8 @@ class _AddListingDialogState extends State<AddListingDialog> {
                         );
                         String? res = widget.validator(
                           widget.gpuCluster,
-                          startDate!,
-                          endDate!,
+                          startDate,
+                          endDate,
                         );
 
                         if (res != null) {

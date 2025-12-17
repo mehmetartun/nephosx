@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:nephosx/blocs/notifications/bloc/notifications_bloc.dart';
 import 'package:nephosx/blocs/requests/bloc/requests_bloc.dart';
 import 'package:nephosx/firebase_options.dart';

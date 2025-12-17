@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:nephosx/widgets/dialogs/add_invitation_dialog.dart';
 import 'package:nephosx/widgets/occupation_view_paint.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/gpu_cluster.dart';
 import '../../../model/gpu_transaction.dart';
-import '../../../model/invitaton.dart';
 import '../../../model/listing.dart';
 import '../../../model/slot.dart';
-import '../../../model/user.dart';
-import '../../../widgets/user_avatar.dart';
 
 class ListingView extends StatefulWidget {
   const ListingView({
@@ -202,24 +198,74 @@ class _ListingViewState extends State<ListingView> {
                                           );
                                         }
 
-                                        return SimpleDialog(
-                                          title: Text("Select Slot"),
+                                        return Stack(
                                           children: [
-                                            for (var s
-                                                in gpuCluster.unListedSlots
-                                                    .where((s) {
-                                                      return s.duration() >
-                                                          Duration(hours: 24);
-                                                    })
-                                                    .toList())
-                                              SimpleDialogOption(
-                                                child: Text(
-                                                  "${DateFormat("yyyy-MM-dd HH:mm:ss").format(s.from)} - ${DateFormat("yyyy-MM-dd HH:mm:ss").format(s.to)}",
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.pop(context, s);
-                                                },
+                                            SimpleDialog(
+                                              title: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text("Available Slots"),
+                                                      IconButton(
+                                                        icon: Icon(Icons.close),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                            context,
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Text(
+                                                    "For ${gpuCluster.producer?.name ?? 'ERROR'} ${gpuCluster.device?.name ?? 'ERROR'} ${gpuCluster.quantity}x",
+                                                    style: Theme.of(
+                                                      context,
+                                                    ).textTheme.bodySmall,
+                                                  ),
+                                                ],
                                               ),
+                                              children: [
+                                                for (var s
+                                                    in gpuCluster.unListedSlots
+                                                        .where((s) {
+                                                          return s.duration() >
+                                                              Duration(
+                                                                hours: 24,
+                                                              );
+                                                        })
+                                                        .toList())
+                                                  SimpleDialogOption(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "${DateFormat("yyyy-MM-dd").format(s.from)} to ${DateFormat("yyyy-MM-dd").format(s.to)} (${s.duration().inDays} days)",
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        OutlinedButton(
+                                                          child: Text("Select"),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                              context,
+                                                              s,
+                                                            );
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    onPressed: () {
+                                                      // Navigator.pop(context, s);
+                                                    },
+                                                  ),
+                                              ],
+                                            ),
                                           ],
                                         );
                                       },

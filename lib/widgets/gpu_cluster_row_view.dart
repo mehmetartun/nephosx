@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:nephosx/widgets/gpu_cluster_list_tile_view.dart';
-import 'package:responsive_framework/responsive_framework.dart';
-
-import 'occupation_view_paint.dart';
-import 'property_badge.dart';
 
 // enum GpuClusterListTileViewType { listTile, compact }
 

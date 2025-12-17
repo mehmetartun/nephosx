@@ -12,7 +12,7 @@ extension AddMonths on DateTime {
     // Calculate the target year and month.
     // Dart's DateTime constructor handles year overflow automatically
     // (e.g., month 13 becomes January of next year).
-    var expectedMonth = this.month + months;
+    var expectedMonth = month + months;
 
     // Create a tentative date.
     // We must preserve the timezone (UTC or Local).
@@ -82,8 +82,6 @@ extension AddMonths on DateTime {
 
 // --- TEST RUNNER ---
 void main() {
-  print('Running DateTime Extension Tests...\n');
-
   testCase(
     description: 'Standard Addition',
     start: DateTime(2023, 1, 15),
@@ -142,11 +140,4 @@ void testCase({
 }) {
   final result = start.addMonths(monthsToAdd);
   final passed = result == expected && result.isUtc == expected.isUtc;
-
-  print('$description:');
-  print('  Start:    $start');
-  print('  Add:      $monthsToAdd month(s)');
-  print('  Result:   $result');
-  print('  Expected: $expected');
-  print('  Status:   ${passed ? "✅ PASS" : "❌ FAIL"}\n');
 }

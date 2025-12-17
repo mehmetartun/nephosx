@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
-import '../../model/company.dart';
 import '../../model/user.dart';
 import '../../repositories/authentication/authentication_repository.dart';
 import '../../repositories/database/database.dart';
