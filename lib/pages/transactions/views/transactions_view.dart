@@ -80,7 +80,13 @@ class _TransactionsViewState extends State<TransactionsView> {
     );
   }
 
-  void updateSource() {}
+  void updateSource(txns) {
+    transactionsDataSource = TransactionsDataSource(
+      transactions: txns,
+      user: user!,
+      context: context,
+    );
+  }
 
   void updateCountries() {
     if (region != null) {
@@ -118,6 +124,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                   DropdownMenuFormField<TransactionType>(
                     label: Text("Export"),
                     initialSelection: selectedTransactions,
+                    enableSearch: false,
                     dropdownMenuEntries: [
                       DropdownMenuEntry(
                         value: TransactionType.all,
@@ -207,7 +214,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                               availabilityFrom = null;
                               availabilityTo = null;
                               tier = null;
-                              updateSource();
+                              // updateSource();
                             });
                           },
                           child: Text("Clear"),
@@ -216,15 +223,81 @@ class _TransactionsViewState extends State<TransactionsView> {
                     ),
                     SizedBox(height: 10),
                     Wrap(
+                      runSpacing: 10,
+                      spacing: 10,
+                      direction: Axis.horizontal,
                       children: [
+                        SizedBox(
+                          width: 250,
+                          child: DateTimeFormField(
+                            clearButton: true,
+                            border: const OutlineInputBorder(),
+                            // trailing: IconButton(
+                            //   icon: Icon(Icons.close),
+                            //   onPressed: () {
+                            //     setState(() {
+                            //       availabilityFrom = null;
+                            //     });
+                            //   },
+                            // ),
+                            onClear: () {
+                              setState(() {
+                                availabilityFrom = null;
+                                // updateSource();
+                              });
+                            },
+                            labelText: "From",
+                            initialValue: availabilityFrom,
+                            // lastDate: availabilityTo,
+                            onChanged: (value) {
+                              setState(() {
+                                availabilityFrom = value;
+
+                                if (value != null &&
+                                    (availabilityTo?.isBefore(value) ??
+                                        false)) {
+                                  availabilityTo = value;
+                                }
+                                // updateSource();
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          width: 250,
+                          child: DateTimeFormField(
+                            clearButton: true,
+                            border: const OutlineInputBorder(),
+                            labelText: "To",
+                            initialValue: availabilityTo,
+                            onClear: () {
+                              setState(() {
+                                availabilityTo = null;
+                                // updateSource();
+                              });
+                            },
+                            onChanged: (value) {
+                              setState(() {
+                                availabilityTo = value;
+                                if (value != null &&
+                                    (availabilityFrom?.isAfter(value) ??
+                                        false)) {
+                                  availabilityFrom = value;
+                                }
+                                // updateSource();
+                              });
+                            },
+                          ),
+                        ),
                         DropdownMenuFormField<String?>(
                           // width: double.infinity,
                           label: Text("GPU Model"),
                           initialSelection: selectedDeviceId,
+                          enableSearch: false,
                           onSelected: (value) {
                             setState(() {
                               selectedDeviceId = value;
-                              updateSource();
+                              // updateSource();
                             });
                           },
                           dropdownMenuEntries: [
@@ -254,10 +327,11 @@ class _TransactionsViewState extends State<TransactionsView> {
                           //   }).toList();
                           // },
                           initialSelection: clusterSize,
+                          enableSearch: false,
                           onSelected: (value) {
                             setState(() {
                               clusterSize = value;
-                              updateSource();
+                              // updateSource();
                             });
                           },
                           dropdownMenuEntries: [
@@ -281,7 +355,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                                 country = null;
                               }
                               updateCountries();
-                              updateSource();
+                              // updateSource();
                             });
                           },
                           dropdownMenuEntries: [
@@ -296,7 +370,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                         ),
                         DropdownMenuFormField<DatacenterTier?>(
                           label: Text("Tier"),
-
+                          enableSearch: false,
                           // width: double.infinity,
                           initialSelection: tier,
                           onSelected: (value) {
@@ -306,7 +380,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                                 country = null;
                               }
                               updateCountries();
-                              updateSource();
+                              // updateSource();
                             });
                           },
                           dropdownMenuEntries: [
@@ -324,10 +398,11 @@ class _TransactionsViewState extends State<TransactionsView> {
                           // width: double.infinity,
                           menuStyle: MenuStyle(),
                           initialSelection: country,
+                          enableSearch: false,
                           onSelected: (value) {
                             setState(() {
                               country = value;
-                              updateSource();
+                              // updateSource();
                             });
                           },
                           dropdownMenuEntries: [
@@ -340,57 +415,20 @@ class _TransactionsViewState extends State<TransactionsView> {
                             }).toList(),
                           ],
                         ),
-                        DateTimeFormField(
-                          clearButton: true,
-                          border: const OutlineInputBorder(),
-                          // trailing: IconButton(
-                          //   icon: Icon(Icons.close),
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       availabilityFrom = null;
-                          //     });
-                          //   },
-                          // ),
-                          onClear: () {
-                            setState(() {
-                              availabilityFrom = null;
-                              updateSource();
-                            });
-                          },
-                          labelText: "Availability from",
-                          initialValue: availabilityFrom,
-                          // lastDate: availabilityTo,
+                        TextFormField(
+                          initialValue: "",
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Search S/N",
+                          ),
                           onChanged: (value) {
                             setState(() {
-                              availabilityFrom = value;
-
-                              if (value != null &&
-                                  (availabilityTo?.isBefore(value) ?? false)) {
-                                availabilityTo = value;
-                              }
-                              updateSource();
-                            });
-                          },
-                        ),
-                        DateTimeFormField(
-                          clearButton: true,
-                          border: const OutlineInputBorder(),
-                          labelText: "Availability to",
-                          initialValue: availabilityTo,
-                          onClear: () {
-                            setState(() {
-                              availabilityTo = null;
-                              updateSource();
-                            });
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              availabilityTo = value;
-                              if (value != null &&
-                                  (availabilityFrom?.isAfter(value) ?? false)) {
-                                availabilityFrom = value;
-                              }
-                              updateSource();
+                              transactions = widget.transactions.where((tx) {
+                                return tx.gpuCluster?.serialNumber.contains(
+                                      value,
+                                    ) ??
+                                    false;
+                              }).toList();
                             });
                           },
                         ),

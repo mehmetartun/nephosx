@@ -10,6 +10,7 @@ final class DataLoaded extends DataState {
   final List<GpuTransaction> transactions;
   final List<GpuCluster> gpuClusters;
   final List<Listing> listings;
+  final List<Company> companies;
 
   DataLoaded({
     required this.user,
@@ -17,6 +18,7 @@ final class DataLoaded extends DataState {
     required this.transactions,
     required this.gpuClusters,
     required this.listings,
+    required this.companies,
   });
 }
 
