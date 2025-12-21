@@ -19,7 +19,7 @@ class ListingCubit extends Cubit<ListingState> {
   List<Datacenter> datacenters = [];
   List<User> corporateUsers = [];
   final HttpsCallable _addListingFunction = FirebaseFunctions.instance
-      .httpsCallable('addListing');
+      .httpsCallable('listing-addListing');
 
   final User? user;
   final DatabaseRepository databaseRepository;
@@ -130,6 +130,6 @@ class ListingCubit extends Cubit<ListingState> {
       emit(ListingError(error: e.toString()));
       return;
     }
-    init();
+    // init();
   }
 }

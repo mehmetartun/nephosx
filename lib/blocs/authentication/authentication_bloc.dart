@@ -164,11 +164,13 @@ class AuthenticationBloc
     try {
       user = await authenticationRepository.signInWithIdToken(event.idToken);
       try {
-        await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
-          'uid': user?.uid,
-          'fcmToken': await getFcmToken() ?? '',
-          'action': 'add',
-        });
+        await FirebaseFunctions.instance
+            .httpsCallable('auth-updateUserToken')
+            .call({
+              'uid': user?.uid,
+              'fcmToken': await getFcmToken() ?? '',
+              'action': 'add',
+            });
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }
@@ -191,11 +193,13 @@ class AuthenticationBloc
     try {
       user = await authenticationRepository.signInWithGoogle();
       try {
-        await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
-          'uid': user?.uid,
-          'fcmToken': await getFcmToken() ?? '',
-          'action': 'add',
-        });
+        await FirebaseFunctions.instance
+            .httpsCallable('auth-updateUserToken')
+            .call({
+              'uid': user?.uid,
+              'fcmToken': await getFcmToken() ?? '',
+              'action': 'add',
+            });
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }
@@ -227,11 +231,13 @@ class AuthenticationBloc
     try {
       user = await authenticationRepository.signInWithApple();
       try {
-        await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
-          'uid': user?.uid,
-          'fcmToken': await getFcmToken() ?? '',
-          'action': 'add',
-        });
+        await FirebaseFunctions.instance
+            .httpsCallable('auth-updateUserToken')
+            .call({
+              'uid': user?.uid,
+              'fcmToken': await getFcmToken() ?? '',
+              'action': 'add',
+            });
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }
@@ -278,11 +284,13 @@ class AuthenticationBloc
         password: event.password,
       );
       try {
-        await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
-          'uid': user?.uid,
-          'fcmToken': await getFcmToken() ?? '',
-          'action': 'add',
-        });
+        await FirebaseFunctions.instance
+            .httpsCallable('auth-updateUserToken')
+            .call({
+              'uid': user?.uid,
+              'fcmToken': await getFcmToken() ?? '',
+              'action': 'add',
+            });
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }
@@ -316,11 +324,13 @@ class AuthenticationBloc
         password: event.password,
       );
       try {
-        await FirebaseFunctions.instance.httpsCallable('updateUserToken').call({
-          'uid': user?.uid,
-          'fcmToken': await getFcmToken() ?? '',
-          'action': 'add',
-        });
+        await FirebaseFunctions.instance
+            .httpsCallable('auth-updateUserToken')
+            .call({
+              'uid': user?.uid,
+              'fcmToken': await getFcmToken() ?? '',
+              'action': 'add',
+            });
       } catch (e) {
         debugPrint('Failed to update user token: $e');
       }

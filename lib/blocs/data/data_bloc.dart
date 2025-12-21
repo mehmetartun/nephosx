@@ -98,7 +98,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           add(DataRefreshEvent());
         });
     listingsSubscription = databaseRepository
-        .listingsStream(companyId: user!.companyId!)
+        .activeListingsStream(companyId: user!.companyId!)
         .listen((listings) {
           this.listings = listings;
           print("Got Listings: ${listings.length}");

@@ -184,8 +184,8 @@ class GpuCluster {
   }
 
   void addListings(List<Listing> lst) {
-    Set<Listing> lsSet;
-    lsSet = listings.toSet();
+    Set<Listing> lsSet = {};
+    // lsSet = lst.toSet();
     for (var ls in lst) {
       if (ls.gpuClusterId == id) {
         lsSet.add(ls);
