@@ -225,46 +225,105 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                             child: const Text("Admin"),
                           ),
                   ],
-                  if (user.canSeeSettings) ...[
-                    navigationShell?.currentIndex == 5
-                        ? FilledButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(5);
-                            },
-                            child: const Text("Settings"),
-                          )
-                        : user.emailVerified == false
-                        ? TextButton.icon(
-                            icon: Icon(
-                              Icons.warning,
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                            onPressed: () {
-                              navigationShell?.goBranch(5);
-                            },
-                            label: const Text("Settings"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(5);
-                            },
-                            child: const Text("Settings"),
-                          ),
-                  ],
+                  // if (user.canSeeSettings) ...[
+                  //   navigationShell?.currentIndex == 5
+                  //       ? FilledButton(
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(5);
+                  //           },
+                  //           child: const Text("Settings"),
+                  //         )
+                  //       : user.emailVerified == false
+                  //       ? TextButton.icon(
+                  //           icon: Icon(
+                  //             Icons.warning,
+                  //             color: Theme.of(context).colorScheme.error,
+                  //           ),
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(5);
+                  //           },
+                  //           label: const Text("Settings"),
+                  //         )
+                  //       : TextButton(
+                  //           onPressed: () {
+                  //             navigationShell?.goBranch(5);
+                  //           },
+                  //           child: const Text("Settings"),
+                  //         ),
+                  // ],
                 ],
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if (user.canSeeSettings && navigationShell?.currentIndex == 5)
+                    IconButton.filled(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () {
+                        navigationShell?.goBranch(5);
+                      },
+                    ),
+                  if (user.canSeeSettings && navigationShell?.currentIndex != 5)
+                    Stack(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.settings),
+                          onPressed: () {
+                            navigationShell?.goBranch(5);
+                          },
+                        ),
+                        if (!user.emailVerified)
+                          Positioned(
+                            right: 3,
+                            bottom: 6,
+                            child: Icon(
+                              Icons.warning,
+                              color: Theme.of(context).colorScheme.error,
+                              size: 12,
+                            ),
+                          ),
+                      ],
+                    ),
                   BrightnessSelector(shouldPop: false, narrow: true),
                   if (hasLogout)
-                    IconButton(
-                      icon: const Icon(Icons.logout),
-                      onPressed: () {
-                        BlocProvider.of<AuthenticationBloc>(
-                          context,
-                        ).add(AuthenticationEventSignOut());
-                      },
+                    Stack(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.logout),
+                          onPressed: () {
+                            AuthenticationBloc authenticationBloc =
+                                BlocProvider.of<AuthenticationBloc>(context);
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text("Confirm Logout"),
+                                  content: const Text(
+                                    "Are you sure you want to log out?",
+                                  ),
+                                  actions: [
+                                    OutlinedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        authenticationBloc.add(
+                                          AuthenticationEventSignOut(),
+                                        );
+                                      },
+                                      child: const Text("Logout"),
+                                    ),
+                                    FilledButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("Cancel"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
                     ),
                 ],
               ),

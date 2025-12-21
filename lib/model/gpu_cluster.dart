@@ -118,9 +118,9 @@ class GpuCluster {
   @TimestampConverter()
   final DateTime endDate;
   @JsonKey(name: "serial_number")
-  final String? serialNumber;
+  final String serialNumber;
   @JsonKey(name: "asset_tag")
-  final String? assetTag;
+  final String assetTag;
 
   @JsonKey(name: "manufacture_date")
   @TimestampConverter()
@@ -161,8 +161,8 @@ class GpuCluster {
     this.manufactureDate,
     required this.startDate,
     required this.endDate,
-    this.serialNumber,
-    this.assetTag,
+    this.serialNumber = "S/N ****",
+    this.assetTag = "A/T ****",
   });
   factory GpuCluster.fromJson(Map<String, dynamic> json) =>
       _$GpuClusterFromJson(json);

@@ -15,7 +15,7 @@ class CorpUserAcceptancePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final invitationId = GoRouter.of(context).state.uri.queryParameters["id"];
-    print(invitationId);
+    // print(invitationId);
 
     final authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     final databaseRepository = RepositoryProvider.of<DatabaseRepository>(

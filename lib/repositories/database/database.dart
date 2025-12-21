@@ -44,7 +44,7 @@ abstract class DatabaseRepository {
 
   Stream<User?> userStream(String uid);
   Stream<List<GpuCluster>> gpuClustersStream({String? companyId});
-  Stream<List<User>> usersStream();
+  Stream<List<User>> usersStream({String? companyId});
   Stream<List<Request>> requestsByCompanyIdStream(String companyId);
   Stream<List<Request>> requestsByRequestorIdStream(String requestorId);
   Stream<List<GpuTransaction>> gpuTransactionsStream({
@@ -167,7 +167,18 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Stream<List<User>> usersStream() {
+  Stream<List<User>> usersStream({String? companyId}) {
+    if (companyId != null) {
+      return db
+          .collection('users')
+          .where('company_id', isEqualTo: companyId)
+          .snapshots()
+          .map<List<User>>((snapshot) {
+            return snapshot.docs.map((doc) {
+              return User.fromJson(doc.data());
+            }).toList();
+          });
+    }
     return db.collection('users').snapshots().map<List<User>>((snapshot) {
       return snapshot.docs.map((doc) {
         return User.fromJson(doc.data());
@@ -321,7 +332,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {
-            print(doc.data());
+            // print(doc.data());
             return GpuTransaction.fromJson({...doc.data(), 'id': doc.id});
           }).toList();
         });

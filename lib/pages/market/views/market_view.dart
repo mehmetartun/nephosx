@@ -204,8 +204,8 @@ class _MarketViewState extends State<MarketView> {
 
   @override
   Widget build(BuildContext context) {
-    print(availabilityFrom);
-    print(availabilityTo);
+    // print(availabilityFrom);
+    // print(availabilityTo);
     User? user = context.read<AuthenticationBloc>().user;
     return Scaffold(
       body: CustomScrollView(

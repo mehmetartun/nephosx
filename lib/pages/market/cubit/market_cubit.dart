@@ -56,7 +56,7 @@ class MarketCubit extends Cubit<MarketState> {
     if (user == null) {
       return;
     }
-    print(data.toJson());
+    // print(data.toJson());
     try {
       await addTransactionFunction.call(data.toJson());
       init();

@@ -5,8 +5,10 @@ import 'package:nephosx/widgets/occupation_view_paint.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/gpu_cluster.dart';
+import '../../../model/gpu_transaction.dart';
 import '../../../model/listing.dart';
 import '../../../model/listing_by_gpu_cluster_data_source.dart';
+import '../../../model/transactions_data_source.dart';
 import '../../../model/user.dart';
 
 class GpuClusterDetailView extends StatefulWidget {
@@ -26,6 +28,7 @@ class GpuClusterDetailView extends StatefulWidget {
 
 class _GpuClusterDetailViewState extends State<GpuClusterDetailView> {
   late ListingByGpuClusterDataSource listingDataSource;
+  late TransactionsDataSource transactionsDataSource;
   int? _sortColumnIndex;
   bool? _sortAscending;
   @override
@@ -37,6 +40,12 @@ class _GpuClusterDetailViewState extends State<GpuClusterDetailView> {
       context: context,
       validator: (_, _, _) {},
       onAddTransaction: (x) {},
+    );
+    transactionsDataSource = TransactionsDataSource(
+      transactions: widget.gpuCluster.transactions,
+      user: widget.user,
+      context: context,
+      showSerialNumber: true,
     );
   }
 
@@ -134,77 +143,123 @@ class _GpuClusterDetailViewState extends State<GpuClusterDetailView> {
                   unListedSlots: widget.gpuCluster.unListedSlots,
                 ),
                 SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  child: CardTheme(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
-                      side: BorderSide(
-                        color: Theme.of(context).colorScheme.outline,
+                if (widget.gpuCluster.listings.length > 0) ...[
+                  Container(
+                    width: double.infinity,
+                    child: CardTheme(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0),
+                        side: BorderSide(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                      ),
+                      color: Theme.of(context).colorScheme.surface,
+                      margin: EdgeInsets.zero,
+                      elevation: 0,
+                      child: PaginatedDataTable(
+                        header: Text("Listings on this GPU Cluster"),
+                        sortColumnIndex: _sortColumnIndex,
+                        sortAscending: _sortAscending ?? true,
+                        source: listingDataSource,
+                        horizontalMargin: 10,
+                        columnSpacing: 10,
+                        showEmptyRows: false,
+                        rowsPerPage: widget.gpuCluster.listings.length,
+                        columns: [
+                          DataColumn(
+                            label: Text(
+                              'Start Date',
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                            onSort: (columnIndex, ascending) {
+                              _sort<DateTime>(
+                                (d) => d.startDate,
+                                columnIndex,
+                                ascending,
+                              );
+                            },
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'End Date',
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                            onSort: (columnIndex, ascending) {
+                              _sort<DateTime>(
+                                (d) => d.endDate,
+                                columnIndex,
+                                ascending,
+                              );
+                            },
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Length (days)',
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                            onSort: (columnIndex, ascending) {
+                              _sort<num>(
+                                (d) => d.numberOfDays,
+                                columnIndex,
+                                ascending,
+                              );
+                            },
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Tenor/Price',
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    color: Theme.of(context).colorScheme.surface,
-                    margin: EdgeInsets.zero,
-                    elevation: 0,
-                    child: PaginatedDataTable(
-                      header: Text("Listings on this GPU Cluster"),
-                      sortColumnIndex: _sortColumnIndex,
-                      sortAscending: _sortAscending ?? true,
-                      source: listingDataSource,
-                      horizontalMargin: 10,
-                      columnSpacing: 10,
-                      showEmptyRows: false,
-                      rowsPerPage: widget.gpuCluster.listings.length,
-                      columns: [
-                        DataColumn(
-                          label: Text(
-                            'Start Date',
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                          onSort: (columnIndex, ascending) {
-                            _sort<DateTime>(
-                              (d) => d.startDate,
-                              columnIndex,
-                              ascending,
-                            );
-                          },
+                  ),
+                ],
+                if (widget.gpuCluster.transactions.length > 0) ...[
+                  Container(
+                    width: double.infinity,
+                    child: CardTheme(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0),
+                        side: BorderSide(
+                          color: Theme.of(context).colorScheme.outline,
                         ),
-                        DataColumn(
-                          label: Text(
-                            'End Date',
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                          onSort: (columnIndex, ascending) {
-                            _sort<DateTime>(
-                              (d) => d.endDate,
-                              columnIndex,
-                              ascending,
-                            );
-                          },
+                      ),
+                      color: Theme.of(context).colorScheme.surface,
+                      margin: EdgeInsets.zero,
+                      elevation: 0,
+                      child: PaginatedDataTable(
+                        header: Text("Transactions on this GPU Cluster"),
+                        sortColumnIndex: _sortColumnIndex,
+                        sortAscending: _sortAscending ?? true,
+                        source: transactionsDataSource,
+                        horizontalMargin: 10,
+                        columnSpacing: 10,
+                        showEmptyRows: false,
+                        rowsPerPage: widget.gpuCluster.transactions.length,
+                        columns: transactionsDataSource.getColumns(
+                          sortFunction:
+                              <T>(
+                                Comparable<T> Function(GpuTransaction d)
+                                getField,
+                                int columnIndex,
+                                bool ascending,
+                              ) {
+                                setState(() {
+                                  transactionsDataSource.sort<T>(
+                                    getField,
+                                    ascending,
+                                  );
+                                  _sortColumnIndex = columnIndex;
+                                  _sortAscending = ascending;
+                                });
+                              },
                         ),
-                        DataColumn(
-                          label: Text(
-                            'Length (days)',
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                          onSort: (columnIndex, ascending) {
-                            _sort<num>(
-                              (d) => d.numberOfDays,
-                              columnIndex,
-                              ascending,
-                            );
-                          },
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Tenor/Price',
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ],
             ),
           ),

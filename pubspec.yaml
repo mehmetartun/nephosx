@@ -78,6 +78,9 @@ dependencies:
   material_symbols_icons: ^4.2892.0
   shimmer: ^3.0.0
   dropdown_flutter: ^1.0.3
+  firebase_crashlytics: ^5.0.6
+  firebase_analytics: ^12.1.0
+  pretty_json: ^2.0.0
 
 
 flutter_launcher_icons:

@@ -62,6 +62,7 @@ class DateTimeFormField extends FormField<DateTime> {
                  border: border,
                  suffix: clearButton
                      ? IconButton(
+                         visualDensity: VisualDensity.compact,
                          icon: Icon(Icons.close),
                          onPressed: () {
                            state.didChange(null);

@@ -158,8 +158,8 @@ class CompaniesCubit extends Cubit<CompaniesState> {
 
     List<Address> ads = [...company.addresses, address];
     // company.addresses.add(address);
-    print(company.toJson());
-    print(address.toJson());
+    // print(company.toJson());
+    // print(address.toJson());
     updateCompany(company.copyWith(addresses: ads));
   }
 

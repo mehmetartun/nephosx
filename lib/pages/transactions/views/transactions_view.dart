@@ -5,9 +5,13 @@ import 'package:nephosx/widgets/transaction_table.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../model/datacenter.dart';
+import '../../../model/enums.dart';
 import '../../../model/gpu_transaction.dart';
 import '../../../model/transactions_data_source.dart';
 import '../../../model/user.dart';
+import '../../../services/platform_settings/platform_settings_service.dart';
+import '../../../widgets/formfields/date_formfield.dart';
 
 enum TransactionType { all, buy, sell }
 
@@ -35,6 +39,15 @@ class _TransactionsViewState extends State<TransactionsView> {
   late User? user;
   bool? _sortAscending;
   int? _sortColumnIndex;
+  AddressRegion? region;
+  Country? country;
+  DatacenterTier? tier;
+  int? clusterSize;
+  String? selectedDeviceId;
+  DateTime? availabilityFrom;
+  DateTime? availabilityTo;
+  Set<Country> countries = {};
+  Set<AddressRegion> regions = {};
 
   void _sort<T>(
     Comparable<T> Function(GpuTransaction d) getField,
@@ -67,12 +80,30 @@ class _TransactionsViewState extends State<TransactionsView> {
     );
   }
 
+  void updateSource() {}
+
+  void updateCountries() {
+    if (region != null) {
+      countries = widget.transactions
+          .where(
+            (tx) => tx.gpuCluster?.datacenter?.address.country.region == region,
+          )
+          .map((tx) => tx.gpuCluster!.datacenter!.address.country)
+          .toSet();
+    } else {
+      countries = widget.transactions
+          .where((tx) => tx.gpuCluster?.datacenter != null)
+          .map((tx) => tx.gpuCluster!.datacenter!.address.country)
+          .toSet();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: MaxWidthBox(
-          maxWidth: 900,
+          maxWidth: 1200,
           child: Column(
             children: [
               SizedBox(height: 20),
@@ -128,41 +159,286 @@ class _TransactionsViewState extends State<TransactionsView> {
               ),
               SizedBox(height: 20),
 
-              SizedBox(
-                width: double.infinity,
-                child: TransactionTable(transactions: transactions),
-              ),
+              // SizedBox(
+              //   width: double.infinity,
+              //   child: TransactionTable(transactions: transactions),
+              // ),
+              // SizedBox(height: 20),
+              // Text("Buying"),
+              // SizedBox(
+              //   width: double.infinity,
+              //   child: TransactionTable(transactions: buys),
+              // ),
+              // SizedBox(height: 20),
+              // Text("Selling"),
+              // SizedBox(
+              //   width: double.infinity,
+              //   child: TransactionTable(transactions: sells),
+              // ),
               SizedBox(height: 20),
-              Text("Buying"),
-              SizedBox(
-                width: double.infinity,
-                child: TransactionTable(transactions: buys),
-              ),
-              SizedBox(height: 20),
-              Text("Selling"),
-              SizedBox(
-                width: double.infinity,
-                child: TransactionTable(transactions: sells),
-              ),
-              PaginatedDataTable(
-                sortColumnIndex: _sortColumnIndex,
-                sortAscending: _sortAscending ?? true,
-                header: Text("All Transactions"),
-                columns: transactionsDataSource.getColumns(
-                  sortFunction:
-                      <T>(
-                        Comparable<T> Function(GpuTransaction d) getField,
-                        int columnIndex,
-                        bool ascending,
-                      ) {
-                        setState(() {
-                          transactionsDataSource.sort<T>(getField, ascending);
-                          _sortColumnIndex = columnIndex;
-                          _sortAscending = ascending;
-                        });
-                      },
+              Container(
+                padding: const EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  // color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(0),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                 ),
-                source: transactionsDataSource,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.filter_alt_outlined),
+                            SizedBox(width: 10),
+                            Text("Filters"),
+                          ],
+                        ),
+                        FilledButton.tonal(
+                          onPressed: () {
+                            setState(() {
+                              region = null;
+                              country = null;
+                              clusterSize = null;
+                              selectedDeviceId = null;
+                              availabilityFrom = null;
+                              availabilityTo = null;
+                              tier = null;
+                              updateSource();
+                            });
+                          },
+                          child: Text("Clear"),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Wrap(
+                      children: [
+                        DropdownMenuFormField<String?>(
+                          // width: double.infinity,
+                          label: Text("GPU Model"),
+                          initialSelection: selectedDeviceId,
+                          onSelected: (value) {
+                            setState(() {
+                              selectedDeviceId = value;
+                              updateSource();
+                            });
+                          },
+                          dropdownMenuEntries: [
+                            DropdownMenuEntry(value: null, label: "All"),
+                            ...PlatformSettingsService
+                                .instance
+                                .platformSettings
+                                .devices
+                                .map((device) {
+                                  return DropdownMenuEntry(
+                                    value: device.id,
+                                    label: device.name,
+                                  );
+                                })
+                                .toList(),
+                          ],
+                        ),
+                        DropdownMenuFormField<int?>(
+                          // enableFilter: true,
+                          // width: double.infinity,
+                          label: Text("Cluster Size"),
+                          // filterCallback: (entries, filter) {
+                          //   return entries.where((entry) {
+                          //     return entry.label.toLowerCase().contains(
+                          //       filter.toLowerCase(),
+                          //     );
+                          //   }).toList();
+                          // },
+                          initialSelection: clusterSize,
+                          onSelected: (value) {
+                            setState(() {
+                              clusterSize = value;
+                              updateSource();
+                            });
+                          },
+                          dropdownMenuEntries: [
+                            DropdownMenuEntry(value: null, label: "All"),
+                            ...[1, 2, 4, 8, 16, 32, 64, 128].map((clustersize) {
+                              return DropdownMenuEntry(
+                                value: clustersize,
+                                label: clustersize.toString(),
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        DropdownMenuFormField<AddressRegion?>(
+                          label: Text("Region"),
+                          // width: double.infinity,
+                          initialSelection: region,
+                          onSelected: (value) {
+                            setState(() {
+                              region = value;
+                              if (country?.region != region) {
+                                country = null;
+                              }
+                              updateCountries();
+                              updateSource();
+                            });
+                          },
+                          dropdownMenuEntries: [
+                            DropdownMenuEntry(value: null, label: "All"),
+                            ...regions.map((region) {
+                              return DropdownMenuEntry(
+                                value: region,
+                                label: region.title,
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        DropdownMenuFormField<DatacenterTier?>(
+                          label: Text("Tier"),
+
+                          // width: double.infinity,
+                          initialSelection: tier,
+                          onSelected: (value) {
+                            setState(() {
+                              tier = value;
+                              if (country?.region != region) {
+                                country = null;
+                              }
+                              updateCountries();
+                              updateSource();
+                            });
+                          },
+                          dropdownMenuEntries: [
+                            DropdownMenuEntry(value: null, label: "All"),
+                            ...DatacenterTier.values.map((tier) {
+                              return DropdownMenuEntry(
+                                value: tier,
+                                label: tier.roman,
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        DropdownMenuFormField<Country?>(
+                          label: Text("Country"),
+                          // width: double.infinity,
+                          menuStyle: MenuStyle(),
+                          initialSelection: country,
+                          onSelected: (value) {
+                            setState(() {
+                              country = value;
+                              updateSource();
+                            });
+                          },
+                          dropdownMenuEntries: [
+                            DropdownMenuEntry(value: null, label: "All"),
+                            ...countries.map((country) {
+                              return DropdownMenuEntry(
+                                value: country,
+                                label: country.description,
+                              );
+                            }).toList(),
+                          ],
+                        ),
+                        DateTimeFormField(
+                          clearButton: true,
+                          border: const OutlineInputBorder(),
+                          // trailing: IconButton(
+                          //   icon: Icon(Icons.close),
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       availabilityFrom = null;
+                          //     });
+                          //   },
+                          // ),
+                          onClear: () {
+                            setState(() {
+                              availabilityFrom = null;
+                              updateSource();
+                            });
+                          },
+                          labelText: "Availability from",
+                          initialValue: availabilityFrom,
+                          // lastDate: availabilityTo,
+                          onChanged: (value) {
+                            setState(() {
+                              availabilityFrom = value;
+
+                              if (value != null &&
+                                  (availabilityTo?.isBefore(value) ?? false)) {
+                                availabilityTo = value;
+                              }
+                              updateSource();
+                            });
+                          },
+                        ),
+                        DateTimeFormField(
+                          clearButton: true,
+                          border: const OutlineInputBorder(),
+                          labelText: "Availability to",
+                          initialValue: availabilityTo,
+                          onClear: () {
+                            setState(() {
+                              availabilityTo = null;
+                              updateSource();
+                            });
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              availabilityTo = value;
+                              if (value != null &&
+                                  (availabilityFrom?.isAfter(value) ?? false)) {
+                                availabilityFrom = value;
+                              }
+                              updateSource();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                child: CardTheme(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                  ),
+                  color: Theme.of(context).colorScheme.surface,
+                  margin: EdgeInsets.zero,
+                  elevation: 0,
+                  child: PaginatedDataTable(
+                    showEmptyRows: false,
+
+                    columnSpacing: 10,
+                    sortColumnIndex: _sortColumnIndex,
+                    sortAscending: _sortAscending ?? true,
+                    header: Text("All Transactions"),
+                    columns: transactionsDataSource.getColumns(
+                      sortFunction:
+                          <T>(
+                            Comparable<T> Function(GpuTransaction d) getField,
+                            int columnIndex,
+                            bool ascending,
+                          ) {
+                            setState(() {
+                              transactionsDataSource.sort<T>(
+                                getField,
+                                ascending,
+                              );
+                              _sortColumnIndex = columnIndex;
+                              _sortAscending = ascending;
+                            });
+                          },
+                    ),
+                    source: transactionsDataSource,
+                  ),
+                ),
               ),
             ],
           ),

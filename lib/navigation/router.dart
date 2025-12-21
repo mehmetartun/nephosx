@@ -82,10 +82,10 @@ class NestedRouter {
     // navigatorKey: _rootNavigatorKey,
     initialLocation: "/market",
     redirect: (BuildContext context, GoRouterState state) {
-      print('Mathced Location ${state.matchedLocation}');
-      print('Uri ${state.uri.toString()}');
-      print('Path ${state.path}');
-      print('Full Path ${state.fullPath}');
+      // print('Mathced Location ${state.matchedLocation}');
+      // print('Uri ${state.uri.toString()}');
+      // print('Path ${state.path}');
+      // print('Full Path ${state.fullPath}');
 
       if (state.matchedLocation == "/auth_actions") {
         return null;
@@ -104,7 +104,7 @@ class NestedRouter {
             return "/market";
             // return null;
           } else {
-            print(state.matchedLocation);
+            // print(state.matchedLocation);
             return null;
           }
         case AuthenticationStateUnkown _:

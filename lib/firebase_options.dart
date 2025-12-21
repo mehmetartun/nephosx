@@ -72,4 +72,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'nephosx-dev.firebasestorage.app',
     iosBundleId: 'com.nephosx.dev',
   );
+
 }

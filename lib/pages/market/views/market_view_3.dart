@@ -493,7 +493,7 @@ class _MarketView3State extends State<MarketView3> {
                                     ).textTheme.labelMedium,
                                   ),
                                   onSort: (columnIndex, ascending) {
-                                    print(ascending);
+                                    // print(ascending);
                                     _sort<String>(
                                       (d) =>
                                           "${d.gpuCluster?.producer?.name ?? 'ERROR'}\n${d.gpuCluster?.device?.name ?? 'ERROR'}",

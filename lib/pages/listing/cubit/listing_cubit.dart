@@ -17,37 +17,14 @@ class ListingCubit extends Cubit<ListingState> {
   List<GpuCluster> gpuClusters = [];
   List<GpuTransaction> transactions = [];
   List<Datacenter> datacenters = [];
-  final HttpsCallable addListingFunction = FirebaseFunctions.instance
+  List<User> corporateUsers = [];
+  final HttpsCallable _addListingFunction = FirebaseFunctions.instance
       .httpsCallable('addListing');
-
-  final HttpsCallable testFunc = FirebaseFunctions.instance.httpsCallable(
-    'testFunc',
-  );
-
-  final HttpsCallable addTransaction = FirebaseFunctions.instance.httpsCallable(
-    'addTransaction',
-  );
 
   final User? user;
   final DatabaseRepository databaseRepository;
-  void init() async {
-    listings = await databaseRepository.getListings(
-      companyId: user?.companyId,
-      status: ListingStatus.active,
-    );
-    print("Got Listings");
-    gpuClusters = await databaseRepository.getGpuClusters(
-      companyId: user?.companyId,
-    );
-    print("Got GpuClusters");
-    datacenters = await databaseRepository.getDatacenters(
-      companyId: user?.companyId,
-    );
-    print("Got Datacenters");
-    transactions = await databaseRepository.getGpuTransactions(
-      companyId: user?.companyId,
-    );
-    print("Got Transactions");
+
+  void prepareData() {
     for (var gpuCluster in gpuClusters) {
       gpuCluster.addTransactions(transactions);
       gpuCluster.addListings(listings);
@@ -57,6 +34,58 @@ class ListingCubit extends Cubit<ListingState> {
       listing.addGpuCluster(gpuClusters);
       listing.addDatacenter(datacenters);
     }
+  }
+
+  void dataRefresh(
+    List<GpuTransaction> transactions,
+    List<GpuCluster> gpuClusters,
+    List<Listing> listings,
+    List<User> corporateUsers,
+  ) {
+    this.transactions = transactions;
+    this.gpuClusters = gpuClusters;
+    this.listings = listings;
+    this.corporateUsers = corporateUsers;
+
+    prepareData();
+    if (state is ListingLoaded || state is ListingInitial) {
+      emit(
+        ListingLoaded(
+          listings: listings,
+          gpuClusters: gpuClusters,
+          transactions: transactions,
+        ),
+      );
+    }
+  }
+
+  void init() async {
+    // listings = await databaseRepository.getListings(
+    //   companyId: user?.companyId,
+    //   status: ListingStatus.active,
+    // );
+    // print("Got Listings");
+    // gpuClusters = await databaseRepository.getGpuClusters(
+    //   companyId: user?.companyId,
+    // );
+    // print("Got GpuClusters");
+    // datacenters = await databaseRepository.getDatacenters(
+    //   companyId: user?.companyId,
+    // );
+    // print("Got Datacenters");
+    // transactions = await databaseRepository.getGpuTransactions(
+    //   companyId: user?.companyId,
+    // );
+    // print("Got Transactions");
+    // for (var gpuCluster in gpuClusters) {
+    //   gpuCluster.addTransactions(transactions);
+    //   gpuCluster.addListings(listings);
+    // }
+
+    // for (var listing in listings) {
+    //   listing.addGpuCluster(gpuClusters);
+    //   listing.addDatacenter(datacenters);
+    // }
 
     emit(
       ListingLoaded(
@@ -93,7 +122,7 @@ class ListingCubit extends Cubit<ListingState> {
   void addListing({required Listing listing}) async {
     emit(ListingInitial());
     try {
-      await addListingFunction.call(listing.toJson());
+      await _addListingFunction.call(listing.toJson());
     } on FirebaseFunctionsException catch (e) {
       emit(ListingError(error: e.toString()));
       return;

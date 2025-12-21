@@ -81,10 +81,10 @@ class AdminOnboardingCubit extends Cubit<AdminOnboardingState> {
         'requestId': selectedRequest!.id,
       });
     } catch (e) {
-      print(e);
+      // print(e);
       emit(AdminOnboardingError(error: e.toString()));
     }
-    print(res?.data);
+    // print(res?.data);
 
     requests = await databaseRepository.getRequests();
     emit(AdminOnboardingLoaded(requests: requests));

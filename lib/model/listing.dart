@@ -4,6 +4,7 @@ import 'package:nephosx/model/company.dart';
 import 'package:nephosx/model/datacenter.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:nephosx/model/rental_price.dart';
+import 'package:pretty_json/pretty_json.dart';
 
 import 'conversions.dart';
 import 'slot.dart';

@@ -212,7 +212,7 @@ class FirebaseAuthenticationRepository extends AuthenticationRepository {
           .signInWithEmailAndPassword(email: email, password: password);
     } on Exception catch (e) {
       if (e is auth.FirebaseAuthException) {
-        print(e.code);
+        // print(e.code);
         switch (e.code) {
           case "invalid-email":
             throw AuthenticationException(

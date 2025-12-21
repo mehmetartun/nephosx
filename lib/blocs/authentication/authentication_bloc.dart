@@ -100,7 +100,7 @@ class AuthenticationBloc
     );
     final data = jsonDecode(response.body);
     final ip = data['ip'];
-    print(ip);
+    // print(ip);
   }
 
   void _handleSaveDestiontion(

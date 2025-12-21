@@ -41,8 +41,8 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     if (user == null) {
       emit(TransactionErrorState(message: "User cannot be null"));
     }
-    print("User ${user!.email}");
-    print("User ${user!.companyId}");
+    // print("User ${user!.email}");
+    // print("User ${user!.companyId}");
     _transactionsSubscription?.cancel();
     companies = await databaseRepository.getCompanies();
     gpuClusters = await databaseRepository.getGpuClusters();

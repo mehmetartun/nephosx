@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:intl/intl.dart';
+import 'package:nephosx/blocs/data/data_bloc.dart';
 import 'package:nephosx/blocs/notifications/bloc/notifications_bloc.dart';
 import 'package:nephosx/blocs/requests/bloc/requests_bloc.dart';
 import 'package:nephosx/firebase_options.dart';
@@ -20,6 +24,29 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'widgets/views/password_secreen.dart';
 
+/// {@template app_bloc_observer}
+/// Custom [BlocObserver] that observes all bloc and cubit state changes.
+/// {@endtemplate}
+class AppBlocObserver extends BlocObserver {
+  /// {@macro app_bloc_observer}
+  const AppBlocObserver();
+
+  @override
+  void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
+    super.onChange(bloc, change);
+    if (bloc is Cubit) print(change);
+  }
+
+  @override
+  void onTransition(
+    Bloc<dynamic, dynamic> bloc,
+    Transition<dynamic, dynamic> transition,
+  ) {
+    super.onTransition(bloc, transition);
+    print(transition);
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   List<Future> initialize = [];
@@ -28,6 +55,8 @@ void main() async {
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
   );
   await Future.wait(initialize);
+
+  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   // HttpsCallableResult res;
@@ -36,6 +65,21 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // prefs.setString("password", "123");
   var password = prefs.getString("password");
+
+  // var qs = await FirebaseFirestore.instance
+  //     .collectionGroup('gpu_clusters')
+  //     .get();
+  // int id = 1;
+  // List<Future> futs = [];
+  // for (var i = 0; i < qs.docs.length; i++) {
+  //   futs.add(
+  //     qs.docs[i].reference.update({
+  //       'serial_number': NumberFormat("'SN'000000").format(i),
+  //       'asset_tag': NumberFormat("'AT'000000").format(i),
+  //     }),
+  //   );
+  // }
+  // await Future.wait(futs);
 
   // var qs = await FirebaseFirestore.instance.collection("transactions").get();
   // for (var doc in qs.docs) {
@@ -72,6 +116,7 @@ void main() async {
   //   // });
   // }
 
+  Bloc.observer = const AppBlocObserver();
   if (password == "TopSecret123") {
     runApp(const MyApp());
   } else {
@@ -120,6 +165,10 @@ class MyApp extends StatelessWidget {
         create: (context) => authenticationRepository,
         child: MultiBlocProvider(
           providers: [
+            BlocProvider<DataBloc>(
+              create: (context) =>
+                  DataBloc(databaseRepository: databaseRepository),
+            ),
             BlocProvider<AuthenticationBloc>(
               create: (context) => authenticationBloc..init(),
             ),
@@ -217,6 +266,15 @@ class _MyMaterialAppState extends State<MyMaterialApp>
             ],
             child: BlocListener<AuthenticationBloc, AuthenticationState>(
               listener: (context, state) {
+                if (state is AuthenticationStateSignedIn) {
+                  print("Starting Data");
+                  BlocProvider.of<DataBloc>(
+                    context,
+                  ).add(DataStartEvent(user: state.user));
+                } else {
+                  BlocProvider.of<DataBloc>(context).add(DataStopEvent());
+                }
+
                 if (state is AuthenticationStateSignedIn &&
                     state.destination != null) {
                   BlocProvider.of<AuthenticationBloc>(

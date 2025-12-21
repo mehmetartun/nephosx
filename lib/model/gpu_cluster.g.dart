@@ -62,8 +62,8 @@ GpuCluster _$GpuClusterFromJson(Map<String, dynamic> json) => GpuCluster(
     json['start_date'] as Timestamp,
   ),
   endDate: const TimestampConverter().fromJson(json['end_date'] as Timestamp),
-  serialNumber: json['serial_number'] as String?,
-  assetTag: json['asset_tag'] as String?,
+  serialNumber: json['serial_number'] as String? ?? "S/N ****",
+  assetTag: json['asset_tag'] as String? ?? "A/T ****",
 );
 
 Map<String, dynamic> _$GpuClusterToJson(GpuCluster instance) =>
