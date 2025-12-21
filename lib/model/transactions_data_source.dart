@@ -106,15 +106,15 @@ class TransactionsDataSource extends DataTableSource {
         },
       ),
       // if (showSerialNumber)
-      DataColumn(
-        label: Text(
-          'Serial\nNumber',
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
-        // onSort: (columnIndex, ascending) {
-        //   sortFunction<String>((d) => d.serialNumber, columnIndex, ascending);
-        // },
-      ),
+      // DataColumn(
+      //   label: Text(
+      //     'Serial\nNumber',
+      //     style: Theme.of(context).textTheme.labelMedium,
+      //   ),
+      //   // onSort: (columnIndex, ascending) {
+      //   //   sortFunction<String>((d) => d.serialNumber, columnIndex, ascending);
+      //   // },
+      // ),
       DataColumn(
         label: Text('Region', style: Theme.of(context).textTheme.labelMedium),
         onSort: (columnIndex, ascending) {
@@ -218,7 +218,7 @@ class TransactionsDataSource extends DataTableSource {
         ),
         DataCell(Text(transaction.gpuCluster?.quantity.toString() ?? "X")),
 
-        DataCell(Text(transaction.gpuCluster?.serialNumber ?? 'XXX')),
+        // DataCell(Text(transaction.gpuCluster?.serialNumber ?? 'XXX')),
         DataCell(
           Text(
             transaction

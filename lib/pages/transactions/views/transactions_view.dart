@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,6 +7,8 @@ import 'package:nephosx/widgets/transaction_table.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../blocs/transactions/transactions_bloc.dart'
+    hide TransactionsState;
 import '../../../model/datacenter.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_transaction.dart';
@@ -12,6 +16,7 @@ import '../../../model/transactions_data_source.dart';
 import '../../../model/user.dart';
 import '../../../services/platform_settings/platform_settings_service.dart';
 import '../../../widgets/formfields/date_formfield.dart';
+import '../cubit/transactions_cubit.dart';
 
 enum TransactionType { all, buy, sell }
 
@@ -29,9 +34,9 @@ class TransactionsView extends StatefulWidget {
 }
 
 class _TransactionsViewState extends State<TransactionsView> {
-  late List<GpuTransaction> transactions;
-  late List<GpuTransaction> buys;
-  late List<GpuTransaction> sells;
+  List<GpuTransaction> transactions = [];
+  List<GpuTransaction> buys = [];
+  List<GpuTransaction> sells = [];
   late TransactionsDataSource transactionsDataSource;
 
   TransactionType? selectedTransactions = null;
@@ -48,6 +53,15 @@ class _TransactionsViewState extends State<TransactionsView> {
   DateTime? availabilityTo;
   Set<Country> countries = {};
   Set<AddressRegion> regions = {};
+  StreamSubscription<TransactionsState>? dataSubscription;
+  TextEditingController? searchController;
+
+  @override
+  void dispose() {
+    searchController?.dispose();
+    dataSubscription?.cancel();
+    super.dispose();
+  }
 
   void _sort<T>(
     Comparable<T> Function(GpuTransaction d) getField,
@@ -64,12 +78,33 @@ class _TransactionsViewState extends State<TransactionsView> {
   @override
   void initState() {
     super.initState();
+    searchController = TextEditingController();
     user = BlocProvider.of<AuthenticationBloc>(context).user;
-    transactions = widget.transactions.toList();
-    buys = widget.transactions.where((e) {
+    // transactions = widget.transactions.toList();
+    dataSubscription = BlocProvider.of<TransactionsCubit>(context).stream
+        .listen((state) {
+          if (state is TransactionsLoaded) {
+            setState(() {
+              transactions = state.transactions;
+              buys = state.transactions.where((e) {
+                return user!.companyId == e.buyerCompanyId;
+              }).toList();
+              sells = state.transactions.where((e) {
+                return user!.companyId == e.sellerCompanyId;
+              }).toList();
+              transactionsDataSource = TransactionsDataSource(
+                transactions: state.transactions,
+                user: user!,
+                context: context,
+              );
+            });
+          }
+        });
+
+    buys = transactions.where((e) {
       return user!.companyId == e.buyerCompanyId;
     }).toList();
-    sells = widget.transactions.where((e) {
+    sells = transactions.where((e) {
       return user!.companyId == e.sellerCompanyId;
     }).toList();
 
@@ -214,7 +249,8 @@ class _TransactionsViewState extends State<TransactionsView> {
                               availabilityFrom = null;
                               availabilityTo = null;
                               tier = null;
-                              // updateSource();
+                              searchController?.text = "";
+                              updateSource(transactions);
                             });
                           },
                           child: Text("Clear"),
@@ -416,19 +452,24 @@ class _TransactionsViewState extends State<TransactionsView> {
                           ],
                         ),
                         TextFormField(
-                          initialValue: "",
+                          // initialValue: "",
+                          controller: searchController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: "Search S/N",
                           ),
                           onChanged: (value) {
                             setState(() {
-                              transactions = widget.transactions.where((tx) {
-                                return tx.gpuCluster?.serialNumber.contains(
-                                      value,
-                                    ) ??
-                                    false;
-                              }).toList();
+                              List<GpuTransaction> filtered = widget
+                                  .transactions
+                                  .where((tx) {
+                                    return tx.gpuCluster?.serialNumber.contains(
+                                          value,
+                                        ) ??
+                                        false;
+                                  })
+                                  .toList();
+                              updateSource(filtered);
                             });
                           },
                         ),

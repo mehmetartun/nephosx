@@ -181,7 +181,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
     }
     return db.collection('users').snapshots().map<List<User>>((snapshot) {
       return snapshot.docs.map((doc) {
-        return User.fromJson(doc.data());
+        return User.fromJson({...doc.data(), 'uid': doc.id});
       }).toList();
     });
   }
@@ -236,7 +236,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .map<User?>((snapshot) {
           return snapshot.docs
               .map((doc) {
-                return User.fromJson(doc.data());
+                return User.fromJson({...doc.data(), 'uid': doc.id});
               })
               .toList()
               .firstOrNull;
@@ -271,7 +271,9 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .collectionGroup("requests")
         .where("company_id", isEqualTo: companyId)
         .get();
-    return qs.docs.map((doc) => Request.fromJson(doc.data())).toList();
+    return qs.docs
+        .map((doc) => Request.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
   }
 
   @override
@@ -280,7 +282,9 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .collectionGroup("requests")
         .where("requestor_id", isEqualTo: requestorId)
         .get();
-    return qs.docs.map((doc) => Request.fromJson({...doc.data()})).toList();
+    return qs.docs
+        .map((doc) => Request.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
   }
 
   @override
@@ -291,7 +295,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .snapshots()
         .map((snapshot) {
           return snapshot.docs
-              .map((doc) => Request.fromJson(doc.data()))
+              .map((doc) => Request.fromJson({...doc.data(), 'id': doc.id}))
               .toList();
         });
   }
@@ -304,7 +308,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .snapshots()
         .map((snapshot) {
           return snapshot.docs
-              .map((doc) => Request.fromJson(doc.data()))
+              .map((doc) => Request.fromJson({...doc.data(), 'id': doc.id}))
               .toList();
         });
   }
@@ -395,13 +399,17 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   @override
   Future<List<Request>> getRequests() async {
     var qs = await db.collectionGroup("requests").get();
-    return qs.docs.map((doc) => Request.fromJson({...doc.data()})).toList();
+    return qs.docs
+        .map((doc) => Request.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
   }
 
   @override
   Future<List<Invitation>> getInvitations({String? companyId}) async {
     var qs = await db.collection("invitations").get();
-    return qs.docs.map((doc) => Invitation.fromJson({...doc.data()})).toList();
+    return qs.docs
+        .map((doc) => Invitation.fromJson({...doc.data(), 'id': doc.id}))
+        .toList();
   }
 
   @override
@@ -417,14 +425,18 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
             .where('company_id', isEqualTo: companyId)
             .get();
 
-        return qs.docs.map((doc) => Listing.fromJson({...doc.data()})).toList();
+        return qs.docs
+            .map((doc) => Listing.fromJson({...doc.data(), 'id': doc.id}))
+            .toList();
       } else {
         QuerySnapshot<Map<String, dynamic>> qs = await db
             .collection('listings')
             .where('company_id', isEqualTo: companyId)
             .get();
 
-        return qs.docs.map((doc) => Listing.fromJson({...doc.data()})).toList();
+        return qs.docs
+            .map((doc) => Listing.fromJson({...doc.data(), 'id': doc.id}))
+            .toList();
       }
     } else {
       if (status != null) {
@@ -433,13 +445,17 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
             .where('status', isEqualTo: status.name)
             .get();
 
-        return qs.docs.map((doc) => Listing.fromJson({...doc.data()})).toList();
+        return qs.docs
+            .map((doc) => Listing.fromJson({...doc.data(), 'id': doc.id}))
+            .toList();
       } else {
         QuerySnapshot<Map<String, dynamic>> qs = await db
             .collection('listings')
             .get();
 
-        return qs.docs.map((doc) => Listing.fromJson({...doc.data()})).toList();
+        return qs.docs
+            .map((doc) => Listing.fromJson({...doc.data(), 'id': doc.id}))
+            .toList();
       }
     }
   }
@@ -481,7 +497,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
           .snapshots()
           .map((snapshot) {
             return snapshot.docs
-                .map((doc) => Listing.fromJson({...doc.data()}))
+                .map((doc) => Listing.fromJson({...doc.data(), 'id': doc.id}))
                 .toList();
           });
     }
@@ -502,7 +518,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
           .snapshots()
           .map((snapshot) {
             return snapshot.docs
-                .map((doc) => Listing.fromJson({...doc.data()}))
+                .map((doc) => Listing.fromJson({...doc.data(), 'id': doc.id}))
                 .toList();
           });
     }
@@ -512,7 +528,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
         .snapshots()
         .map((snapshot) {
           return snapshot.docs
-              .map((doc) => Listing.fromJson({...doc.data()}))
+              .map((doc) => Listing.fromJson({...doc.data(), 'id': doc.id}))
               .toList();
         });
   }

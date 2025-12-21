@@ -15,7 +15,7 @@ class CorpAdminUsersCubit extends Cubit<CorpAdminUsersState> {
   List<Invitation> invitations = [];
   final DatabaseRepository databaseRepository;
   final HttpsCallable addInvitationFunction = FirebaseFunctions.instance
-      .httpsCallable('corpAdminAddInvitation');
+      .httpsCallable('company-corpAdminAddInvitation');
 
   init() async {
     users = await databaseRepository.getUsers(companyId: user!.companyId);

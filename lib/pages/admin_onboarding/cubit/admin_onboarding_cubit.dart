@@ -13,7 +13,7 @@ class AdminOnboardingCubit extends Cubit<AdminOnboardingState> {
   final DatabaseRepository databaseRepository;
 
   HttpsCallable addCompany = FirebaseFunctions.instance.httpsCallable(
-    'adminAddCompany',
+    'company-adminAddCompany',
   );
 
   List<Request> requests = [];

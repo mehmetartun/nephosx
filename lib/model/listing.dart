@@ -107,4 +107,19 @@ class Listing {
       _$ListingFromJson(json);
 
   Map<String, dynamic> toJson() => _$ListingToJson(this);
+
+  @override
+  String toString() {
+    return 'Listing(id: $id, startDate: $startDate, endDate: $endDate)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Listing &&
+        other.id == id &&
+        other.startDate == startDate &&
+        other.endDate == endDate;
+  }
 }

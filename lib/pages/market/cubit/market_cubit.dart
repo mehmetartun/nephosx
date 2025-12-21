@@ -20,7 +20,7 @@ class MarketCubit extends Cubit<MarketState> {
   List<Datacenter> datacenters = [];
 
   HttpsCallable addTransactionFunction = FirebaseFunctions.instance
-      .httpsCallable('addTransaction');
+      .httpsCallable('transaction-addTransaction');
 
   void init() async {
     emit(MarketLoading());

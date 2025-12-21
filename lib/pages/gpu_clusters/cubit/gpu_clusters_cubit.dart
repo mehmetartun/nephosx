@@ -31,7 +31,7 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
   List<Company> companies = [];
   List<Listing> listings = [];
   HttpsCallable gpuClusterUpdateCheck = FirebaseFunctions.instance
-      .httpsCallable("gpuClusterUpdateCheck");
+      .httpsCallable("gpuCluster-gpuClusterUpdateCheck");
 
   void init({String? gpuClusterId}) async {
     emit(GpuClustersInitial());
