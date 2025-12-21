@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../model/company.dart';
 import '../../model/gpu_cluster.dart';
 import '../../model/gpu_transaction.dart';
 import '../../model/listing.dart';
@@ -25,11 +26,13 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   StreamSubscription<List<GpuCluster>>? gpuClustersSubscription;
   StreamSubscription<List<Listing>>? listingsSubscription;
   StreamSubscription<List<User>>? usersSubscription;
+  StreamSubscription<List<Company>>? companiesSubscription;
 
   List<GpuTransaction> transactions = [];
   List<GpuCluster> gpuClusters = [];
   List<Listing> listings = [];
   List<User> corporateUsers = [];
+  List<Company> companies = [];
 
   final DatabaseRepository databaseRepository;
   User? user;
@@ -45,6 +48,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         gpuClusters: gpuClusters,
         listings: listings,
         corporateUsers: corporateUsers,
+        companies: companies,
         user: user!,
       ),
     );
@@ -59,10 +63,12 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     await gpuClustersSubscription?.cancel();
     await listingsSubscription?.cancel();
     await usersSubscription?.cancel();
+    await companiesSubscription?.cancel();
     transactions = [];
     gpuClusters = [];
     listings = [];
     corporateUsers = [];
+    companies = [];
     user = event.user;
     if (user == null || user!.companyId == null) {
       emit(
@@ -71,6 +77,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           gpuClusters: gpuClusters,
           listings: listings,
           corporateUsers: corporateUsers,
+          companies: companies,
           user: user!,
         ),
       );

@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
-import 'package:rxdart/rxdart.dart';
+// import 'package:rxdart/rxdart.dart';
 
 import '../../../model/company.dart';
 import '../../../model/datacenter.dart';
-import '../../../model/enums.dart';
+// import '../../../model/enums.dart';
 import '../../../model/gpu_transaction.dart';
 import '../../../model/user.dart';
 import '../../../repositories/database/database.dart';
@@ -19,13 +19,49 @@ class TransactionsCubit extends Cubit<TransactionsState> {
   TransactionsCubit(this.databaseRepository, this.user)
     : super(TransactionsInitial());
   final DatabaseRepository databaseRepository;
-  StreamSubscription<List<GpuTransaction>>? _transactionsSubscription;
+  // StreamSubscription<List<GpuTransaction>>? _transactionsSubscription;
   final User? user;
 
   List<GpuTransaction> transactions = [];
   List<Company> companies = [];
   List<GpuCluster> gpuClusters = [];
   List<Datacenter> datacenters = [];
+
+  void prepareData() {
+    for (var gpuCluster in gpuClusters) {
+      gpuCluster.addTransactions(transactions);
+    }
+
+    for (var transaction in transactions) {
+      transaction.addBuyer(companies);
+      transaction.addSeller(companies);
+      transaction.addGpuCluster(gpuClusters);
+      transaction.addDatacenter(datacenters);
+    }
+  }
+
+  void dataRefresh(
+    List<GpuTransaction> transactions,
+    List<GpuCluster> gpuClusters,
+    // List<User> corporateUsers,
+    // List<Listing> listings,
+    List<Company> companies,
+  ) {
+    this.transactions = transactions;
+    this.gpuClusters = gpuClusters;
+    this.companies = companies;
+
+    prepareData();
+    if (state is TransactionsLoaded || state is TransactionsInitial) {
+      emit(
+        TransactionsLoaded(
+          transactions: transactions,
+          companies: companies,
+          gpuClusters: gpuClusters,
+        ),
+      );
+    }
+  }
 
   void init() async {
     // var qs = await FirebaseFirestore.instance.collection('transactions').get();
@@ -43,10 +79,10 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     }
     // print("User ${user!.email}");
     // print("User ${user!.companyId}");
-    _transactionsSubscription?.cancel();
-    companies = await databaseRepository.getCompanies();
-    gpuClusters = await databaseRepository.getGpuClusters();
-    datacenters = await databaseRepository.getDatacenters();
+    // _transactionsSubscription?.cancel();
+    // companies = await databaseRepository.getCompanies();
+    // gpuClusters = await databaseRepository.getGpuClusters();
+    // datacenters = await databaseRepository.getDatacenters();
 
     // _transactionsSubscription =
     //     Rx.combineLatest2(
@@ -72,24 +108,24 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     //       );
     //     });
 
-    _transactionsSubscription = databaseRepository
-        .gpuTransactionsStream(companyId: user!.companyId!)
-        .listen((transactions) {
-          this.transactions = transactions;
-          for (GpuTransaction tx in this.transactions) {
-            tx.addBuyer(companies);
-            tx.addSeller(companies);
-            tx.addGpuCluster(gpuClusters);
-            tx.addDatacenter(datacenters);
-          }
-          emit(
-            TransactionsLoaded(
-              transactions: transactions,
-              companies: companies,
-              gpuClusters: gpuClusters,
-            ),
-          );
-        });
+    // _transactionsSubscription = databaseRepository
+    //     .gpuTransactionsStream(companyId: user!.companyId!)
+    //     .listen((transactions) {
+    //       this.transactions = transactions;
+    //       for (GpuTransaction tx in this.transactions) {
+    //         tx.addBuyer(companies);
+    //         tx.addSeller(companies);
+    //         tx.addGpuCluster(gpuClusters);
+    //         tx.addDatacenter(datacenters);
+    //       }
+    //       emit(
+    //         TransactionsLoaded(
+    //           transactions: transactions,
+    //           companies: companies,
+    //           gpuClusters: gpuClusters,
+    //         ),
+    //       );
+    //     });
     // transactions = await databaseRepository.getTransactions();
     // emit(
     //   TransactionsLoaded(
@@ -102,7 +138,7 @@ class TransactionsCubit extends Cubit<TransactionsState> {
 
   @override
   Future<void> close() {
-    _transactionsSubscription?.cancel();
+    // _transactionsSubscription?.cancel();
     return super.close();
   }
 

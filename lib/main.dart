@@ -43,18 +43,21 @@ class AppBlocObserver extends BlocObserver {
     Transition<dynamic, dynamic> transition,
   ) {
     super.onTransition(bloc, transition);
-    print(transition);
+    print("${DateTime.now()} $transition");
   }
 }
 
 void main() async {
+  print(DateTime.now());
   WidgetsFlutterBinding.ensureInitialized();
+  print(DateTime.now());
   List<Future> initialize = [];
   // initialize.add(LocalStorage.instance.initialize());
   initialize.add(
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
   );
   await Future.wait(initialize);
+  print("Firebase Initialiazed  ${DateTime.now()}");
 
   // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -63,6 +66,7 @@ void main() async {
   // res = await FirebaseFunctions.instance.httpsCallable('helloWorld').call();
   usePathUrlStrategy();
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  print("Preferences Initialiazed  ${DateTime.now()}");
   // prefs.setString("password", "123");
   var password = prefs.getString("password");
 
@@ -158,6 +162,8 @@ class MyApp extends StatelessWidget {
 
     ThemeCubit themeCubit = ThemeCubit()
       ..changeThemeMode(ThemeCubit.savedThemeMode);
+
+    print("ThemeCubit Initialiazed  ${DateTime.now()}");
 
     return RepositoryProvider<DatabaseRepository>(
       create: (context) => databaseRepository,
