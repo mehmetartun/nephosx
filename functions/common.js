@@ -2,9 +2,18 @@
 
 const { getFirestore, HttpsError, logger } = require("./init");
 
+const {
+    USERS_COLLECTION,
+    COMPANIES_COLLECTION,
+    DATACENTERS_COLLECTION,
+    GPU_CLUSTERS_COLLECTION,
+    TRANSACTIONS_COLLECTION,
+    LISTINGS_COLLECTION
+} = require("./constants");
+
 async function getUserById(userId) {
     const db = getFirestore();
-    var user = await db.collection('users').doc(userId).get();
+    var user = await db.doc(userDocPath(userId)).get();
     if (!user.exists) {
         logger.error({ message: 'User not found', userId: userId });
         throw new HttpsError('user-not-found', 'User not found');
@@ -16,7 +25,7 @@ async function getUserById(userId) {
 
 async function getCompanyById(companyId) {
     const db = getFirestore();
-    var company = await db.collection('companies').doc(companyId).get();
+    var company = await db.doc(companyDocPath(companyId)).get();
     if (!company.exists) {
         logger.error({ message: 'Company not found', companyId: companyId });
         throw new HttpsError('company-not-found', 'Company not found');
@@ -27,7 +36,7 @@ async function getCompanyById(companyId) {
 async function getGpuClusterById(gpuClusterId, datacenterId) {
     console.log(gpuClusterId, datacenterId);
     const db = getFirestore();
-    var gpuCluster = await db.collection('datacenters').doc(datacenterId).collection('gpu_clusters').doc(gpuClusterId).get();
+    var gpuCluster = await db.doc(gpuClusterDocPath(gpuClusterId, datacenterId)).get();
     if (!gpuCluster.exists) {
         logger.error({ message: 'GPU Cluster not found', gpuClusterId: gpuClusterId });
         throw new HttpsError('gpu-cluster-not-found', 'GPU Cluster not found');
@@ -37,7 +46,7 @@ async function getGpuClusterById(gpuClusterId, datacenterId) {
 
 async function getDatacenterById(datacenterId) {
     const db = getFirestore();
-    var datacenter = await db.collection('datacenters').doc(datacenterId).get();
+    var datacenter = await db.doc(datacenterDocPath(datacenterId)).get();
     if (!datacenter.exists) {
         logger.error({ message: 'Datacenter not found', datacenterId: datacenterId });
         throw new HttpsError('datacenter-not-found', 'Datacenter not found');
@@ -45,11 +54,44 @@ async function getDatacenterById(datacenterId) {
     return datacenter.data();
 }
 
+function userDocPath(uid) {
+    return `${USERS_COLLECTION}/${uid}`;
+}
+
+function companyDocPath(companyId) {
+    return `${COMPANIES_COLLECTION}/${companyId}`;
+}
+
+function gpuClusterDocPath(gpuClusterId, datacenterId) {
+    return `${DATACENTERS_COLLECTION}/${datacenterId}/${GPU_CLUSTERS_COLLECTION}/${gpuClusterId}`;
+}
+
+function datacenterDocPath(datacenterId) {
+    return `${DATACENTERS_COLLECTION}/${datacenterId}`;
+}
+
+function transactionDocPath(transactionId) {
+    return `${TRANSACTIONS_COLLECTION}/${transactionId}`;
+}
+
+function listingDocPath(listingId) {
+    return `${LISTINGS_COLLECTION}/${listingId}`;
+}
+
+function requestDocPath(requestId) {
+    return `${REQUESTS_COLLECTION}/${requestId}`;
+}
 
 module.exports = {
     getUserById,
     getCompanyById,
     getGpuClusterById,
     getDatacenterById,
+    userDocPath,
+    companyDocPath,
+    gpuClusterDocPath,
+    datacenterDocPath,
+    transactionDocPath,
+    listingDocPath
 }
 

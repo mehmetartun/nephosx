@@ -5,53 +5,53 @@ const {
     onCall,
     onRequest,
     HttpsError } = require("./init");
-const { getCompanyById, getDatacenterById, getGpuClusterById, getUserById } = require("./common");
+const { getCompanyById, getDatacenterById, getGpuClusterById } = require("./common");
 
+const { LISTINGS_COLLECTION, TRANSACTIONS_COLLECTION, GPU_CLUSTERS_COLLECTION } = require("./constants");
+// exports.copyTransaction = onDocumentWritten("transactions/{transactionId}", async (event) => {
+//     const db = getFirestore();
+//     const transactionId = event.params.transactionId;
+//     const afterData = event.data.after.data();
+//     const beforeData = event.data.before.data();
 
-exports.copyTransaction = onDocumentWritten("transactions/{transactionId}", async (event) => {
-    const db = getFirestore();
-    const transactionId = event.params.transactionId;
-    const afterData = event.data.after.data();
-    const beforeData = event.data.before.data();
+//     // Determine gpu_cluster_id
+//     const gpuClusterId = afterData ? afterData.gpu_cluster_id : beforeData.gpu_cluster_id;
+//     if (!gpuClusterId) return; // Should not happen if data is valid
 
-    // Determine gpu_cluster_id
-    const gpuClusterId = afterData ? afterData.gpu_cluster_id : beforeData.gpu_cluster_id;
-    if (!gpuClusterId) return; // Should not happen if data is valid
+//     const clusterRef = db.doc(`datacenters/${afterData.datacenter_id}/gpu_clusters/${gpuClusterId}`);
 
-    const clusterRef = db.doc(`datacenters/${afterData.datacenter_id}/gpu_clusters/${gpuClusterId}`);
+//     await db.runTransaction(async (t) => {
+//         const clusterDoc = await t.get(clusterRef);
 
-    await db.runTransaction(async (t) => {
-        const clusterDoc = await t.get(clusterRef);
+//         var buyer_company_id = afterData.buyer_company_id;
+//         var seller_company_id = afterData.seller_company_id;
+//         var buyer_company_ref = await db.collection('companies').doc(buyer_company_id).get();
+//         var seller_company_ref = await db.collection('companies').doc(seller_company_id).get();
 
-        var buyer_company_id = afterData.buyer_company_id;
-        var seller_company_id = afterData.seller_company_id;
-        var buyer_company_ref = await db.collection('companies').doc(buyer_company_id).get();
-        var seller_company_ref = await db.collection('companies').doc(seller_company_id).get();
+//         const buyer_company_doc = await t.get(buyer_company_ref);
+//         const seller_company_doc = await t.get(seller_company_ref);
 
-        const buyer_company_doc = await t.get(buyer_company_ref);
-        const seller_company_doc = await t.get(seller_company_ref);
+//         const data = {
+//             ...afterData,
+//             buyer_company: buyer_company_doc.data(),
+//             seller_company: seller_company_doc.data()
+//         }
 
-        const data = {
-            ...afterData,
-            buyer_company: buyer_company_doc.data(),
-            seller_company: seller_company_doc.data()
-        }
+//         if (!clusterDoc.exists) return;
 
-        if (!clusterDoc.exists) return;
+//         let transactions = clusterDoc.data().transactions || [];
 
-        let transactions = clusterDoc.data().transactions || [];
+//         // Remove existing entry for this transactionId
+//         transactions = transactions.filter(tx => tx.id !== transactionId);
 
-        // Remove existing entry for this transactionId
-        transactions = transactions.filter(tx => tx.id !== transactionId);
+//         // If not a deletion, add the new data
+//         if (afterData) {
+//             transactions.push({ ...data, id: transactionId });
+//         }
 
-        // If not a deletion, add the new data
-        if (afterData) {
-            transactions.push({ ...data, id: transactionId });
-        }
-
-        t.update(clusterRef, { transactions });
-    });
-});
+//         t.update(clusterRef, { transactions });
+//     });
+// });
 
 exports.addTransaction = onCall(async (request) => {
     if (!request.auth) {
@@ -84,7 +84,7 @@ exports.addTransaction = onCall(async (request) => {
         const buyerCompany = await getCompanyById(request.data.buyer_company_id);
         const gpuCluster = await getGpuClusterById(request.data.gpu_cluster_id, request.data.datacenter_id);
         const datacenter = await getDatacenterById(request.data.datacenter_id);
-        var txref = await db.collection('transactions').add({
+        var txref = await db.collection(TRANSACTIONS_COLLECTION).add({
             start_date: Timestamp.fromMillis(request.data.start_date),
             end_date: Timestamp.fromMillis(request.data.end_date),
             seller_company_id: request.data.seller_company_id,
@@ -102,7 +102,7 @@ exports.addTransaction = onCall(async (request) => {
         });
 
         if (request.data.listing_id) {
-            var listing_qs = await db.collection('listings').doc(request.data.listing_id).get();
+            var listing_qs = await db.collection(LISTINGS_COLLECTION).doc(request.data.listing_id).get();
             t.update(listing_qs.ref, { transaction_id: txref.id, status: 'traded' });
         }
         t.update(txref, { id: txref.id });
@@ -112,31 +112,31 @@ exports.addTransaction = onCall(async (request) => {
 });
 
 
-exports.tempTransactionUpdate = onRequest(
-    async (req, res) => {
-        const db = getFirestore();
-        const qs = db.collection('transactions').get();
+// exports.tempTransactionUpdate = onRequest(
+//     async (req, res) => {
+//         const db = getFirestore();
+//         const qs = db.collection('transactions').get();
 
-        var futs = [];
-        (await qs).forEach((doc) => {
-            futs.push(doc.ref.update(
-                {
-                    counterparty_ids:
-                        [doc.data()['buyer_company_id'], doc.data()['seller_company_id']]
-                }));
-        })
-        await Promise.all(futs);
-        res.send({ 'message': 'Transaction data updated successfully' });
-    }
-);
+//         var futs = [];
+//         (await qs).forEach((doc) => {
+//             futs.push(doc.ref.update(
+//                 {
+//                     counterparty_ids:
+//                         [doc.data()['buyer_company_id'], doc.data()['seller_company_id']]
+//                 }));
+//         })
+//         await Promise.all(futs);
+//         res.send({ 'message': 'Transaction data updated successfully' });
+//     }
+// );
 
-exports.cleanUpTransactionDataOnGpuClusters = onRequest(async (req, res) => {
-    const db = getFirestore();
-    var gpus = await db.collectionGroup('gpu_clusters').get();
-    gpus.forEach((doc) => {
-        doc.ref.update({ transactions: [] });
-    });
-    res.send({ 'message': 'Transaction data cleaned up successfully' });
-});
+// exports.cleanUpTransactionDataOnGpuClusters = onRequest(async (req, res) => {
+//     const db = getFirestore();
+//     var gpus = await db.collectionGroup('gpu_clusters').get();
+//     gpus.forEach((doc) => {
+//         doc.ref.update({ transactions: [] });
+//     });
+//     res.send({ 'message': 'Transaction data cleaned up successfully' });
+// });
 
 

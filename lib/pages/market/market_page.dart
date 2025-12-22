@@ -39,9 +39,9 @@ class MarketPage extends StatelessWidget {
               return MarketView3(
                 listings: state.listings,
                 ownCompanyId: state.ownCompanyId,
-
                 validator: marketCubit.transactionValidator,
                 onAddTransaction: marketCubit.addTransaction,
+                onRefresh: marketCubit.init,
               );
             case MarketError():
               return ErrorView(title: 'Error', message: state.message);

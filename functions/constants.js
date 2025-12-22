@@ -1,0 +1,20 @@
+'use strict';
+
+const LISTINGS_COLLECTION = 'listings';
+const TRANSACTIONS_COLLECTION = 'transactions';
+const USERS_COLLECTION = 'users';
+const COMPANIES_COLLECTION = 'companies';
+const DATACENTERS_COLLECTION = 'datacenters';
+const GPU_CLUSTERS_COLLECTION = 'gpu_clusters';
+const INVITATIONS_COLLECTION = 'invitations';
+const REQUESTS_COLLECTION = 'requests';
+
+module.exports = {
+    LISTINGS_COLLECTION,
+    TRANSACTIONS_COLLECTION,
+    USERS_COLLECTION,
+    COMPANIES_COLLECTION,
+    DATACENTERS_COLLECTION,
+    GPU_CLUSTERS_COLLECTION,
+    INVITATIONS_COLLECTION
+}

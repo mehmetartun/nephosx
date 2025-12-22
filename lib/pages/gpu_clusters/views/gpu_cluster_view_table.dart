@@ -182,6 +182,7 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
                             ),
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 mainAxisAlignment:
@@ -211,181 +212,147 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 20),
-                              SizedBox(
-                                height: 90,
-                                child: Row(
-                                  children: [
-                                    Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child: DropdownMenuFormField<String?>(
-                                        // width: double.infinity,
-                                        label: Text("GPU Model"),
-                                        initialSelection: selectedDeviceId,
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedDeviceId = value;
-                                            updateSource();
-                                          });
-                                        },
-                                        dropdownMenuEntries: [
-                                          DropdownMenuEntry(
-                                            value: null,
-                                            label: "All",
-                                          ),
-                                          ...PlatformSettingsService
-                                              .instance
-                                              .platformSettings
-                                              .devices
-                                              .map((device) {
-                                                return DropdownMenuEntry(
-                                                  value: device.id,
-                                                  label: device.name,
-                                                );
-                                              })
-                                              .toList(),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 20),
-                                    Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child: DropdownMenuFormField<int?>(
-                                        // width: double.infinity,
-                                        label: Text("Cluster Size"),
-                                        initialSelection: clusterSize,
-                                        onSelected: (value) {
-                                          setState(() {
-                                            clusterSize = value;
-                                            updateSource();
-                                          });
-                                        },
-                                        dropdownMenuEntries: [
-                                          DropdownMenuEntry(
-                                            value: null,
-                                            label: "All",
-                                          ),
-                                          ...[1, 2, 4, 8, 16, 32, 64, 128].map((
-                                            clustersize,
-                                          ) {
-                                            return DropdownMenuEntry(
-                                              value: clustersize,
-                                              label: clustersize.toString(),
-                                            );
-                                          }).toList(),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 20),
-                                    Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child:
-                                          DropdownMenuFormField<AddressRegion?>(
-                                            label: Text("Region"),
-                                            // width: double.infinity,
-                                            initialSelection: region,
-                                            onSelected: (value) {
-                                              setState(() {
-                                                region = value;
-                                                if (country?.region != region) {
-                                                  country = null;
-                                                }
-                                                updateCountries();
-                                                updateSource();
-                                              });
-                                            },
-                                            dropdownMenuEntries: [
-                                              DropdownMenuEntry(
-                                                value: null,
-                                                label: "All",
-                                              ),
-                                              ...regions.map((region) {
-                                                return DropdownMenuEntry(
-                                                  value: region,
-                                                  label: region.title,
-                                                );
-                                              }).toList(),
-                                            ],
-                                          ),
-                                    ),
-                                    SizedBox(width: 20),
-                                    Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child: DropdownMenuFormField<Country?>(
-                                        label: Text("Country"),
-                                        // width: double.infinity,
-                                        menuStyle: MenuStyle(),
-                                        initialSelection: country,
-                                        onSelected: (value) {
-                                          setState(() {
-                                            country = value;
-                                            updateSource();
-                                          });
-                                        },
-                                        dropdownMenuEntries: [
-                                          DropdownMenuEntry(
-                                            value: null,
-                                            label: "All",
-                                          ),
-                                          ...countries.map((country) {
-                                            return DropdownMenuEntry(
-                                              value: country,
-                                              label: country.description,
-                                            );
-                                          }).toList(),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: 20),
-                                    Flexible(
-                                      flex: 1,
-                                      fit: FlexFit.tight,
-                                      child:
-                                          DropdownMenuFormField<
-                                            DatacenterTier?
-                                          >(
-                                            label: Text("Tier"),
 
-                                            // width: double.infinity,
-                                            initialSelection: tier,
-                                            onSelected: (value) {
-                                              setState(() {
-                                                tier = value;
-                                                if (country?.region != region) {
-                                                  country = null;
-                                                }
-                                                updateCountries();
-                                                updateSource();
-                                              });
-                                            },
-                                            dropdownMenuEntries: [
-                                              DropdownMenuEntry(
-                                                value: null,
-                                                label: "All",
-                                              ),
-                                              ...DatacenterTier.values.map((
-                                                tier,
-                                              ) {
-                                                return DropdownMenuEntry(
-                                                  value: tier,
-                                                  label: tier.roman,
-                                                );
-                                              }).toList(),
-                                            ],
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Row(
+                              SizedBox(height: 20),
+                              Wrap(
+                                runSpacing: 10,
+                                spacing: 10,
+                                direction: Axis.horizontal,
                                 children: [
-                                  Flexible(
-                                    flex: 1,
-                                    fit: FlexFit.tight,
+                                  DropdownMenuFormField<String?>(
+                                    // width: double.infinity,
+                                    label: Text("GPU Model"),
+                                    initialSelection: selectedDeviceId,
+                                    onSelected: (value) {
+                                      setState(() {
+                                        selectedDeviceId = value;
+                                        updateSource();
+                                      });
+                                    },
+                                    dropdownMenuEntries: [
+                                      DropdownMenuEntry(
+                                        value: null,
+                                        label: "All",
+                                      ),
+                                      ...PlatformSettingsService
+                                          .instance
+                                          .platformSettings
+                                          .devices
+                                          .map((device) {
+                                            return DropdownMenuEntry(
+                                              value: device.id,
+                                              label: device.name,
+                                            );
+                                          })
+                                          .toList(),
+                                    ],
+                                  ),
+                                  DropdownMenuFormField<int?>(
+                                    // width: double.infinity,
+                                    label: Text("Cluster Size"),
+                                    initialSelection: clusterSize,
+                                    onSelected: (value) {
+                                      setState(() {
+                                        clusterSize = value;
+                                        updateSource();
+                                      });
+                                    },
+                                    dropdownMenuEntries: [
+                                      DropdownMenuEntry(
+                                        value: null,
+                                        label: "All",
+                                      ),
+                                      ...[1, 2, 4, 8, 16, 32, 64, 128].map((
+                                        clustersize,
+                                      ) {
+                                        return DropdownMenuEntry(
+                                          value: clustersize,
+                                          label: clustersize.toString(),
+                                        );
+                                      }).toList(),
+                                    ],
+                                  ),
+                                  DropdownMenuFormField<AddressRegion?>(
+                                    label: Text("Region"),
+                                    // width: double.infinity,
+                                    initialSelection: region,
+                                    onSelected: (value) {
+                                      setState(() {
+                                        region = value;
+                                        if (country?.region != region) {
+                                          country = null;
+                                        }
+                                        updateCountries();
+                                        updateSource();
+                                      });
+                                    },
+                                    dropdownMenuEntries: [
+                                      DropdownMenuEntry(
+                                        value: null,
+                                        label: "All",
+                                      ),
+                                      ...regions.map((region) {
+                                        return DropdownMenuEntry(
+                                          value: region,
+                                          label: region.title,
+                                        );
+                                      }).toList(),
+                                    ],
+                                  ),
+                                  DropdownMenuFormField<Country?>(
+                                    label: Text("Country"),
+                                    // width: double.infinity,
+                                    menuStyle: MenuStyle(),
+                                    initialSelection: country,
+                                    onSelected: (value) {
+                                      setState(() {
+                                        country = value;
+                                        updateSource();
+                                      });
+                                    },
+                                    dropdownMenuEntries: [
+                                      DropdownMenuEntry(
+                                        value: null,
+                                        label: "All",
+                                      ),
+                                      ...countries.map((country) {
+                                        return DropdownMenuEntry(
+                                          value: country,
+                                          label: country.description,
+                                        );
+                                      }).toList(),
+                                    ],
+                                  ),
+                                  DropdownMenuFormField<DatacenterTier?>(
+                                    label: Text("Tier"),
+
+                                    // width: double.infinity,
+                                    initialSelection: tier,
+                                    onSelected: (value) {
+                                      setState(() {
+                                        tier = value;
+                                        if (country?.region != region) {
+                                          country = null;
+                                        }
+                                        updateCountries();
+                                        updateSource();
+                                      });
+                                    },
+                                    dropdownMenuEntries: [
+                                      DropdownMenuEntry(
+                                        value: null,
+                                        label: "All",
+                                      ),
+                                      ...DatacenterTier.values.map((tier) {
+                                        return DropdownMenuEntry(
+                                          value: tier,
+                                          label: tier.roman,
+                                        );
+                                      }).toList(),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: 250,
                                     child: DateTimeFormField(
                                       clearButton: true,
                                       border: const OutlineInputBorder(),
@@ -422,10 +389,8 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
                                       },
                                     ),
                                   ),
-                                  SizedBox(width: 20),
-                                  Flexible(
-                                    flex: 1,
-                                    fit: FlexFit.tight,
+                                  SizedBox(
+                                    width: 250,
                                     child: DateTimeFormField(
                                       clearButton: true,
                                       border: const OutlineInputBorder(),
@@ -451,25 +416,6 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
                                         });
                                       },
                                     ),
-                                  ),
-
-                                  SizedBox(width: 20),
-                                  Flexible(
-                                    flex: 1,
-                                    fit: FlexFit.tight,
-                                    child: Container(),
-                                  ),
-                                  SizedBox(width: 20),
-                                  Flexible(
-                                    flex: 1,
-                                    fit: FlexFit.tight,
-                                    child: Container(),
-                                  ),
-                                  SizedBox(width: 20),
-                                  Flexible(
-                                    flex: 1,
-                                    fit: FlexFit.tight,
-                                    child: Container(),
                                   ),
                                 ],
                               ),

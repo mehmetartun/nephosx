@@ -1,6 +1,7 @@
 const { onCall, HttpsError, getFirestore, Timestamp } = require("./init");
-const { getCompanyById, getDatacenterById, getGpuClusterById, getUserById } = require("./common");
+const { getCompanyById, getDatacenterById, getGpuClusterById } = require("./common");
 
+const { LISTINGS_COLLECTION } = require("./constants");
 exports.addListing = onCall(async (request) => {
     if (!request.auth) {
         throw new HttpsError(
@@ -31,7 +32,7 @@ exports.addListing = onCall(async (request) => {
         const company = await getCompanyById(request.data.company_id);
         const datacenter = await getDatacenterById(request.data.datacenter_id);
         const gpuCluster = await getGpuClusterById(request.data.gpu_cluster_id, request.data.datacenter_id);
-        var txref = await db.collection('listings').add({
+        var txref = await db.collection(LISTINGS_COLLECTION).add({
             start_date: Timestamp.fromMillis(request.data.start_date),
             end_date: Timestamp.fromMillis(request.data.end_date),
             company_id: request.data.company_id,

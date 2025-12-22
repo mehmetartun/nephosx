@@ -221,24 +221,17 @@ class TransactionsDataSource extends DataTableSource {
         // DataCell(Text(transaction.gpuCluster?.serialNumber ?? 'XXX')),
         DataCell(
           Text(
-            transaction
-                    .gpuCluster
-                    ?.datacenter
-                    ?.address
-                    .country
-                    .region
-                    .description ??
-                'X',
+            transaction.datacenter?.address.country.region.description ?? 'X',
           ),
         ),
         DataCell(
           Text(
-            transaction.gpuCluster?.datacenter == null
+            transaction.datacenter == null
                 ? 'X'
-                : '${transaction.gpuCluster!.datacenter!.address.country.flagUnicode} ${transaction.gpuCluster!.datacenter!.address.country.iso2}',
+                : '${transaction.datacenter!.address.country.flagUnicode} ${transaction.datacenter!.address.country.iso2}',
           ),
         ),
-        DataCell(Text(transaction.gpuCluster?.datacenter?.tier.roman ?? 'X')),
+        DataCell(Text(transaction.datacenter?.tier.roman ?? 'X')),
 
         DataCell(
           Text(transaction.gpuCluster?.teraFlops?.toString() ?? "ERROR"),

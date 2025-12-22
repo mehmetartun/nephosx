@@ -37,13 +37,13 @@ class GpuTransaction {
   final List<String> counterpartyIds;
   @JsonKey(name: "listing_id")
   final String? listingId;
-  @JsonKey(name: "buyer_company", includeFromJson: false, includeToJson: false)
+  @JsonKey(name: "buyer_company", includeFromJson: true, includeToJson: false)
   Company? buyerCompany;
-  @JsonKey(name: "seller_company", includeFromJson: false, includeToJson: false)
+  @JsonKey(name: "seller_company", includeFromJson: true, includeToJson: false)
   Company? sellerCompany;
-  @JsonKey(name: "gpu_cluster", includeFromJson: false, includeToJson: false)
+  @JsonKey(name: "gpu_cluster", includeFromJson: true, includeToJson: false)
   GpuCluster? gpuCluster;
-  @JsonKey(name: "datacenter", includeFromJson: false, includeToJson: false)
+  @JsonKey(name: "datacenter", includeFromJson: true, includeToJson: false)
   Datacenter? datacenter;
 
   GpuTransaction({
@@ -58,6 +58,10 @@ class GpuTransaction {
     required this.counterpartyIds,
     this.listingId,
     required this.datacenterId,
+    this.buyerCompany,
+    this.sellerCompany,
+    this.gpuCluster,
+    this.datacenter,
   });
 
   void addDatacenter(List<Datacenter> datacenters) {

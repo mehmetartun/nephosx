@@ -96,7 +96,7 @@ class _GpuClusterDetailViewState extends State<GpuClusterDetailView> {
                         color: Theme.of(context).colorScheme.primaryContainer,
                       ),
                       child: Text(
-                        widget.gpuCluster.serialNumber ?? 'ABC123456XY',
+                        widget.gpuCluster.serialNumber,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Theme.of(
                             context,
@@ -143,8 +143,8 @@ class _GpuClusterDetailViewState extends State<GpuClusterDetailView> {
                   unListedSlots: widget.gpuCluster.unListedSlots,
                 ),
                 SizedBox(height: 20),
-                if (widget.gpuCluster.listings.length > 0) ...[
-                  Container(
+                if (widget.gpuCluster.listings.isNotEmpty) ...[
+                  SizedBox(
                     width: double.infinity,
                     child: CardTheme(
                       shape: RoundedRectangleBorder(
@@ -216,8 +216,9 @@ class _GpuClusterDetailViewState extends State<GpuClusterDetailView> {
                     ),
                   ),
                 ],
-                if (widget.gpuCluster.transactions.length > 0) ...[
-                  Container(
+                if (widget.gpuCluster.transactions.isNotEmpty) ...[
+                  SizedBox(height: 20),
+                  SizedBox(
                     width: double.infinity,
                     child: CardTheme(
                       shape: RoundedRectangleBorder(

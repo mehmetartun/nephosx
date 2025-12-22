@@ -101,6 +101,8 @@ class _TransactionsViewState extends State<TransactionsView> {
           }
         });
 
+    transactions = BlocProvider.of<TransactionsCubit>(context).transactions;
+
     buys = transactions.where((e) {
       return user!.companyId == e.buyerCompanyId;
     }).toList();

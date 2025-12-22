@@ -80,7 +80,7 @@ class FirestoreDatabaseRepository extends DatabaseRepository {
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
   FirestoreDatabaseRepository._internal() {
-    db.settings = Settings(persistenceEnabled: true);
+    db.settings = Settings(persistenceEnabled: false);
   }
 
   @override

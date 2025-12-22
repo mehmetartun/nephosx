@@ -2,9 +2,10 @@
 const { onDocumentWritten, getFirestore, onCall, HttpsError, logger } = require("./init");
 
 
-const { getCompanyById, getDatacenterById, getGpuClusterById, getUserById } = require("./common");
+const { getCompanyById, getDatacenterById, getGpuClusterById, getUserById, datacenterDocPath, gpuClusterDocPath, companyDocPath } = require("./common");
+const { DATACENTERS_COLLECTION, GPU_CLUSTERS_COLLECTION, COMPANIES_COLLECTION } = require("./constants");
 
-exports.gpuClusterWritten = onDocumentWritten("datacenters/{datacenterId}/gpu_clusters/{gpuClusterId}", async (event) => {
+exports.gpuClusterWritten = onDocumentWritten(`${DATACENTERS_COLLECTION}/{datacenterId}/${GPU_CLUSTERS_COLLECTION}/{gpuClusterId}`, async (event) => {
     const db = getFirestore();
     const gpuClusterId = event.params.gpuClusterId;
     const datacenterId = event.params.datacenterId;
@@ -13,19 +14,19 @@ exports.gpuClusterWritten = onDocumentWritten("datacenters/{datacenterId}/gpu_cl
 
     if (afterData && (!afterData.datacenter || !afterData.company)) {
         await db.runTransaction(async (t) => {
-            const companyRef = db.doc(`companies/${afterData.company_id}`);
+            const companyRef = db.doc(companyDocPath(afterData.company_id));
             const companyDoc = await companyRef.get();
             if (!companyDoc.exists) {
                 return;
             }
             const companyData = companyDoc.data();
-            const datacenterRef = db.doc(`datacenters/${datacenterId}`);
+            const datacenterRef = db.doc(datacenterDocPath(datacenterId));
             const datacenterDoc = await datacenterRef.get();
             if (!datacenterDoc.exists) {
                 return;
             }
             const datacenterData = datacenterDoc.data();
-            const gpuClusterRef = db.doc(`datacenters/${datacenterId}/gpu_clusters/${gpuClusterId}`);
+            const gpuClusterRef = db.doc(gpuClusterDocPath(gpuClusterId, datacenterId));
             t.update(gpuClusterRef, { company: companyData, datacenter: datacenterData });
         });
     }

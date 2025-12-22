@@ -1,8 +1,9 @@
 const { onDocumentUpdated, getFirestore, onCall, HttpsError, Timestamp } = require("./init");
 
-const { getCompanyById, getDatacenterById, getGpuClusterById, getUserById } = require("./common");
+const { companyDocPath, requestDocPath } = require("./common");
+const { USERS_COLLECTION, INVITATIONS_COLLECTION, GPU_CLUSTERS_COLLECTION, REQUESTS_COLLECTION, COMPANIES_COLLECTION } = require("./constants");
 
-exports.companyUpdate = onDocumentUpdated("companies/{companyId}", async (event) => {
+exports.companyUpdate = onDocumentUpdated(`${COMPANIES_COLLECTION}/{companyId}`, async (event) => {
     const db = getFirestore();
     const companyId = event.params.companyId;
     const afterData = event.data.after.data();
@@ -10,18 +11,18 @@ exports.companyUpdate = onDocumentUpdated("companies/{companyId}", async (event)
 
     if (afterData) {
         await db.runTransaction(async (t) => {
-            const companyRef = db.doc(`companies/${companyId}`);
+            const companyRef = db.doc(companyDocPath(companyId));
             const companyDoc = await companyRef.get();
             if (!companyDoc.exists) {
                 return;
             }
             const companyData = companyDoc.data();
-            const usersRef = db.collection(`users`).where('company_id', '==', companyId);
+            const usersRef = db.collection(USERS_COLLECTION).where('company_id', '==', companyId);
             const usersSnapshot = await usersRef.get();
             usersSnapshot.forEach((userDoc) => {
                 t.update(userDoc.ref, { company: companyData });
             });
-            const gpuClustersRef = db.collectionGroup(`gpu_clusters`).where('company_id', '==', companyId);
+            const gpuClustersRef = db.collectionGroup(GPU_CLUSTERS_COLLECTION).where('company_id', '==', companyId);
             const gpuClustersSnapshot = await gpuClustersRef.get();
             gpuClustersSnapshot.forEach((gpuClusterDoc) => {
                 t.update(gpuClusterDoc.ref, { company: companyData });
@@ -47,7 +48,7 @@ exports.corpAdminAddInvitation = onCall(async (request) => {
 
     const db = getFirestore();
 
-    var qs = await db.collection('invitations').where('email', '==', request.data.email).get();
+    var qs = await db.collection(INVITATIONS_COLLECTION).where('email', '==', request.data.email).get();
     if (qs.docs.length > 0) {
         throw new HttpsError(
             "invalid-argument",
@@ -56,7 +57,7 @@ exports.corpAdminAddInvitation = onCall(async (request) => {
     }
 
     await db.runTransaction(async (t) => {
-        var docref = await db.collection('invitations').add({
+        var docref = await db.collection(INVITATIONS_COLLECTION).add({
             inviting_user_id: request.auth.uid,
             email: request.data.email,
             display_name: request.data.displayName,
@@ -97,7 +98,7 @@ exports.adminAddCompany = onCall(async (request) => {
 
     const db = getFirestore();
 
-    var qs = await db.collection('companies').where('domain', '==', request.data.companyDomain).get();
+    var qs = await db.collection(COMPANIES_COLLECTION).where('domain', '==', request.data.companyDomain).get();
     if (qs.docs.length > 0) {
         throw new HttpsError(
             "invalid-argument",
@@ -106,7 +107,7 @@ exports.adminAddCompany = onCall(async (request) => {
     }
 
     await db.runTransaction(async (t) => {
-        const companyRef = await db.collection('companies').add({
+        const companyRef = await db.collection(COMPANIES_COLLECTION).add({
             name: request.data.companyName,
             domain: request.data.companyDomain,
             created_at: Timestamp.now(),
@@ -114,8 +115,8 @@ exports.adminAddCompany = onCall(async (request) => {
         });
 
 
-        const requestPath = `requests/${request.data.requestId}`;
-        const userPath = 'users/' + request.data.userId;
+        const requestPath = requestDocPath(request.data.requestId);
+        const userPath = userDocPath(request.data.userId);
         const userDoc = await db.doc(userPath).get();
         if (!userDoc.exists) {
             throw new HttpsError(

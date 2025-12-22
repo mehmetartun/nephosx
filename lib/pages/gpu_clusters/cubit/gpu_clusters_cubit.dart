@@ -63,7 +63,10 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
     transactions = await databaseRepository.getGpuTransactions(
       companyId: user!.companyId,
     );
-    listings = await databaseRepository.getListings(companyId: user!.companyId);
+    listings = await databaseRepository.getListings(
+      companyId: user!.companyId,
+      status: ListingStatus.active,
+    );
     gpuClusters = await databaseRepository.getGpuClusters(
       companyId: user!.companyId,
     );

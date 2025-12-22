@@ -1,6 +1,9 @@
 
 const { onDocumentUpdated, getFirestore } = require("./init");
 
+const { companyDocPath, userDocPath } = require("./common");
+
+
 exports.userUpdate = onDocumentUpdated("users/{userId}", async (event) => {
     const db = getFirestore();
     const userId = event.params.userId;
@@ -9,13 +12,14 @@ exports.userUpdate = onDocumentUpdated("users/{userId}", async (event) => {
 
     if (afterData && afterData.company_id && afterData.company_id != beforeData.company_id) {
         await db.runTransaction(async (t) => {
-            const companyRef = db.doc(`companies/${afterData.company_id}`);
+            const companyRef = db.doc(companyDocPath(afterData.company_id));
+
             const companyDoc = await companyRef.get();
             if (!companyDoc.exists) {
                 return;
             }
             const companyData = companyDoc.data();
-            const userRef = db.doc(`users/${userId}`);
+            const userRef = db.doc(userDocPath(userId));
             t.update(userRef, { company: companyData });
         });
     }

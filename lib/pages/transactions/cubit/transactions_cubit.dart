@@ -32,12 +32,12 @@ class TransactionsCubit extends Cubit<TransactionsState> {
       gpuCluster.addTransactions(transactions);
     }
 
-    for (var transaction in transactions) {
-      transaction.addBuyer(companies);
-      transaction.addSeller(companies);
-      transaction.addGpuCluster(gpuClusters);
-      transaction.addDatacenter(datacenters);
-    }
+    // for (var transaction in transactions) {
+    //   transaction.addBuyer(companies);
+    //   transaction.addSeller(companies);
+    //   transaction.addGpuCluster(gpuClusters);
+    //   transaction.addDatacenter(datacenters);
+    // }
   }
 
   void dataRefresh(
