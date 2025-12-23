@@ -21,3 +21,9 @@ final class TransactionErrorState extends TransactionsState {
 
   TransactionErrorState({required this.message});
 }
+
+final class TransactionDetailState extends TransactionsState {
+  final GpuTransaction transaction;
+
+  TransactionDetailState({required this.transaction});
+}

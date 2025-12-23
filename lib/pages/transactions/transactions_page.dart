@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nephosx/pages/transactions/views/transaction_detail_view.dart';
 
 import '../../blocs/authentication/authentication_bloc.dart';
 import '../../blocs/data/data_bloc.dart';
@@ -45,10 +46,16 @@ class TransactionsPage extends StatelessWidget {
                 return LoadingView(title: "Transactions");
               case TransactionErrorState _:
                 return ErrorView(title: "Error", message: state.message);
+              case TransactionDetailState _:
+                return TransactionDetailView(
+                  transaction: state.transaction,
+                  onCancel: cubit.showList,
+                );
               case TransactionsLoaded _:
                 return TransactionsView(
                   transactions: state.transactions,
                   onExport: cubit.onExport,
+                  onTransactionDetail: cubit.onTransactionDetail,
                 );
             }
           },

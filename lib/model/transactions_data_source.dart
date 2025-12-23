@@ -13,6 +13,7 @@ class TransactionsDataSource extends DataTableSource {
   final User user;
   final BuildContext context;
   final bool showSerialNumber;
+  final void Function(GpuTransaction) onTransactionDetail;
 
   // final String? Function(GpuCluster, DateTime, DateTime) validator;
   // final void Function(GpuTransaction) onAddTransaction;
@@ -22,6 +23,7 @@ class TransactionsDataSource extends DataTableSource {
     required this.user,
     required this.context,
     this.showSerialNumber = true,
+    required this.onTransactionDetail,
     // required this.validator,
     // required this.onAddTransaction,
   });
@@ -194,7 +196,12 @@ class TransactionsDataSource extends DataTableSource {
     return DataRow(
       cells: [
         DataCell(
-          Text(transaction.buyerCompanyId == user.companyId ? "BUY" : "SELL"),
+          TableRowInkWell(
+            onTap: () => onTransactionDetail(transaction),
+            child: Text(
+              transaction.buyerCompanyId == user.companyId ? "BUY" : "SELL",
+            ),
+          ),
         ),
         DataCell(Text(transaction.gpuCluster?.serialNumber ?? 'XXX')),
         DataCell(

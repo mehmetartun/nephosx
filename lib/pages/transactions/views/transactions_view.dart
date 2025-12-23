@@ -25,9 +25,13 @@ class TransactionsView extends StatefulWidget {
     super.key,
     required this.transactions,
     required this.onExport,
+    required this.onTransactionDetail,
   });
   final List<GpuTransaction> transactions;
   final void Function(List<GpuTransaction>, {String prefix}) onExport;
+  final void Function(GpuTransaction) onTransactionDetail;
+
+  //
 
   @override
   State<TransactionsView> createState() => _TransactionsViewState();
@@ -96,6 +100,7 @@ class _TransactionsViewState extends State<TransactionsView> {
                 transactions: state.transactions,
                 user: user!,
                 context: context,
+                onTransactionDetail: widget.onTransactionDetail,
               );
             });
           }
@@ -114,6 +119,7 @@ class _TransactionsViewState extends State<TransactionsView> {
       transactions: transactions,
       user: user!,
       context: context,
+      onTransactionDetail: widget.onTransactionDetail,
     );
   }
 
@@ -122,6 +128,7 @@ class _TransactionsViewState extends State<TransactionsView> {
       transactions: txns,
       user: user!,
       context: context,
+      onTransactionDetail: widget.onTransactionDetail,
     );
   }
 

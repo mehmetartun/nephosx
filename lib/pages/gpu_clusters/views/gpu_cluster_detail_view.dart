@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:nephosx/pages/transactions/views/transaction_detail_view.dart';
 import 'package:nephosx/widgets/occupation_view_paint.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -46,6 +47,19 @@ class _GpuClusterDetailViewState extends State<GpuClusterDetailView> {
       user: widget.user,
       context: context,
       showSerialNumber: true,
+      onTransactionDetail: (transaction) => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return TransactionDetailView(
+              transaction: transaction,
+              onCancel: () {
+                Navigator.pop(context);
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 

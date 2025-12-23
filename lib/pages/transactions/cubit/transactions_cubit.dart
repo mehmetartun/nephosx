@@ -142,7 +142,21 @@ class TransactionsCubit extends Cubit<TransactionsState> {
     return super.close();
   }
 
+  void showList() {
+    emit(
+      TransactionsLoaded(
+        transactions: transactions,
+        companies: companies,
+        gpuClusters: gpuClusters,
+      ),
+    );
+  }
+
   void onExport(List<GpuTransaction> txs, {String prefix = "transactions"}) {
     CsvService().exportTransactions(txs, prefix: prefix);
+  }
+
+  void onTransactionDetail(GpuTransaction transaction) {
+    emit(TransactionDetailState(transaction: transaction));
   }
 }
