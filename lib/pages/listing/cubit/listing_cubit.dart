@@ -101,6 +101,16 @@ class ListingCubit extends Cubit<ListingState> {
     init();
   }
 
+  void cancelListing(Listing listing) async {
+    emit(ListingInitial());
+    await databaseRepository.updateDocument(
+      data: {'status': 'cancelled'},
+      docPath: 'listings/${listing.id}',
+    );
+
+    init();
+  }
+
   void requestAddListing({required GpuCluster gpuCluster, required Slot slot}) {
     emit(ListingAddEdit(gpuCluster: gpuCluster, slot: slot));
   }

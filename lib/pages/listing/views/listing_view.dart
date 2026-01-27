@@ -22,7 +22,7 @@ class ListingView extends StatefulWidget {
   final List<Listing> listings;
   final List<GpuTransaction> transactions;
 
-  final void Function() onCancel;
+  final void Function(Listing) onCancel;
   final List<GpuCluster> gpuClusters;
 
   final void Function({required GpuCluster gpuCluster, required Slot slot})
@@ -74,6 +74,7 @@ class _ListingViewState extends State<ListingView> {
                       DataColumn(label: Text("Px2")),
                       DataColumn(label: Text("Px3")),
                       DataColumn(label: Text("Px4")),
+                      DataColumn(label: Text("Action")),
                     ],
                     rows: widget.listings
                         .map(
@@ -135,6 +136,41 @@ class _ListingViewState extends State<ListingView> {
                                             .pricePerHourFormattedWithUnits,
                                       )
                                     : Text("N/A"),
+                              ),
+                              DataCell(
+                                TextButton(
+                                  onPressed: () async {
+                                    bool? confirmed = await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text("Confirm"),
+                                          content: Text(
+                                            "Are you sure you want to cancel this listing?",
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context, false);
+                                              },
+                                              child: Text("Cancel"),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context, true);
+                                              },
+                                              child: Text("Confirm"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                    if (confirmed == true) {
+                                      widget.onCancel(listing);
+                                    }
+                                  },
+                                  child: Text("Cancel"),
+                                ),
                               ),
                             ],
                           ),

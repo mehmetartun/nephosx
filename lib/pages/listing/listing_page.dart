@@ -71,9 +71,7 @@ class ListingPage extends StatelessWidget {
                   gpuClusters: state.gpuClusters,
                   transactions: state.transactions,
 
-                  onCancel: () {
-                    cubit.onCancel();
-                  },
+                  onCancel: cubit.cancelListing,
                   requestAddListing: cubit.requestAddListing,
                 );
             }
