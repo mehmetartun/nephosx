@@ -18,6 +18,7 @@ class GpuClusterDataSource extends DataTableSource {
 
   final void Function(GpuCluster gpuCluster) updateGpuClusterRequest;
   final void Function(GpuCluster gpuCluster) gpuClusterDetailRequest;
+  final void Function(GpuCluster gpuCluster) duplicateGpuClusterRequest;
   final bool showSerialNumber;
 
   // final double Function(GpuCluster, DateTime, DateTime) priceCalculator;
@@ -30,6 +31,7 @@ class GpuClusterDataSource extends DataTableSource {
     required this.context,
     required this.updateGpuClusterRequest,
     required this.gpuClusterDetailRequest,
+    required this.duplicateGpuClusterRequest,
     this.showSerialNumber = true,
     // required this.priceCalculator,
     // required this.validator,
@@ -153,6 +155,12 @@ class GpuClusterDataSource extends DataTableSource {
         //   sortFunction<DateTime>((d) => d.startDate, columnIndex, ascending);
         // },
       ),
+      DataColumn(
+        label: Text('', style: Theme.of(context).textTheme.labelMedium),
+        // onSort: (columnIndex, ascending) {
+        //   sortFunction<DateTime>((d) => d.startDate, columnIndex, ascending);
+        // },
+      ),
     ];
   }
 
@@ -237,6 +245,19 @@ class GpuClusterDataSource extends DataTableSource {
                       ? null
                       : () => updateGpuClusterRequest(gpuCluster),
                   child: Text(!gpuCluster.canEdit ? "Locked" : "Edit"),
+                )
+              : SizedBox.shrink(),
+        ),
+        DataCell(
+          (BlocProvider.of<AuthenticationBloc>(
+                    context,
+                  ).user?.canUpdateGpuCluster ??
+                  false)
+              ? TextButton(
+                  onPressed: !gpuCluster.canEdit
+                      ? null
+                      : () => duplicateGpuClusterRequest(gpuCluster),
+                  child: Text("Duplicate"),
                 )
               : SizedBox.shrink(),
         ),

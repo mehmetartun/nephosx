@@ -40,6 +40,7 @@ class GpuClustersPage extends StatelessWidget {
                 addGpuClusterRequest: cubit.addGpuClusterRequest,
                 updateGpuClusterRequest: cubit.updateGpuClusterRequest,
                 gpuClusterDetailRequest: cubit.gpuClusterDetailRequest,
+                duplicateGpuClusterRequest: cubit.duplicateGpuClusterRequest,
               );
             case GpuClustersAddEdit _:
               return GpuClusterAddEditView(
@@ -48,6 +49,7 @@ class GpuClustersPage extends StatelessWidget {
                 onAddGpuCluster: cubit.addGpuCluster,
                 onUpdateGpuCluster: cubit.updateGpuCluster,
                 onCancel: cubit.cancelAddGpuCluster,
+                useAsTemplate: state.useAsTemplate ?? false,
               );
             case GpuClusterDetail _:
               return GpuClusterDetailView(

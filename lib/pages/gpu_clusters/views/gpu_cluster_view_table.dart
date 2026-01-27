@@ -16,11 +16,13 @@ class GpuClustersViewTable extends StatefulWidget {
     required this.addGpuClusterRequest,
     required this.updateGpuClusterRequest,
     required this.gpuClusterDetailRequest,
+    required this.duplicateGpuClusterRequest,
   }) : super(key: key);
   final List<GpuCluster> gpuClusters;
   final void Function() addGpuClusterRequest;
   final void Function(GpuCluster) updateGpuClusterRequest;
   final void Function(GpuCluster) gpuClusterDetailRequest;
+  final void Function(GpuCluster) duplicateGpuClusterRequest;
 
   @override
   State<GpuClustersViewTable> createState() => _GpuClustersViewTableState();
@@ -53,11 +55,13 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
       context: context,
       updateGpuClusterRequest: widget.updateGpuClusterRequest,
       gpuClusterDetailRequest: widget.gpuClusterDetailRequest,
+      duplicateGpuClusterRequest: widget.duplicateGpuClusterRequest,
     );
   }
 
   void updateSource() {
     gpuClusterDataSource = GpuClusterDataSource(
+      duplicateGpuClusterRequest: widget.duplicateGpuClusterRequest,
       gpuClusters: widget.gpuClusters
           .where((element) {
             if (selectedDeviceId == null) return true;

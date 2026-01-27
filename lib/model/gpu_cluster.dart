@@ -8,6 +8,7 @@ import 'conversions.dart';
 import 'cpu.dart';
 import 'datacenter.dart';
 import 'device.dart';
+import 'gpu_maintenance.dart';
 import 'gpu_transaction.dart';
 import 'listing.dart';
 import 'producer.dart';
@@ -66,6 +67,7 @@ class GpuCluster {
   final String companyId;
   @JsonKey(name: "transactions", includeToJson: false, includeFromJson: false)
   List<GpuTransaction> transactions;
+  List<GpuMaintenance> maintenances;
 
   @JsonKey(name: "datacenter", includeToJson: false, includeFromJson: true)
   final Datacenter? datacenter;
@@ -143,6 +145,7 @@ class GpuCluster {
     required this.id,
     this.perGpuVramInGb,
     this.transactions = const [],
+    this.maintenances = const [],
     this.listings = const [],
     this.datacenter,
     this.company,
@@ -171,6 +174,8 @@ class GpuCluster {
 
   List<Slot> get occupiedSlots => transactions.map((tx) => tx.slot).toList();
   List<Slot> get listedSlots => listings.map((ls) => ls.slot).toList();
+  List<Slot> get maintenanceSlots =>
+      maintenances.map((mst) => mst.slot).toList();
 
   void addTransactions(List<GpuTransaction> trx) {
     Set<GpuTransaction> txSet;
@@ -194,6 +199,17 @@ class GpuCluster {
     listings = lsSet.toList();
   }
 
+  void addMaintenance(List<GpuMaintenance> mst) {
+    Set<GpuMaintenance> mtSet = {};
+    // mtSet = lst.toSet();
+    for (var mt in mst) {
+      if (mt.gpuClusterId == id) {
+        mtSet.add(mt);
+      }
+    }
+    maintenances = mtSet.toList();
+  }
+
   GpuCluster copyWith({
     // String? producerId,
     String? deviceId,
@@ -214,6 +230,7 @@ class GpuCluster {
     double? perGpuVramInGb,
     List<GpuTransaction>? transactions,
     List<Listing>? listings,
+    List<GpuMaintenance>? maintenances,
     double? teraFlops,
     List<RentalPrice>? rentalPrices,
     double? effectiveRam,
@@ -250,6 +267,7 @@ class GpuCluster {
       perGpuVramInGb: perGpuVramInGb ?? this.perGpuVramInGb,
       transactions: transactions ?? this.transactions,
       listings: listings ?? this.listings,
+      maintenances: maintenances ?? this.maintenances,
       datacenter: datacenter ?? this.datacenter,
       company: company ?? this.company,
       teraFlops: teraFlops ?? this.teraFlops,
@@ -347,6 +365,7 @@ class GpuCluster {
     List<GpuTransaction> txs = transactions.toList();
     List<Slot> slots = occupiedSlots.toList();
     slots.addAll(listedSlots.toList());
+    slots.addAll(maintenanceSlots.toList());
 
     List<Slot> gaps = [];
     late DateTime sDate;

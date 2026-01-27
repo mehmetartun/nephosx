@@ -20,7 +20,12 @@ final class GpuClustersLoading extends GpuClustersState {}
 final class GpuClustersAddEdit extends GpuClustersState {
   final GpuCluster? gpuCluster;
   final List<Datacenter> datacenters;
-  GpuClustersAddEdit({this.gpuCluster, required this.datacenters});
+  final bool? useAsTemplate;
+  GpuClustersAddEdit({
+    this.gpuCluster,
+    required this.datacenters,
+    this.useAsTemplate,
+  });
 }
 
 final class GpuClusterDetail extends GpuClustersState {

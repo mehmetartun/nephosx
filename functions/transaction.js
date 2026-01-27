@@ -4,7 +4,10 @@ const {
     onDocumentWritten,
     onCall,
     onRequest,
-    HttpsError } = require("./init");
+    HttpsError,
+    FieldValue,
+    logger, onObjectFinalized
+} = require("./init");
 const { getCompanyById, getDatacenterById, getGpuClusterById } = require("./common");
 
 const { LISTINGS_COLLECTION, TRANSACTIONS_COLLECTION, GPU_CLUSTERS_COLLECTION } = require("./constants");
@@ -84,7 +87,7 @@ exports.addTransaction = onCall(async (request) => {
         const buyerCompany = await getCompanyById(request.data.buyer_company_id);
         const gpuCluster = await getGpuClusterById(request.data.gpu_cluster_id, request.data.datacenter_id);
         const datacenter = await getDatacenterById(request.data.datacenter_id);
-        var txref = await db.collection(TRANSACTIONS_COLLECTION).add({
+        var txData = {
             start_date: Timestamp.fromMillis(request.data.start_date),
             end_date: Timestamp.fromMillis(request.data.end_date),
             seller_company_id: request.data.seller_company_id,
@@ -98,14 +101,22 @@ exports.addTransaction = onCall(async (request) => {
             gpu_cluster: gpuCluster,
             seller_company: sellerCompany,
             buyer_company: buyerCompany,
-
-        });
+        };
+        var txref = await db.collection(TRANSACTIONS_COLLECTION).add(txData);
+        var txBuyerRef = await db.collection(`companies/${request.data.buyer_company_id}/transactions`).add(txData);
+        var txSellerRef = await db.collection(`companies/${request.data.seller_company_id}/transactions`).add(txData);
 
         if (request.data.listing_id) {
             var listing_qs = await db.collection(LISTINGS_COLLECTION).doc(request.data.listing_id).get();
             t.update(listing_qs.ref, { transaction_id: txref.id, status: 'traded' });
         }
-        t.update(txref, { id: txref.id });
+        t.update(txref, {
+            id: txref.id,
+            buyer_transaction_reference: txBuyerRef,
+            seller_transaction_reference: txSellerRef
+        });
+        t.update(txBuyerRef, { id: txBuyerRef.id, transaction_reference: txref, transaction_id: txref.id });
+        t.update(txSellerRef, { id: txSellerRef.id, transaction_reference: txref, transaction_id: txref.id });
         transaction_id = txref.id;
     });
     return { 'message': 'Transaction added successfully', transaction_id: transaction_id };
@@ -138,5 +149,44 @@ exports.addTransaction = onCall(async (request) => {
 //     });
 //     res.send({ 'message': 'Transaction data cleaned up successfully' });
 // });
+
+exports.updateTransactionOnUpload = onObjectFinalized(async (event) => {
+    const fileBucket = event.data.bucket;
+    const filePath = event.data.name;
+    const contentType = event.data.contentType;
+
+    if (!filePath.startsWith("transactions/")) {
+        return logger.log("Not a transaction file.");
+    }
+
+    const parts = filePath.split("/");
+    if (parts.length < 3) {
+        return logger.log("File path is not deep enough to be a transaction file.");
+    }
+    const transactionId = parts[1];
+    const fileName = parts.pop();
+
+    const db = getFirestore();
+    const transactionRef = db.collection(TRANSACTIONS_COLLECTION).doc(transactionId);
+
+    const fileData = {
+        path: filePath,
+        bucket: fileBucket,
+        name: fileName,
+        content_type: contentType,
+        url: event.data.mediaLink || `https://storage.googleapis.com/${fileBucket}/${filePath}`,
+        created_at: Timestamp.now(),
+    };
+
+    try {
+        await transactionRef.update({
+            documents: FieldValue.arrayUnion(fileData)
+        });
+        logger.log(`Updated transaction ${transactionId} with document ${fileName}`);
+    } catch (error) {
+        logger.error(`Error updating transaction ${transactionId}:`, error);
+    }
+});
+
 
 

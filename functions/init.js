@@ -20,6 +20,10 @@ const {
     FirestoreEvent
 } = require('firebase-functions/v2/firestore');
 
+const {
+    onObjectFinalized
+} = require('firebase-functions/v2/storage');
+
 const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
 // const {admin} = require('firebase-admin');
 
@@ -82,4 +86,5 @@ module.exports = {
     onDocumentDeleted,
     Change,
     FirestoreEvent,
+    onObjectFinalized,
 }

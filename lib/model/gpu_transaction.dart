@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:nephosx/model/company.dart';
 import 'package:nephosx/model/conversions.dart';
+import 'package:nephosx/model/file_data.dart';
 
 import '../extensions/add_month.dart';
 import 'consideration.dart';
@@ -45,6 +46,8 @@ class GpuTransaction {
   GpuCluster? gpuCluster;
   @JsonKey(name: "datacenter", includeFromJson: true, includeToJson: false)
   Datacenter? datacenter;
+  @JsonKey(name: "documents", includeFromJson: true, includeToJson: false)
+  List<FileData> documents;
 
   GpuTransaction({
     required this.id,
@@ -62,6 +65,7 @@ class GpuTransaction {
     this.sellerCompany,
     this.gpuCluster,
     this.datacenter,
+    this.documents = const [],
   });
 
   void addDatacenter(List<Datacenter> datacenters) {

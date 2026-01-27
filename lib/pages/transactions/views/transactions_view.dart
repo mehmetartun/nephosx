@@ -3,12 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:nephosx/widgets/transaction_table.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
-import '../../../blocs/transactions/transactions_bloc.dart'
-    hide TransactionsState;
+
 import '../../../model/datacenter.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_transaction.dart';
@@ -472,9 +470,9 @@ class _TransactionsViewState extends State<TransactionsView> {
                               List<GpuTransaction> filtered = widget
                                   .transactions
                                   .where((tx) {
-                                    return tx.gpuCluster?.serialNumber.contains(
-                                          value,
-                                        ) ??
+                                    return tx.gpuCluster?.serialNumber
+                                            .toLowerCase()
+                                            .contains(value.toLowerCase()) ??
                                         false;
                                   })
                                   .toList();

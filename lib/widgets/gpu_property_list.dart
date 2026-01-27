@@ -4,27 +4,37 @@ import 'package:nephosx/model/key_value_pair.dart';
 class GpuPropertyList extends StatelessWidget {
   final String title;
   final List<KeyValuePair> properties;
+  final double width;
+  final Widget? titleWidget;
   const GpuPropertyList({
     super.key,
     required this.title,
     required this.properties,
+    this.width = 300,
+    this.titleWidget,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 300,
+      width: width,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 20),
-            child: Text(
-              title,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+            child: Row(
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                if (titleWidget != null) titleWidget!,
+              ],
             ),
           ),
           ListView.separated(
@@ -33,17 +43,24 @@ class GpuPropertyList extends StatelessWidget {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(properties[index].key),
-                    Text(
-                      properties[index].value,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                child: InkWell(
+                  onTap: properties[index].onTap,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child:
+                            properties[index].keyWidget ??
+                            Text(
+                              properties[index].key,
+                              overflow: TextOverflow.clip,
+                            ),
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 10),
+                      properties[index].valueWidget ??
+                          Text(properties[index].value),
+                    ],
+                  ),
                 ),
               );
             },

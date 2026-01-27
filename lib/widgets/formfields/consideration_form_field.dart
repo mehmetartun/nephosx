@@ -12,17 +12,29 @@ class ConsiderationFormField extends FormField<Consideration> {
     super.validator,
     super.onSaved,
     super.initialValue,
+    this.fixedCurrency,
     void Function(Consideration)? onChanged,
   }) : super(
          builder: (state) {
-           return _ConsiderationFormField(state: state, onChanged: onChanged);
+           return _ConsiderationFormField(
+             state: state,
+             onChanged: onChanged,
+             fixedCurrency: fixedCurrency,
+           );
          },
        );
+
+  final Currency? fixedCurrency;
 }
 
 class _ConsiderationFormField extends StatefulWidget {
-  const _ConsiderationFormField({required this.state, this.onChanged});
+  const _ConsiderationFormField({
+    required this.state,
+    this.onChanged,
+    this.fixedCurrency,
+  });
   final FormFieldState<Consideration> state;
+  final Currency? fixedCurrency;
   final void Function(Consideration)? onChanged;
 
   @override
@@ -34,11 +46,17 @@ class __ConsiderationFormFieldState extends State<_ConsiderationFormField> {
   Consideration? value;
   Currency? currency;
   double? amount;
+  // Currency? fixedCurrency;
+
   @override
   void initState() {
     super.initState();
     value = widget.state.value;
-    currency = value?.currency;
+    if (widget.fixedCurrency == null) {
+      currency = value?.currency;
+    } else {
+      currency = widget.fixedCurrency;
+    }
     amount = value?.amount;
   }
 
@@ -78,9 +96,16 @@ class __ConsiderationFormFieldState extends State<_ConsiderationFormField> {
                   }
                   return null;
                 },
-                items: Currency.values.map((e) {
-                  return DropdownMenuItem(value: e, child: Text(e.title));
-                }).toList(),
+                items: widget.fixedCurrency == null
+                    ? Currency.values.map((e) {
+                        return DropdownMenuItem(value: e, child: Text(e.title));
+                      }).toList()
+                    : [
+                        DropdownMenuItem(
+                          value: widget.fixedCurrency,
+                          child: Text(widget.fixedCurrency!.title),
+                        ),
+                      ],
               ),
             ],
           ),

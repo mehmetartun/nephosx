@@ -32,6 +32,7 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
   List<Listing> listings = [];
   HttpsCallable gpuClusterUpdateCheck = FirebaseFunctions.instance
       .httpsCallable("gpuCluster-gpuClusterUpdateCheck");
+  List<Future> futures = [];
 
   void init({String? gpuClusterId}) async {
     emit(GpuClustersInitial());
@@ -57,19 +58,30 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
     //     });
 
     // companies = await databaseRepository.getCompanies();
-    // datacenters = await databaseRepository.getDatacenters(
-    //   companyId: user!.companyId,
-    // );
-    transactions = await databaseRepository.getGpuTransactions(
-      companyId: user!.companyId,
+    futures.add(
+      databaseRepository
+          .getDatacenters(companyId: user!.companyId)
+          .then((value) => datacenters = value),
     );
-    listings = await databaseRepository.getListings(
-      companyId: user!.companyId,
-      status: ListingStatus.active,
+    futures.add(
+      databaseRepository.getCompanies().then((value) => companies = value),
     );
-    gpuClusters = await databaseRepository.getGpuClusters(
-      companyId: user!.companyId,
+    futures.add(
+      databaseRepository
+          .getGpuTransactions(companyId: user!.companyId)
+          .then((value) => transactions = value),
     );
+    futures.add(
+      databaseRepository
+          .getListings(companyId: user!.companyId, status: ListingStatus.active)
+          .then((value) => listings = value),
+    );
+    futures.add(
+      databaseRepository
+          .getGpuClusters(companyId: user!.companyId)
+          .then((value) => gpuClusters = value),
+    );
+    await Future.wait(futures);
 
     for (var gpuCluster in gpuClusters) {
       gpuCluster.addListings(listings);
@@ -132,6 +144,16 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
 
   void addGpuClusterRequest() {
     emit(GpuClustersAddEdit(gpuCluster: null, datacenters: datacenters));
+  }
+
+  void duplicateGpuClusterRequest(GpuCluster gpuCluster) {
+    emit(
+      GpuClustersAddEdit(
+        gpuCluster: gpuCluster,
+        datacenters: datacenters,
+        useAsTemplate: true,
+      ),
+    );
   }
 
   void updateGpuClusterRequest(GpuCluster gpuCluster) async {

@@ -11,6 +11,7 @@ import '../../../widgets/formfields/date_formfield.dart';
 
 class GpuClusterAddEditView extends StatefulWidget {
   final GpuCluster? gpuCluster;
+  final bool useAsTemplate;
   final List<Datacenter> datacenters;
   final void Function(GpuCluster) onAddGpuCluster;
   final void Function(GpuCluster) onUpdateGpuCluster;
@@ -22,6 +23,7 @@ class GpuClusterAddEditView extends StatefulWidget {
     required this.onAddGpuCluster,
     required this.onUpdateGpuCluster,
     required this.onCancel,
+    this.useAsTemplate = false,
   });
 
   @override
@@ -101,8 +103,10 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
     startDate = widget.gpuCluster?.startDate;
     endDate = widget.gpuCluster?.endDate;
     manufactureDate = widget.gpuCluster?.manufactureDate;
-    serialNumber = widget.gpuCluster?.serialNumber;
-    assetTag = widget.gpuCluster?.assetTag;
+    serialNumber = widget.useAsTemplate
+        ? null
+        : widget.gpuCluster?.serialNumber;
+    assetTag = widget.useAsTemplate ? null : widget.gpuCluster?.assetTag;
     if (datacenter == null) {
       // getDataCenter();
     } else {
@@ -156,7 +160,7 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.gpuCluster == null
+                      widget.gpuCluster == null || widget.useAsTemplate
                           ? "Add GPU Cluster"
                           : "Edit GPU Cluster",
                       style: Theme.of(context).textTheme.headlineSmall,

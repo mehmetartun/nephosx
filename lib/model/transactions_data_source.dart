@@ -78,9 +78,14 @@ class TransactionsDataSource extends DataTableSource {
           'Serial\nNumber',
           style: Theme.of(context).textTheme.labelMedium,
         ),
-        // onSort: (columnIndex, ascending) {
-        //   sortFunction<String>((d) => d.serialNumber, columnIndex, ascending);
-        // },
+
+        onSort: (columnIndex, ascending) {
+          sortFunction<String>(
+            (d) => d.gpuCluster?.serialNumber ?? 'S/N ****',
+            columnIndex,
+            ascending,
+          );
+        },
       ),
       DataColumn(
         label: Text(

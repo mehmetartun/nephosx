@@ -1,0 +1,17 @@
+[
+    {
+        "maxAgeSeconds": 3600,
+        "method": [
+            "GET",
+            "PUT",
+            "HEAD"
+        ],
+        "origin": [
+            "https://nephosx-dev.web.app",
+            "https://nephosx-dev.firebaseapp.com"
+        ],
+        "responseHeader": [
+            "Content-Type"
+        ]
+    }
+]
