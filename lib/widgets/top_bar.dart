@@ -5,6 +5,7 @@ import 'package:nephosx/widgets/brightness_selector.dart';
 
 import '../blocs/authentication/authentication_bloc.dart';
 import '../model/enums.dart';
+import 'user_avatar.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -53,209 +54,246 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Image.asset('assets/images/nephosx2/nephosx.png', height: 70),
               Text(
                 "NephosX",
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
-                  fontStyle: FontStyle.italic,
+                  // fontStyle: FontStyle.italic,
                 ),
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // if (user!.canSeeUsers) ...[
-                  //   navigationShell?.currentIndex == 0
-                  //       ? FilledButton(
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(0);
-                  //           },
-                  //           child: const Text("Users"),
-                  //         )
-                  //       : TextButton(
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(0);
-                  //           },
-                  //           child: const Text("Users"),
-                  //         ),
-                  // ],
+              SizedBox(width: 20),
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    textButtonTheme: TextButtonThemeData(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  child: OverflowBar(
+                    // mainAxisSize: MainAxisSize.min,
+                    spacing: 10,
+                    children: [
+                      // if (user!.canSeeUsers) ...[
+                      //   navigationShell?.currentIndex == 0
+                      //       ? FilledButton(
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(0);
+                      //           },
+                      //           child: const Text("Users"),
+                      //         )
+                      //       : TextButton(
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(0);
+                      //           },
+                      //           child: const Text("Users"),
+                      //         ),
+                      // ],
 
-                  // if (user!.canSeeCompanies) ...[
-                  //   navigationShell?.currentIndex == 1
-                  //       ? FilledButton(
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(1);
-                  //           },
-                  //           child: const Text("Companies"),
-                  //         )
-                  //       : TextButton(
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(1);
-                  //           },
-                  //           child: const Text("Companies"),
-                  //         ),
-                  // ],
-                  // if (user!.canSeeDatacenters) ...[
-                  //   navigationShell?.currentIndex == 2
-                  //       ? FilledButton(
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(2);
-                  //           },
-                  //           child: const Text("Datacenters"),
-                  //         )
-                  //       : TextButton(
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(2);
-                  //           },
-                  //           child: const Text("Datacenters"),
-                  //         ),
-                  // ],
-                  // if (user!.canSeeGpuClusters) ...[
-                  //   navigationShell?.currentIndex == 3
-                  //       ? FilledButton(
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(3);
-                  //           },
-                  //           child: const Text("GPU Clusters"),
-                  //         )
-                  //       : TextButton(
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(3);
-                  //           },
-                  //           child: const Text("GPU Clusters"),
-                  //         ),
-                  // ],
-                  if (user!.canSeeMarketplace) ...[
-                    navigationShell?.currentIndex == 4
-                        ? FilledButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(4);
-                            },
-                            child: const Text("Market"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(4);
-                            },
-                            child: const Text("Market"),
-                          ),
-                  ],
-                  if (user.canSeeCorporateAdmin) ...[
-                    navigationShell?.currentIndex == 9
-                        ? FilledButton(
-                            onPressed: () {
-                              // navigationShell?.goBranch(7);
-                              // context.go("/admin/data");
-                            },
-                            child: const Text("My Listings"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              context.goNamed("listing");
-                              // navigationShell?.goBranch(7);
-                            },
-                            child: const Text("My Listings"),
-                          ),
-                  ],
+                      // if (user!.canSeeCompanies) ...[
+                      //   navigationShell?.currentIndex == 1
+                      //       ? FilledButton(
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(1);
+                      //           },
+                      //           child: const Text("Companies"),
+                      //         )
+                      //       : TextButton(
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(1);
+                      //           },
+                      //           child: const Text("Companies"),
+                      //         ),
+                      // ],
+                      // if (user!.canSeeDatacenters) ...[
+                      //   navigationShell?.currentIndex == 2
+                      //       ? FilledButton(
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(2);
+                      //           },
+                      //           child: const Text("Datacenters"),
+                      //         )
+                      //       : TextButton(
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(2);
+                      //           },
+                      //           child: const Text("Datacenters"),
+                      //         ),
+                      // ],
+                      // if (user!.canSeeGpuClusters) ...[
+                      //   navigationShell?.currentIndex == 3
+                      //       ? FilledButton(
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(3);
+                      //           },
+                      //           child: const Text("GPU Clusters"),
+                      //         )
+                      //       : TextButton(
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(3);
+                      //           },
+                      //           child: const Text("GPU Clusters"),
+                      //         ),
+                      // ],
+                      if (user!.canSeeMarketplace) ...[
+                        navigationShell?.currentIndex == 4
+                            ? FilledButton.icon(
+                                onPressed: () {
+                                  navigationShell?.goBranch(4);
+                                },
+                                icon: Icon(Icons.shopping_cart),
+                                label: const Text("Market"),
+                              )
+                            : TextButton.icon(
+                                onPressed: () {
+                                  navigationShell?.goBranch(4);
+                                },
+                                icon: Icon(Icons.shopping_cart),
+                                label: const Text("Market"),
+                              ),
+                      ],
+                      if (user.canSeeCorporateAdmin) ...[
+                        navigationShell?.currentIndex == 9
+                            ? FilledButton.icon(
+                                onPressed: () {
+                                  // navigationShell?.goBranch(7);
+                                  // context.go("/admin/data");
+                                },
+                                icon: Icon(Icons.developer_board),
+                                label: const Text("My GPUs"),
+                              )
+                            : TextButton.icon(
+                                onPressed: () {
+                                  context.goNamed("listing");
+                                  // navigationShell?.goBranch(7);
+                                },
+                                icon: Icon(Icons.developer_board),
+                                label: const Text("My GPUs"),
+                              ),
+                      ],
 
-                  if (user.type == UserType.public) ...[
-                    navigationShell?.currentIndex == 1
-                        ? FilledButton(
-                            onPressed: () {
-                              // navigationShell?.goBranch(1);
-                            },
-                            child: const Text("Company"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(1);
-                            },
-                            child: const Text("Company"),
-                          ),
-                  ],
+                      if (user.type == UserType.public) ...[
+                        navigationShell?.currentIndex == 1
+                            ? FilledButton(
+                                onPressed: () {
+                                  // navigationShell?.goBranch(1);
+                                },
+                                child: const Text("Company"),
+                              )
+                            : TextButton(
+                                onPressed: () {
+                                  navigationShell?.goBranch(1);
+                                },
+                                child: const Text("Company"),
+                              ),
+                      ],
 
-                  if (user.canSeeTransactions) ...[
-                    navigationShell?.currentIndex == 6
-                        ? FilledButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(6);
-                            },
-                            child: const Text("Transactions"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              navigationShell?.goBranch(6);
-                            },
-                            child: const Text("Transactions"),
-                          ),
-                  ],
-                  if (user.canSeeAdmin) ...[
-                    navigationShell?.currentIndex == 7
-                        ? FilledButton(
-                            onPressed: () {
-                              // navigationShell?.goBranch(7);
-                              // context.go("/admin/data");
-                            },
-                            child: const Text("Admin"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              context.go("/admin/data");
-                              // navigationShell?.goBranch(7);
-                            },
-                            child: const Text("Admin"),
-                          ),
-                  ],
-                  if (user.canSeeCorporateAdmin) ...[
-                    navigationShell?.currentIndex == 8
-                        ? FilledButton(
-                            onPressed: () {
-                              // navigationShell?.goBranch(7);
-                              // context.go("/admin/data");
-                            },
-                            child: const Text("Admin"),
-                          )
-                        : TextButton(
-                            onPressed: () {
-                              context.goNamed("corp_admin_users");
-                              // navigationShell?.goBranch(7);
-                            },
-                            child: const Text("Admin"),
-                          ),
-                  ],
-                  // if (user.canSeeSettings) ...[
-                  //   navigationShell?.currentIndex == 5
-                  //       ? FilledButton(
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(5);
-                  //           },
-                  //           child: const Text("Settings"),
-                  //         )
-                  //       : user.emailVerified == false
-                  //       ? TextButton.icon(
-                  //           icon: Icon(
-                  //             Icons.warning,
-                  //             color: Theme.of(context).colorScheme.error,
-                  //           ),
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(5);
-                  //           },
-                  //           label: const Text("Settings"),
-                  //         )
-                  //       : TextButton(
-                  //           onPressed: () {
-                  //             navigationShell?.goBranch(5);
-                  //           },
-                  //           child: const Text("Settings"),
-                  //         ),
-                  // ],
-                ],
+                      if (user.canSeeTransactions) ...[
+                        navigationShell?.currentIndex == 6
+                            ? FilledButton.icon(
+                                onPressed: () {
+                                  navigationShell?.goBranch(6);
+                                },
+                                icon: Icon(Icons.text_snippet),
+                                label: const Text("Transactions"),
+                              )
+                            : TextButton.icon(
+                                onPressed: () {
+                                  navigationShell?.goBranch(6);
+                                },
+                                icon: Icon(Icons.text_snippet),
+                                label: const Text("Transactions"),
+                              ),
+                      ],
+                      if (user.canSeeAdmin) ...[
+                        navigationShell?.currentIndex == 7
+                            ? FilledButton.icon(
+                                onPressed: () {
+                                  // navigationShell?.goBranch(7);
+                                  // context.go("/admin/data");
+                                },
+                                icon: Icon(Icons.star),
+                                label: const Text("Admin"),
+                              )
+                            : TextButton.icon(
+                                onPressed: () {
+                                  context.go("/admin/data");
+                                  // navigationShell?.goBranch(7);
+                                },
+                                icon: Icon(Icons.star),
+                                label: const Text("Admin"),
+                              ),
+                      ],
+                      if (user.canSeeCorporateAdmin) ...[
+                        navigationShell?.currentIndex == 8
+                            ? FilledButton.icon(
+                                onPressed: () {
+                                  // navigationShell?.goBranch(7);
+                                  // context.go("/admin/data");
+                                },
+                                icon: Icon(Icons.star),
+                                label: const Text("Admin"),
+                              )
+                            : TextButton.icon(
+                                onPressed: () {
+                                  context.goNamed("corp_admin_users");
+                                  // navigationShell?.goBranch(7);
+                                },
+                                icon: Icon(Icons.star),
+                                label: const Text("Admin"),
+                              ),
+                      ],
+                      // if (user.canSeeSettings) ...[
+                      //   navigationShell?.currentIndex == 5
+                      //       ? FilledButton(
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(5);
+                      //           },
+                      //           child: const Text("Settings"),
+                      //         )
+                      //       : user.emailVerified == false
+                      //       ? TextButton.icon(
+                      //           icon: Icon(
+                      //             Icons.warning,
+                      //             color: Theme.of(context).colorScheme.error,
+                      //           ),
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(5);
+                      //           },
+                      //           label: const Text("Settings"),
+                      //         )
+                      //       : TextButton(
+                      //           onPressed: () {
+                      //             navigationShell?.goBranch(5);
+                      //           },
+                      //           child: const Text("Settings"),
+                      //         ),
+                      // ],
+                    ],
+                  ),
+                ),
               ),
+              Spacer(),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  ActionChip(
+                    avatar: Icon(Icons.refresh),
+                    label: Text('Last update 5s Ago'),
+                    onPressed: () {},
+                  ),
+                  SizedBox(width: 10),
                   if (user.canSeeSettings && navigationShell?.currentIndex == 5)
                     IconButton.filled(
                       icon: const Icon(Icons.settings),
@@ -266,65 +304,137 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                   if (user.canSeeSettings && navigationShell?.currentIndex != 5)
                     Stack(
                       children: [
-                        IconButton(
+                        IconButton.outlined(
                           icon: const Icon(Icons.settings),
                           onPressed: () {
                             navigationShell?.goBranch(5);
                           },
                         ),
-                        if (!user.emailVerified)
-                          Positioned(
-                            right: 3,
-                            bottom: 6,
-                            child: Icon(
-                              Icons.warning,
-                              color: Theme.of(context).colorScheme.error,
-                              size: 12,
-                            ),
-                          ),
+                        // if (!user.emailVerified)
+                        //   Positioned(
+                        //     right: 3,
+                        //     bottom: 6,
+                        //     child: Icon(
+                        //       Icons.warning,
+                        //       color: Theme.of(context).colorScheme.error,
+                        //       size: 12,
+                        //     ),
+                        //   ),
                       ],
                     ),
+                  SizedBox(width: 10),
                   BrightnessSelector(shouldPop: false, narrow: true),
-                  if (hasLogout)
-                    Stack(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.logout),
-                          onPressed: () {
-                            AuthenticationBloc authenticationBloc =
-                                BlocProvider.of<AuthenticationBloc>(context);
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text("Confirm Logout"),
-                                  content: const Text(
-                                    "Are you sure you want to log out?",
-                                  ),
-                                  actions: [
-                                    OutlinedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        authenticationBloc.add(
-                                          AuthenticationEventSignOut(),
-                                        );
-                                      },
-                                      child: const Text("Logout"),
-                                    ),
-                                    FilledButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text("Cancel"),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ],
+                  SizedBox(width: 10),
+                  PopupMenuButton<String>(
+                    tooltip: user.email ?? "User Menu",
+                    offset: Offset(0, 50),
+                    // This defines the look of the trigger
+                    child: UserAvatar(user: user),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                    // This defines what happens when an item is selected
+                    onSelected: (String value) {
+                      switch (value) {
+                        case 'profile':
+                          // Navigate to settings
+                          navigationShell?.goBranch(5);
+                          break;
+                        case 'logout':
+                          AuthenticationBloc authenticationBloc =
+                              BlocProvider.of<AuthenticationBloc>(context);
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text("Confirm Logout"),
+                                content: const Text(
+                                  "Are you sure you want to log out?",
+                                ),
+                                actions: [
+                                  OutlinedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      authenticationBloc.add(
+                                        AuthenticationEventSignOut(),
+                                      );
+                                    },
+                                    child: const Text("Logout"),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text("Cancel"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          break;
+                      }
+                    },
+                    // This builds the actual menu items
+                    itemBuilder: (BuildContext context) => [
+                      const PopupMenuItem<String>(
+                        value: 'profile',
+                        child: ListTile(
+                          leading: Icon(Icons.person_outline),
+                          title: Text('Profile'),
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'logout',
+                        child: ListTile(
+                          leading: Icon(Icons.logout),
+                          title: Text('Logout'),
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // if (hasLogout)
+                  //   Stack(
+                  //     children: [
+                  //       IconButton(
+                  //         icon: const Icon(Icons.logout),
+                  //         onPressed: () {
+                  //           AuthenticationBloc authenticationBloc =
+                  //               BlocProvider.of<AuthenticationBloc>(context);
+                  //           showDialog(
+                  //             context: context,
+                  //             builder: (context) {
+                  //               return AlertDialog(
+                  //                 title: const Text("Confirm Logout"),
+                  //                 content: const Text(
+                  //                   "Are you sure you want to log out?",
+                  //                 ),
+                  //                 actions: [
+                  //                   OutlinedButton(
+                  //                     onPressed: () {
+                  //                       Navigator.of(context).pop();
+                  //                       authenticationBloc.add(
+                  //                         AuthenticationEventSignOut(),
+                  //                       );
+                  //                     },
+                  //                     child: const Text("Logout"),
+                  //                   ),
+                  //                   FilledButton(
+                  //                     onPressed: () {
+                  //                       Navigator.of(context).pop();
+                  //                     },
+                  //                     child: const Text("Cancel"),
+                  //                   ),
+                  //                 ],
+                  //               );
+                  //             },
+                  //           );
+                  //         },
+                  //       ),
+                  //     ],
+                  //   ),
                 ],
               ),
               // if (user != null)

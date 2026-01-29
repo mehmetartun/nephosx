@@ -9,7 +9,7 @@ class UserAvatar extends StatelessWidget {
     super.key,
     required this.user,
     this.onTap,
-    this.radius = 20,
+    this.radius = 16,
   });
   final User user;
   final double radius;
