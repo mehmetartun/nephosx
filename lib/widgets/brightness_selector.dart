@@ -20,7 +20,7 @@ class BrightnessSelector extends StatelessWidget {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
         return narrow
-            ? IconButton(
+            ? IconButton.outlined(
                 icon: Icon(
                   Theme.of(context).brightness == Brightness.light
                       ? Icons.dark_mode
