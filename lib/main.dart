@@ -18,7 +18,7 @@ import 'navigation/router.dart';
 import 'repositories/database/database.dart';
 import 'services/platform_settings/platform_settings_service.dart';
 import 'theme/cubit/theme_cubit.dart';
-import 'theme/theme_black.dart';
+import 'theme/npx_theme.dart';
 import 'theme/util.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
@@ -248,7 +248,7 @@ class _MyMaterialAppState extends State<MyMaterialApp>
     // ).simpleRouter;
 
     MaterialTheme materialTheme = MaterialTheme(
-      createTextTheme(context, "Noto Sans", "Noto Sans Display"),
+      createTextTheme(context, "Inter", "Inter"),
     );
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, themeState) {
@@ -263,44 +263,50 @@ class _MyMaterialAppState extends State<MyMaterialApp>
 
           // home: const MyHomePage(title: 'Flutter Demo Home Page'),
           routerConfig: goRouter,
-          builder: (context, child) => ResponsiveBreakpoints.builder(
-            breakpoints: [
-              const Breakpoint(start: 0, end: 450, name: MOBILE),
-              const Breakpoint(start: 451, end: 800, name: TABLET),
-              const Breakpoint(start: 801, end: 1920, name: DESKTOP),
-              const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
-            ],
-            child: BlocListener<AuthenticationBloc, AuthenticationState>(
-              listener: (context, state) {
-                if (state is AuthenticationStateSignedIn) {
-                  print("Starting Data");
-                  BlocProvider.of<DataBloc>(
-                    context,
-                  ).add(DataStartEvent(user: state.user));
-                } else {
-                  BlocProvider.of<DataBloc>(context).add(DataStopEvent());
-                }
-
-                if (state is AuthenticationStateSignedIn &&
-                    state.destination != null) {
-                  BlocProvider.of<AuthenticationBloc>(
-                    context,
-                  ).add(AuthenticationEventDestinationCleared());
-                  goRouter.go(state.destination!);
-                }
-                if (state is AuthenticationStateSignedIn) {
-                  BlocProvider.of<RequestsBloc>(
-                    context,
-                  ).add(RequestsEventUserChanged(state.user));
-                }
-              },
-              child: BlocListener<NotificationsBloc, NotificationsState>(
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              // alwaysUse24HourFormat: true,
+              textScaler: TextScaler.linear(0.8),
+            ),
+            child: ResponsiveBreakpoints.builder(
+              breakpoints: [
+                const Breakpoint(start: 0, end: 450, name: MOBILE),
+                const Breakpoint(start: 451, end: 800, name: TABLET),
+                const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+                const Breakpoint(start: 1921, end: double.infinity, name: '4K'),
+              ],
+              child: BlocListener<AuthenticationBloc, AuthenticationState>(
                 listener: (context, state) {
-                  if (state is NotificationsShowSplashState) {
-                    goRouter.pushNamed(MyNavigatorRoute.splash.name);
+                  if (state is AuthenticationStateSignedIn) {
+                    print("Starting Data");
+                    BlocProvider.of<DataBloc>(
+                      context,
+                    ).add(DataStartEvent(user: state.user));
+                  } else {
+                    BlocProvider.of<DataBloc>(context).add(DataStopEvent());
+                  }
+
+                  if (state is AuthenticationStateSignedIn &&
+                      state.destination != null) {
+                    BlocProvider.of<AuthenticationBloc>(
+                      context,
+                    ).add(AuthenticationEventDestinationCleared());
+                    goRouter.go(state.destination!);
+                  }
+                  if (state is AuthenticationStateSignedIn) {
+                    BlocProvider.of<RequestsBloc>(
+                      context,
+                    ).add(RequestsEventUserChanged(state.user));
                   }
                 },
-                child: child!,
+                child: BlocListener<NotificationsBloc, NotificationsState>(
+                  listener: (context, state) {
+                    if (state is NotificationsShowSplashState) {
+                      goRouter.pushNamed(MyNavigatorRoute.splash.name);
+                    }
+                  },
+                  child: child!,
+                ),
               ),
             ),
           ),
