@@ -14,14 +14,23 @@ class WidgetsPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("GPU Cluster Stacked Card - not owner"),
+              Text(
+                "GPU Cluster Stacked Card - not owner",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              SizedBox(height: 10),
               Container(
                 width: 400,
                 child: GpuClusterStackedCard(gpuCluster: GpuCluster.mock),
               ),
               SizedBox(height: 20),
-              Text("GPU Cluster Stacked Card - owner"),
+              Text(
+                "GPU Cluster Stacked Card - owner",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              SizedBox(height: 10),
               Container(
                 width: 400,
                 child: GpuClusterStackedCard(

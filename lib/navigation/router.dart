@@ -81,7 +81,7 @@ class NestedRouter {
   late final GoRouter _router = GoRouter(
     debugLogDiagnostics: true,
     // navigatorKey: _rootNavigatorKey,
-    initialLocation: "/widgets",
+    initialLocation: "/market",
     redirect: (BuildContext context, GoRouterState state) {
       // print('Mathced Location ${state.matchedLocation}');
       // print('Uri ${state.uri.toString()}');
