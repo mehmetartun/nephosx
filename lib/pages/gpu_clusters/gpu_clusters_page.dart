@@ -49,7 +49,6 @@ class GpuClustersPage extends StatelessWidget {
                 onAddGpuCluster: cubit.addGpuCluster,
                 onUpdateGpuCluster: cubit.updateGpuCluster,
                 onCancel: cubit.cancelAddGpuCluster,
-                useAsTemplate: state.useAsTemplate ?? false,
               );
             case GpuClusterDetail _:
               return GpuClusterDetailView(

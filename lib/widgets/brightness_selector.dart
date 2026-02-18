@@ -21,6 +21,11 @@ class BrightnessSelector extends StatelessWidget {
       builder: (context, state) {
         return narrow
             ? IconButton.outlined(
+                style: IconButton.styleFrom(
+                  side: BorderSide(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                  ),
+                ),
                 icon: Icon(
                   Theme.of(context).brightness == Brightness.light
                       ? Icons.dark_mode

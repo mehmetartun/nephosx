@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../../constants.dart';
 import '../../../model/datacenter.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
@@ -156,7 +157,7 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
                 child: SizedBox(
                   width: 1100,
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: kColumnPadding,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -177,7 +178,7 @@ class _GpuClustersViewTableState extends State<GpuClustersViewTable> {
                         ),
                         SizedBox(height: 20),
                         Container(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: kColumnPadding,
                           decoration: BoxDecoration(
                             // color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(0),

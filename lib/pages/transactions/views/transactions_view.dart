@@ -7,6 +7,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
 
+import '../../../constants.dart';
 import '../../../model/datacenter.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_transaction.dart';
@@ -226,7 +227,7 @@ class _TransactionsViewState extends State<TransactionsView> {
               // ),
               SizedBox(height: 20),
               Container(
-                padding: const EdgeInsets.all(20.0),
+                padding: kColumnPadding,
                 decoration: BoxDecoration(
                   // color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(0),

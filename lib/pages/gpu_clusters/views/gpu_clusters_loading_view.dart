@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../constants.dart';
+
 class GpuClustersLoadingView extends StatelessWidget {
   const GpuClustersLoadingView({super.key});
 
@@ -20,7 +22,7 @@ class GpuClustersLoadingView extends StatelessWidget {
                   child: SizedBox(
                     width: 1100,
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: kColumnPadding,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -50,7 +52,7 @@ class GpuClustersLoadingView extends StatelessWidget {
                           SizedBox(height: 20),
                           // Filters
                           Container(
-                            padding: const EdgeInsets.all(20.0),
+                            padding: kColumnPadding,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(0),
                               border: Border.all(

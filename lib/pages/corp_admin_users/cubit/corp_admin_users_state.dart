@@ -7,7 +7,12 @@ final class CorpAdminUsersInitial extends CorpAdminUsersState {}
 final class CorpAdminUsersLoaded extends CorpAdminUsersState {
   final List<User> users;
   final List<Invitation> invitations;
-  CorpAdminUsersLoaded({required this.users, required this.invitations});
+  final String? primaryContactId;
+  CorpAdminUsersLoaded({
+    required this.users,
+    required this.invitations,
+    this.primaryContactId,
+  });
 }
 
 final class CorpAdminUsersError extends CorpAdminUsersState {

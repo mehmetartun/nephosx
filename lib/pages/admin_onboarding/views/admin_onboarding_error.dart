@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nephosx/constants.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 class AdminOnboardingErrorView extends StatelessWidget {
   const AdminOnboardingErrorView({
@@ -13,12 +15,22 @@ class AdminOnboardingErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Text("Error"),
-          Text(message),
-          TextButton(onPressed: onCancel, child: Text("Back")),
-        ],
+      appBar: AppBar(title: Text("Error"), centerTitle: true),
+
+      body: MaxWidthBox(
+        alignment: Alignment.topLeft,
+        maxWidth: 600,
+        child: Padding(
+          padding: kColumnPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(message),
+              SizedBox(height: 10),
+              FilledButton(onPressed: onCancel, child: Text("Back")),
+            ],
+          ),
+        ),
       ),
     );
   }

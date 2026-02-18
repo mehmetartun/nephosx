@@ -1111,31 +1111,49 @@ enum Currency {
 
 @JsonEnum(fieldRename: FieldRename.snake)
 enum RequestStatus {
-  pending("Pending"),
-  inReview("In Review"),
-  accepted("Accepted"),
-  rejected("Rejected"),
-  withdrawn("Withdrawn");
+  pending("Pending", "pending"),
+  inReview("In Review", "in_review"),
+  accepted("Accepted", "accepted"),
+  rejected("Rejected", "rejected"),
+  withdrawn("Withdrawn", "withdrawn");
 
   final String description;
-  const RequestStatus(this.description);
+  final String fieldName;
+  const RequestStatus(this.description, this.fieldName);
 }
 
 @JsonEnum(fieldRename: FieldRename.snake)
 enum RequestType {
-  createCompany("Create Company", UserType.public, UserType.admin),
-  joinCompany("Join Company", UserType.public, UserType.corporateAdmin),
+  createCompany(
+    "Create Company",
+    UserType.public,
+    UserType.admin,
+    "create_company",
+  ),
+  joinCompany(
+    "Join Company",
+    UserType.public,
+    UserType.corporateAdmin,
+    "join_company",
+  ),
   authorizeCompany(
     "Authorize Company",
     UserType.corporateAdmin,
     UserType.admin,
+    "authorize_company",
   );
 
   final String description;
   final UserType requestorType;
   final UserType approverType;
+  final String fieldName;
 
-  const RequestType(this.description, this.requestorType, this.approverType);
+  const RequestType(
+    this.description,
+    this.requestorType,
+    this.approverType,
+    this.fieldName,
+  );
 }
 
 enum CorporateOnboardingStatus {

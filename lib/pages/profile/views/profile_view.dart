@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 // import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 
+import '../../../constants.dart';
 import '../../../model/address.dart';
 import '../../../model/user.dart';
 import '../../../widgets/dialogs/add_edit_address_dialog.dart';
@@ -40,7 +41,7 @@ class ProfileView extends StatelessWidget {
       // ),
       body: MaxWidthBox(
         maxWidth: 400,
-        padding: const EdgeInsets.all(20.0),
+        padding: kColumnPadding,
         child: Column(
           children: [
             Row(

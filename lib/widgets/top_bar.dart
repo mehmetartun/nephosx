@@ -294,18 +294,27 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                     onPressed: () {},
                   ),
                   SizedBox(width: 10),
-                  if (user.canSeeSettings && navigationShell?.currentIndex == 5)
-                    IconButton.filled(
-                      icon: const Icon(Icons.settings),
-                      onPressed: () {
-                        navigationShell?.goBranch(5);
-                      },
-                    ),
-                  if (user.canSeeSettings && navigationShell?.currentIndex != 5)
+                  // if (user.canSeeSettings && navigationShell?.currentIndex == 5)
+                  //   IconButton.filled(
+                  //     icon: const Icon(Icons.settings),
+                  //     onPressed: () {
+                  //       navigationShell?.goBranch(5);
+                  //     },
+                  //   ),
+                  // if (user.canSeeSettings && navigationShell?.currentIndex != 5)
+                  //
+                  if (user.canSeeSettings)
                     Stack(
                       children: [
                         IconButton.outlined(
                           icon: const Icon(Icons.settings),
+                          style: IconButton.styleFrom(
+                            side: BorderSide(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.outlineVariant,
+                            ),
+                          ),
                           onPressed: () {
                             navigationShell?.goBranch(5);
                           },

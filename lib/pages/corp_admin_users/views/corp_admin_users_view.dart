@@ -5,9 +5,11 @@ import 'package:nephosx/widgets/dialogs/add_invitation_dialog.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../constants.dart';
 import '../../../model/invitaton.dart';
 import '../../../model/user.dart';
 import '../../../widgets/dialogs/edit_user_dialog.dart';
+import '../../../widgets/invitation_status_widget.dart';
 import '../../../widgets/user_avatar.dart';
 
 class CorpAdminUsersView extends StatefulWidget {
@@ -17,12 +19,16 @@ class CorpAdminUsersView extends StatefulWidget {
     required this.invitations,
     required this.addInvitation,
     required this.updateUser,
+    required this.onSetPrimaryContact,
+    this.primaryContactId,
   }) : super(key: key);
   final List<User> users;
   final List<Invitation> invitations;
   final void Function({required String email, required String displayName})
   addInvitation;
   final void Function({required User user}) updateUser;
+  final void Function({required String uid}) onSetPrimaryContact;
+  final String? primaryContactId;
 
   @override
   State<CorpAdminUsersView> createState() => _CorpAdminUsersViewState();
@@ -39,7 +45,7 @@ class _CorpAdminUsersViewState extends State<CorpAdminUsersView> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: kColumnPadding,
           child: MaxWidthBox(
             alignment: Alignment.topLeft,
             maxWidth: 700,
@@ -126,6 +132,21 @@ class _CorpAdminUsersViewState extends State<CorpAdminUsersView> {
                                               },
                                         child: Text("Edit"),
                                       ),
+                                      SizedBox(width: 10),
+                                      TextButton(
+                                        onPressed:
+                                            user.uid != widget.primaryContactId
+                                            ? () {
+                                                widget.onSetPrimaryContact(
+                                                  uid: user.uid,
+                                                );
+                                              }
+                                            : null,
+                                        child:
+                                            user.uid != widget.primaryContactId
+                                            ? Text("Make Primary")
+                                            : Text("Primary"),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -183,7 +204,11 @@ class _CorpAdminUsersViewState extends State<CorpAdminUsersView> {
                               cells: [
                                 DataCell(Text(invitation.displayName)),
                                 DataCell(Text(invitation.email)),
-                                DataCell(Text(invitation.status.name)),
+                                DataCell(
+                                  InvitationStatusWidget(
+                                    invitation: invitation,
+                                  ),
+                                ),
                                 DataCell(
                                   Text(
                                     DateFormat(

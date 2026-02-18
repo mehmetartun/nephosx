@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../constants.dart';
 import '../../model/datacenter.dart';
 import '../../model/enums.dart';
 
@@ -40,7 +41,7 @@ class _EditDatacenterDialogState extends State<EditDatacenterDialog> {
         maxWidth: 500,
         child: Dialog(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

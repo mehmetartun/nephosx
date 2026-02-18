@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../constants.dart';
 import '../../../model/datacenter.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
@@ -217,7 +218,7 @@ class _MarketViewState extends State<MarketView> {
                 child: SizedBox(
                   width: 1200,
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: kColumnPadding,
                     // child: ListView.builder(
                     //   shrinkWrap: true,
                     //   physics: const NeverScrollableScrollPhysics(),
@@ -233,7 +234,7 @@ class _MarketViewState extends State<MarketView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: kColumnPadding,
                           decoration: BoxDecoration(
                             // color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(0),

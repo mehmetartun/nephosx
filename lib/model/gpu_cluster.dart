@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../services/mock.dart';
 import '../services/platform_settings/platform_settings_service.dart';
 import 'company.dart';
 import 'conversions.dart';
@@ -172,6 +174,44 @@ class GpuCluster {
 
   Map<String, dynamic> toJson() => _$GpuClusterToJson(this);
 
+  static GpuCluster get mock => GpuCluster(
+    deviceId: "TEqXfpocF9DzlwVaUpR2",
+    cpuId: "ea5dZmOybQ5ajXGO1q9L",
+    pcieGeneration: PcieGeneration.x4,
+    pcieLanes: 16,
+    perGpuPcieBandwidthInGbPerSec: 32,
+    maximumCudaVersionSupported: "12.0",
+    perGpuMemoryBandwidthInGbPerSec: 1000,
+    perGpuNvLinkBandwidthInGbPerSec: 1000,
+    quantity: 10,
+    datacenterId: Mock.uid(),
+    companyId: Mock.uid(),
+    id: Mock.uid(),
+    perGpuVramInGb: 80,
+    transactions: [],
+    maintenances: [],
+    listings: [],
+    datacenter: Datacenter.mock,
+    company: Company.mock,
+    teraFlops: 1000,
+    rentalPrices: [],
+    effectiveRam: 80,
+    totalRam: 80,
+    totalCpuCoreCount: 10,
+    effectiveCpuCoreCount: 10,
+    internetUploadSpeedInMbps: 1000,
+    internetDownloadSpeedInMbps: 1000,
+    numberOfOpenPorts: 10,
+    diskBandwidthInMbPerSec: 1000,
+    diskStorageAvailableInGb: 1000,
+    deepLearningPerformanceScore: 1000,
+    manufactureDate: DateTime.now(),
+    startDate: DateTime.now(),
+    endDate: DateTime.now(),
+    serialNumber: "S/N2234098234",
+    assetTag: "A/T123123",
+  );
+
   List<Slot> get occupiedSlots => transactions.map((tx) => tx.slot).toList();
   List<Slot> get listedSlots => listings.map((ls) => ls.slot).toList();
   List<Slot> get maintenanceSlots =>
@@ -208,6 +248,10 @@ class GpuCluster {
       }
     }
     maintenances = mtSet.toList();
+  }
+
+  String get startDateFormatted {
+    return DateFormat('d MMM yyyy').format(startDate);
   }
 
   GpuCluster copyWith({

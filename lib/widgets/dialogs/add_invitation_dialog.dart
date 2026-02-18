@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../constants.dart';
+
 class AddInvitationDialog extends StatefulWidget {
   const AddInvitationDialog({super.key, required this.onAddInvitation});
 
@@ -30,7 +32,7 @@ class _AddInvitationDialogState extends State<AddInvitationDialog> {
         maxWidth: 500,
         child: Dialog(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

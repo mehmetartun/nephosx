@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nephosx/constants.dart';
 import 'package:nephosx/widgets/company_info_card.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -33,7 +34,7 @@ class CompanyAssignView extends StatefulWidget {
 
 class _CompanyAssignViewState extends State<CompanyAssignView> {
   String? companyName;
-  String? companyWebsite;
+  String? companyDomain;
   String? phoneNumber;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -45,7 +46,7 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
         slivers: [
           // SliverAppBar(title: const Text("Edit Company")),
           SliverPadding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             sliver: SliverToBoxAdapter(
               child: MaxWidthBox(
                 alignment: Alignment.topCenter,
@@ -56,6 +57,20 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (widget.request == null) ...[
+                        if (!widget.user.emailVerified)
+                          Container(
+                            color: Theme.of(context).colorScheme.errorContainer,
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              "Please note you must verify your email first.",
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onErrorContainer,
+                                  ),
+                            ),
+                          ),
                         Text(
                           "Become a Corporate User",
                           style: Theme.of(context).textTheme.headlineMedium,
@@ -89,9 +104,12 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "Once you verify your email address, you will be able to "
-                          "create a request for your company to be added to the platform."
-                          "\n\nIf approved, you will be added as a Corporate Admin for your company.",
+                          "Once you verify your email address, "
+                          "you will be able to "
+                          "create a request for your company to be added to "
+                          "the platform."
+                          "\n\nIf approved, you will be added as a Corporate "
+                          "Admin for your company.",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 10),
@@ -116,16 +134,17 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
                           readOnly: !widget.user.emailVerified,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: "Company Website",
+                            labelText: "Company Domain",
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "Please enter a company website";
+                              return "Please enter the domain "
+                                  "name for the Company";
                             }
                             return null;
                           },
                           onSaved: (value) {
-                            companyWebsite = value;
+                            companyDomain = value;
                           },
                         ),
                         SizedBox(height: 20),
@@ -153,15 +172,15 @@ class _CompanyAssignViewState extends State<CompanyAssignView> {
                                     formKey.currentState!.save();
                                     widget.addCompanyCreationRequest({
                                       'company_name': companyName,
-                                      'company_domain': companyWebsite,
+                                      'company_domain': companyDomain,
                                       'company_phone': phoneNumber,
-                                      'requesting_user_id': widget.user.uid,
+                                      // 'requesting_user_id': widget.user.uid,
                                       'requesting_uid': widget.user.uid,
                                       'requesting_user_email':
                                           widget.user.email,
                                       'requesting_user_name':
                                           widget.user.displayName,
-                                      'user': widget.user.toJson(),
+                                      // 'user': widget.user.toJson(),
                                     });
                                   }
                                 }

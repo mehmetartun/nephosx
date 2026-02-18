@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 class TextDisplayWidget extends StatelessWidget {
   const TextDisplayWidget({
     Key? key,
@@ -93,7 +95,7 @@ class ThemePage extends StatelessWidget {
 
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: kColumnPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

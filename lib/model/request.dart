@@ -40,6 +40,15 @@ class Request {
     );
   }
 
+  String get summary {
+    switch (type) {
+      case RequestType.createCompany:
+        return "${data['company_name']} - ${data['company_domain']} requested by ${data['']}";
+      default:
+        return "Unknown Request";
+    }
+  }
+
   factory Request.fromJson(Map<String, dynamic> json) =>
       _$RequestFromJson(json);
 

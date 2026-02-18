@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../constants.dart';
 import '../../../model/datacenter.dart';
 import '../../../model/enums.dart';
 import '../../../model/gpu_cluster.dart';
@@ -162,14 +163,14 @@ class _MarketView3State extends State<MarketView3> {
                 child: SizedBox(
                   width: 1200,
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: kColumnPadding,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TimedRefreshButton(onRefresh: widget.onRefresh),
                         Container(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: kColumnPadding,
                           decoration: BoxDecoration(
                             // color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(0),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nephosx/constants.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:nephosx/model/listing.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -179,7 +180,7 @@ class ListingDataSource extends DataTableSource {
                       child: Stack(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(20.0),
+                            padding: kColumnPadding,
                             child: listing.gpuCluster == null
                                 ? Container()
                                 : GpuClusterInfoView(

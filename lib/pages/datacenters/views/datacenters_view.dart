@@ -4,6 +4,7 @@ import 'package:nephosx/extensions/capitalize.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../constants.dart';
 import '../../../model/datacenter.dart';
 import '../../../services/csv/csv_service.dart';
 import '../../../widgets/datacenter_list_tile.dart';
@@ -46,7 +47,7 @@ class _DatacentersViewState extends State<DatacentersView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: kColumnPadding,
         child: MaxWidthBox(
           alignment: Alignment.topCenter,
           maxWidth: 500,

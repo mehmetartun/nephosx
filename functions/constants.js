@@ -8,6 +8,7 @@ const DATACENTERS_COLLECTION = 'datacenters';
 const GPU_CLUSTERS_COLLECTION = 'gpu_clusters';
 const INVITATIONS_COLLECTION = 'invitations';
 const REQUESTS_COLLECTION = 'requests';
+const MAIL_COLLECTION = 'mail';
 
 module.exports = {
     LISTINGS_COLLECTION,
@@ -17,6 +18,7 @@ module.exports = {
     DATACENTERS_COLLECTION,
     GPU_CLUSTERS_COLLECTION,
     INVITATIONS_COLLECTION,
-    REQUESTS_COLLECTION
+    REQUESTS_COLLECTION,
+    MAIL_COLLECTION
 
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nephosx/widgets/labeled_text.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../constants.dart';
 import '../../model/company.dart';
 import '../../model/consideration.dart';
 import '../../model/gpu_transaction.dart';
@@ -75,7 +76,7 @@ class _AddTransactionDialogNewState extends State<AddTransactionDialogNew> {
         child: Dialog(
           // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

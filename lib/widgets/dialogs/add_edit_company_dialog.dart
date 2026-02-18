@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../constants.dart';
 import '../../model/address.dart';
 import '../../model/company.dart';
 
@@ -81,7 +82,7 @@ class _AddEditCompanyDialogState extends State<AddEditCompanyDialog> {
         maxWidth: 500,
         child: Dialog(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

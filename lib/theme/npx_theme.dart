@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 
+import "../constants.dart";
+
 class MaterialTheme {
   final TextTheme textTheme;
 
@@ -350,17 +352,17 @@ class MaterialTheme {
         inputDecorationTheme: InputDecorationTheme(
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: colorScheme.outlineVariant),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(kBorderRadius),
           ),
           border: OutlineInputBorder(
             // borderSide: BorderSide(color: colorScheme.outlineVariant),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(kBorderRadius),
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(kBorderRadius),
             ),
           ),
         ),
@@ -368,7 +370,7 @@ class MaterialTheme {
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(kBorderRadius),
             ),
           ),
         ),
@@ -376,23 +378,22 @@ class MaterialTheme {
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(kBorderRadius),
             ),
           ),
         ),
         filledButtonTheme: FilledButtonThemeData(
           style: FilledButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(kBorderRadius),
             ),
           ),
         ),
         iconButtonTheme: IconButtonThemeData(
           style: IconButton.styleFrom(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(kBorderRadius),
             ),
-            side: BorderSide(color: colorScheme.outlineVariant),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             maximumSize: Size(32, 32),
             minimumSize: Size(32, 32),

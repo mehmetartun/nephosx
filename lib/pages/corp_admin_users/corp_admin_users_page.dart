@@ -39,6 +39,8 @@ class CorpAdminUsersPage extends StatelessWidget {
                 users: state.users,
                 invitations: state.invitations,
                 addInvitation: cubit.addInvitation,
+                onSetPrimaryContact: cubit.onSetPrimaryContact,
+                primaryContactId: state.primaryContactId,
               );
           }
         },

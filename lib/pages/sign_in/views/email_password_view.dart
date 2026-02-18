@@ -6,6 +6,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../blocs/authentication/authentication_bloc.dart';
+import '../../../constants.dart';
 import '../../../model/enums.dart';
 import '../../../repositories/authentication/authentication_repository.dart';
 import '../../../widgets/error_banner.dart';
@@ -100,7 +101,7 @@ class _EmailPasswordViewState extends State<EmailPasswordView> {
                 child: Form(
                   key: formKey,
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: kColumnPadding,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
 

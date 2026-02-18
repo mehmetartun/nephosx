@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nephosx/constants.dart';
 
 class CorpUserAcceptanceErrorView extends StatelessWidget {
   final String title;
@@ -17,7 +18,7 @@ class CorpUserAcceptanceErrorView extends StatelessWidget {
       appBar: AppBar(title: Text(title)),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: kColumnPadding,
           child: Column(
             children: [
               Container(

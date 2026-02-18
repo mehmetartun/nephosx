@@ -188,7 +188,7 @@ class DatacenterDataSource extends DataTableSource {
         //               child: Stack(
         //                 children: [
         //                   Padding(
-        //                     padding: const EdgeInsets.all(20.0),
+        //                     padding:kColumnPadding,
         //                     child: GpuClusterInfo(gpuCluster: gpuCluster),
         //                   ),
         //                   Positioned(

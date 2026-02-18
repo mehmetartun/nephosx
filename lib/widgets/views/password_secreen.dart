@@ -42,12 +42,12 @@ class _PasswordScreenState extends State<PasswordScreen> {
                 },
               ),
               SizedBox(height: 20),
-              if (password == "TopSecret123")
+              if (password == "Lucky777")
                 ElevatedButton(
                   onPressed: () async {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
-                    prefs.setString("password", "TopSecret123");
+                    prefs.setString("password", "Lucky777");
                     await showDialog(
                       context: context,
                       builder: (context) {

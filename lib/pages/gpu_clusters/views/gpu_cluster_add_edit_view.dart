@@ -71,6 +71,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
     // type = widget.gpuCluster?.type;
     deviceId = widget.gpuCluster?.deviceId;
     cpuId = widget.gpuCluster?.cpuId;
+    deepLearningPerformanceScore =
+        widget.gpuCluster?.deepLearningPerformanceScore;
     quantity = widget.gpuCluster?.quantity;
     datacenter = widget.gpuCluster?.datacenter;
     numExistingRentalPrices = widget.gpuCluster?.rentalPrices.length ?? 0;
@@ -411,7 +413,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                         return null;
                                       },
                                       onSaved: (val) {
-                                        teraFlops = double.tryParse(val!);
+                                        deepLearningPerformanceScore =
+                                            double.tryParse(val!);
                                       },
                                     ),
                                   ),
@@ -799,12 +802,12 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                           serialNumber = value;
                                         }
                                       },
-                                      // validator: (value) {
-                                      //   if (value == null || value.isEmpty) {
-                                      //     return "Please enter a Serial No";
-                                      //   }
-                                      //   return null;
-                                      // },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter a Serial No";
+                                        }
+                                        return null;
+                                      },
                                     ),
                                   ),
                                   SizedBox(
@@ -822,12 +825,12 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                           assetTag = value;
                                         }
                                       },
-                                      // validator: (value) {
-                                      //   if (value == null || value.isEmpty) {
-                                      //     return "Please enter a CUDAversion";
-                                      //   }
-                                      //   return null;
-                                      // },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please enter an Asset Tag";
+                                        }
+                                        return null;
+                                      },
                                     ),
                                   ),
 
@@ -946,7 +949,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                       ),
                                     );
 
-                                    if (widget.gpuCluster == null) {
+                                    if (widget.gpuCluster == null ||
+                                        widget.useAsTemplate) {
                                       widget.onAddGpuCluster(
                                         GpuCluster(
                                           deviceId: deviceId!,
@@ -988,6 +992,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                           startDate: startDate!,
                                           endDate: endDate!,
                                           manufactureDate: manufactureDate,
+                                          serialNumber: serialNumber!,
+                                          assetTag: assetTag!,
                                         ),
                                       );
                                     } else {
@@ -1032,6 +1038,8 @@ class _GpuClusterAddEditViewState extends State<GpuClusterAddEditView> {
                                           startDate: startDate!,
                                           endDate: endDate!,
                                           manufactureDate: manufactureDate,
+                                          serialNumber: serialNumber!,
+                                          assetTag: assetTag!,
                                         ),
                                       );
                                     }

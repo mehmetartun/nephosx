@@ -183,7 +183,7 @@ class ListingByGpuClusterDataSource extends DataTableSource {
         //               child: Stack(
         //                 children: [
         //                   Padding(
-        //                     padding: const EdgeInsets.all(20.0),
+        //                     padding:kColumnPadding,
         //                     child: listing.gpuCluster == null
         //                         ? Container()
         //                         : GpuClusterInfoView(

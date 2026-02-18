@@ -83,6 +83,21 @@ class Company {
     return rets.join("\n");
   }
 
+  static Company get mock => Company(
+    id: Mock.uid(),
+    name: "ABC Corporation",
+    primaryAddressId: Mock.uid(),
+    addressIds: [Mock.uid(), Mock.uid()],
+    addresses: [Address.mock, Address.mock],
+    businessTaxId: "123456789",
+    primaryContactId: Mock.uid(),
+    isBuyer: true,
+    isSeller: true,
+    confirmationEmail: Mock.email(),
+    businessDunsNumber: "123456789",
+    domain: "abc.com",
+  );
+
   Company copyWith({
     String? id,
     String? name,

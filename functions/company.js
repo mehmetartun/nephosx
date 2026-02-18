@@ -1,7 +1,14 @@
 const { onDocumentUpdated, getFirestore, onCall, HttpsError, Timestamp } = require("./init");
 
-const { companyDocPath, requestDocPath } = require("./common");
-const { USERS_COLLECTION, INVITATIONS_COLLECTION, GPU_CLUSTERS_COLLECTION, REQUESTS_COLLECTION, COMPANIES_COLLECTION } = require("./constants");
+const { companyDocPath, requestDocPath, userDocPath } = require("./common");
+const {
+    USERS_COLLECTION,
+    INVITATIONS_COLLECTION,
+    GPU_CLUSTERS_COLLECTION,
+    REQUESTS_COLLECTION,
+    COMPANIES_COLLECTION,
+    MAIL_COLLECTION
+} = require("./constants");
 
 exports.companyUpdate = onDocumentUpdated(`${COMPANIES_COLLECTION}/{companyId}`, async (event) => {
     const db = getFirestore();
@@ -57,7 +64,20 @@ exports.corpAdminAddInvitation = onCall(async (request) => {
     }
 
     await db.runTransaction(async (t) => {
-        var docref = await db.collection(INVITATIONS_COLLECTION).add({
+        var docRef = db.collection(INVITATIONS_COLLECTION).doc();
+        var emailRef = db.collection(MAIL_COLLECTION).doc();
+        var msg = `Dear ${request.data.displayName}, you have been invited to join ${request.data.companyName} on the NephosX platform. <a href="https://nephosx-dev.web.app/corporate_user_accept?id=${docRef.id}">Join NephosX</a> now.`;
+
+        t.set(emailRef, {
+            to: request.data.email,
+            message: {
+                subject: 'Invitation to join ' + request.data.companyName,
+                html: msg,
+                text: `You have been invited to join ${request.data.companyName} on the NephosX platform. Copy and paste this link in your browser: https://nephosx-dev.web.app/corporate_user_accept?id=${docRef.id}.`,
+            }
+        });
+        t.set(docRef, {
+            id: docRef.id,
             inviting_user_id: request.auth.uid,
             email: request.data.email,
             display_name: request.data.displayName,
@@ -65,18 +85,9 @@ exports.corpAdminAddInvitation = onCall(async (request) => {
             company_name: request.data.companyName,
             created_at: Timestamp.now(),
             status: 'invited',
+            mail_record_id: emailRef.id,
+            message: msg
         });
-
-        var msg = `Dear ${request.data.displayName}, you have been invited to join ${request.data.companyName} on the NephosX platform. <a href="https://nephosx-dev.web.app/corporate_user_accept?id=${docref.id}">Join NephosX</a> now.`;
-        var emailref = await db.collection('mail').add({
-            to: request.data.email,
-            message: {
-                subject: 'Invitation to join ' + request.data.companyName,
-                html: msg,
-                text: `You have been invited to join ${request.data.companyName} on the NephosX platform. Copy and paste this link in your browser: https://nephosx-dev.web.app/corporate_user_accept?id=${docref.id}.`,
-            }
-        })
-        t.update(docref, { id: docref.id, mail_record_id: emailref.id, message: msg });
     });
     return { 'message': 'Invitation added successfully' };
 });
@@ -106,8 +117,22 @@ exports.adminAddCompany = onCall(async (request) => {
         );
     }
 
+    var companyRef;
+    var docRef = db.collection(REQUESTS_COLLECTION).doc(request.data.requestId);
+
     await db.runTransaction(async (t) => {
-        const companyRef = await db.collection(COMPANIES_COLLECTION).add({
+        companyRef = db.collection(COMPANIES_COLLECTION).doc();
+        const userPath = userDocPath(request.data.userId);
+        const userDoc = await db.doc(userPath).get();
+
+        if (!userDoc.exists) {
+            throw new HttpsError(
+                "invalid-argument",
+                "The user does not exist."
+            );
+        }
+        await companyRef.set({
+            id: companyRef.id,
             name: request.data.companyName,
             domain: request.data.companyDomain,
             created_at: Timestamp.now(),
@@ -116,21 +141,65 @@ exports.adminAddCompany = onCall(async (request) => {
 
 
         const requestPath = requestDocPath(request.data.requestId);
-        const userPath = userDocPath(request.data.userId);
-        const userDoc = await db.doc(userPath).get();
-        if (!userDoc.exists) {
-            throw new HttpsError(
-                "invalid-argument",
-                "The user does not exist."
-            );
-        }
-        t.update(companyRef, { id: companyRef.id });
+
+
+        // t.update(companyRef, { id: companyRef.id });
+        t.set(companyRef, {
+            id: companyRef.id,
+            name: request.data.companyName,
+            domain: request.data.companyDomain,
+            created_at: Timestamp.now(),
+            confirmation_email: request.data.confirmationEmail,
+        });
         t.update(userDoc.ref, { company_id: companyRef.id, type: request.data.userType });
         t.update(db.doc(requestPath), { status: 'accepted' });
     });
     return { 'message': 'Company added successfully', 'id': companyRef.id };
 });
 
+exports.setPrimaryContactForCompany = onCall(async (request) => {
+    if (!request.auth) {
+        throw new HttpsError(
+            "unauthenticated",
+            "The function must be called while authenticated."
+        );
+    }
+    if (!request.data.companyId || !request.data.userId) {
+        throw new HttpsError(
+            "invalid-argument",
+            "The function must be called with one argument 'companyId', 'userId' containing the company's ID and user ID."
+        );
+    }
 
+    const db = getFirestore();
+
+    var companyRef = db.collection(COMPANIES_COLLECTION).doc(request.data.companyId);
+    var userRef = db.collection(USERS_COLLECTION).doc(request.data.userId);
+
+    await db.runTransaction(async (t) => {
+        const companyDoc = await companyRef.get();
+        const userDoc = await userRef.get();
+
+        if (!companyDoc.exists) {
+            throw new HttpsError(
+                "invalid-argument",
+                "The company does not exist."
+            );
+        }
+        if (!userDoc.exists) {
+            throw new HttpsError(
+                "invalid-argument",
+                "The user does not exist."
+            );
+        }
+        t.update(companyRef,
+            {
+                primary_contact_id: request.data.userId,
+                primary_contact: userDoc.data()
+            });
+        // t.update(userRef, { company_id: request.data.companyId });
+    });
+    return { 'message': 'Primary contact set successfully' };
+});
 
 

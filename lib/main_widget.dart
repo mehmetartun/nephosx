@@ -207,7 +207,7 @@ class MyMaterialApp extends StatelessWidget {
 //       ),
 //       body: Center(
 //         child: Padding(
-//           padding: const EdgeInsets.all(20.0),
+//           padding:kColumnPadding,
 //           child: Column(
 //             mainAxisAlignment: MainAxisAlignment.center,
 //             children: <Widget>[

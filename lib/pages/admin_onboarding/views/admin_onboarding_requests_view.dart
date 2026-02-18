@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nephosx/constants.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/request.dart';
@@ -54,7 +55,7 @@ class _AdminOnboardingRequestsViewState
           alignment: Alignment.topLeft,
           maxWidth: 600,
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

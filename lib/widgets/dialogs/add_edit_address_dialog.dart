@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../constants.dart';
 import '../../model/address.dart';
 import '../../services/platform_settings/platform_settings_service.dart';
 import '../formfields/address_form_field_new.dart';
@@ -39,7 +40,7 @@ class _AddEditAddressDialogState extends State<AddEditAddressDialog> {
         maxWidth: 700,
         child: Dialog(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

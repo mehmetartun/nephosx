@@ -8,7 +8,9 @@ const {
     DATACENTERS_COLLECTION,
     GPU_CLUSTERS_COLLECTION,
     TRANSACTIONS_COLLECTION,
-    LISTINGS_COLLECTION
+    LISTINGS_COLLECTION,
+    REQUESTS_COLLECTION,
+    INVITATIONS_COLLECTION
 } = require("./constants");
 
 async function getUserById(userId) {
@@ -92,6 +94,7 @@ module.exports = {
     gpuClusterDocPath,
     datacenterDocPath,
     transactionDocPath,
-    listingDocPath
+    listingDocPath,
+    requestDocPath
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nephosx/model/enums.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../constants.dart';
 import '../../model/consideration.dart';
 import '../../model/datacenter.dart';
 import '../../model/gpu_cluster.dart';
@@ -73,7 +74,7 @@ class _AddListingDialogState extends State<AddListingDialog> {
         child: Dialog(
           // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

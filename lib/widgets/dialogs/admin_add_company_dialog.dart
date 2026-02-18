@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nephosx/constants.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class AdminAddCompanyDialog extends StatefulWidget {
@@ -71,7 +72,7 @@ class _AdminAddCompanyDialogState extends State<AdminAddCompanyDialog> {
         maxWidth: 500,
         child: Dialog(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

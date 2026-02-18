@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:nephosx/constants.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -53,9 +54,9 @@ class GpuClusterDataSource extends DataTableSource {
             'Serial\nNumber',
             style: Theme.of(context).textTheme.labelMedium,
           ),
-          // onSort: (columnIndex, ascending) {
-          //   sortFunction<String>((d) => d.serialNumber, columnIndex, ascending);
-          // },
+          onSort: (columnIndex, ascending) {
+            sortFunction<String>((d) => d.serialNumber, columnIndex, ascending);
+          },
         ),
       DataColumn(
         label: Text(
@@ -273,7 +274,7 @@ class GpuClusterDataSource extends DataTableSource {
                       child: Stack(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(20.0),
+                            padding: kColumnPadding,
                             child: GpuClusterInfoView(gpuCluster: gpuCluster),
                           ),
                           Positioned(

@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../services/mock.dart';
 import 'address.dart';
 
 part 'datacenter.g.dart';
@@ -45,6 +46,15 @@ class Datacenter {
     // required this.country,
     // required this.region,
   });
+
+  static Datacenter get mock => Datacenter(
+    id: Mock.uid(),
+    name: "ABC Datacenter",
+    companyId: Mock.uid(),
+    address: Address.mock,
+    tier: DatacenterTier.tier1,
+    iso27001: true,
+  );
 
   Datacenter copyWith({
     String? id,

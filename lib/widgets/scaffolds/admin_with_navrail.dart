@@ -80,6 +80,15 @@ class AdminWithNavrail extends StatelessWidget {
                         ).user?.type !=
                         UserType.admin,
                   ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.business),
+                    label: Text('Companies'),
+                    disabled:
+                        BlocProvider.of<AuthenticationBloc>(
+                          context,
+                        ).user?.type !=
+                        UserType.admin,
+                  ),
                   // NavigationRailDestination(
                   //   icon: Icon(Icons.domain),
                   //   label: Text('Companies'),

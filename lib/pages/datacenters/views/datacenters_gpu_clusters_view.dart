@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nephosx/constants.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../../model/company.dart';
@@ -33,7 +34,7 @@ class DatacentersGpuClustersView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: kColumnPadding,
         child: MaxWidthBox(
           alignment: Alignment.topLeft,
           maxWidth: 500,

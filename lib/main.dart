@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:intl/intl.dart';
 import 'package:nephosx/blocs/data/data_bloc.dart';
@@ -48,16 +49,13 @@ class AppBlocObserver extends BlocObserver {
 }
 
 void main() async {
-  print(DateTime.now());
   WidgetsFlutterBinding.ensureInitialized();
-  print(DateTime.now());
   List<Future> initialize = [];
   // initialize.add(LocalStorage.instance.initialize());
   initialize.add(
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
   );
   await Future.wait(initialize);
-  print("Firebase Initialiazed  ${DateTime.now()}");
 
   // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -66,7 +64,6 @@ void main() async {
   // res = await FirebaseFunctions.instance.httpsCallable('helloWorld').call();
   usePathUrlStrategy();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  print("Preferences Initialiazed  ${DateTime.now()}");
   // prefs.setString("password", "123");
   var password = prefs.getString("password");
 
@@ -121,7 +118,7 @@ void main() async {
   // }
 
   Bloc.observer = const AppBlocObserver();
-  if (password == "TopSecret123") {
+  if (password == "Lucky777") {
     runApp(const MyApp());
   } else {
     runApp(const PasswordApp());
@@ -266,7 +263,7 @@ class _MyMaterialAppState extends State<MyMaterialApp>
           builder: (context, child) => MediaQuery(
             data: MediaQuery.of(context).copyWith(
               // alwaysUse24HourFormat: true,
-              textScaler: TextScaler.linear(0.8),
+              textScaler: TextScaler.linear(1.0),
             ),
             child: ResponsiveBreakpoints.builder(
               breakpoints: [
@@ -401,7 +398,7 @@ class _MyMaterialAppState extends State<MyMaterialApp>
 //       ),
 //       body: Center(
 //         child: Padding(
-//           padding: const EdgeInsets.all(20.0),
+//           padding:kColumnPadding,
 //           child: Column(
 //             mainAxisAlignment: MainAxisAlignment.center,
 //             children: <Widget>[

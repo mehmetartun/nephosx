@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../constants.dart';
+
 class UsersLoadingView extends StatelessWidget {
   const UsersLoadingView({Key? key}) : super(key: key);
 
@@ -9,7 +11,7 @@ class UsersLoadingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: kColumnPadding,
         child: MaxWidthBox(
           alignment: Alignment.topCenter,
           maxWidth: 500,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nephosx/constants.dart';
 import 'package:nephosx/model/enums.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -42,7 +43,7 @@ class _AdminOnboardingRequestViewState
           child: MaxWidthBox(
             maxWidth: 600,
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: kColumnPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -126,8 +127,10 @@ class _AdminOnboardingRequestViewState
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(widget.request.data['user']['email']),
-                                if (widget.request.data['user']['email']
+                                Text(
+                                  widget.request.data['requesting_user_email'],
+                                ),
+                                if (widget.request.data['requesting_user_email']
                                         .split('@')
                                         .last ==
                                     widget.request.data['company_domain']) ...[
@@ -151,28 +154,8 @@ class _AdminOnboardingRequestViewState
                           DataCell(Text("Requestor Display Name")),
                           DataCell(
                             Text(
-                              widget.request.data['user']['display_name'] ??
+                              widget.request.data['requesting_user_name'] ??
                                   "--",
-                            ),
-                          ),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Requestor First Name")),
-                          DataCell(
-                            Text(
-                              widget.request.data['user']['first_name'] ?? "--",
-                            ),
-                          ),
-                        ],
-                      ),
-                      DataRow(
-                        cells: [
-                          DataCell(Text("Requestor Last Name")),
-                          DataCell(
-                            Text(
-                              widget.request.data['user']['last_name'] ?? "--",
                             ),
                           ),
                         ],
@@ -189,13 +172,13 @@ class _AdminOnboardingRequestViewState
                           builder: (context) {
                             // print(widget.request.data);
                             return AdminAddCompanyDialog(
-                              userId: widget.request.data['requesting_user_id'],
+                              userId: widget.request.data['requesting_uid'],
 
                               companyName: widget.request.data['company_name'],
                               companyDomain:
                                   widget.request.data['company_domain'],
                               confirmationEmail:
-                                  widget.request.data['user']['email'],
+                                  widget.request.data['requesting_user_email'],
                               onAddCompany: widget.onAddCompany,
                             );
                           },

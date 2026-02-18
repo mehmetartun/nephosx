@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 import 'package:nephosx/model/gpu_cluster.dart';
 
@@ -37,6 +38,38 @@ class GpuClustersCubit extends Cubit<GpuClustersState> {
   void init({String? gpuClusterId}) async {
     emit(GpuClustersInitial());
 
+    // var qs = await FirebaseFirestore.instance
+    //     .doc(
+    //       '/datacenters/cv9c2aasdskJX8qbvX7E/gpu_clusters/wntBrN3uYp7ZdV4vKbpZ',
+    //     )
+    //     .get();
+
+    // var qs = await FirebaseFirestore.instance
+    //     .collection('/datacenters/cv9c2aasdskJX8qbvX7E/gpu_clusters')
+    //     .get();
+
+    // var futs = <Future>[];
+    // for (var doc in qs.docs) {
+    //   futs.add(doc.reference.update({'deep_learning_performance_score': 25}));
+    // }
+    // await Future.wait(futs);
+
+    // await qs.reference.update({
+    //   'serial_number': NumberFormat('NVD00000000000').format(0),
+    //   'asset_tag': NumberFormat('GPLC0000000000').format(0),
+    // });
+
+    // for (var i = 0; i < 25; i++) {
+    //   var docref = FirebaseFirestore.instance
+    //       .collection('/datacenters/cv9c2aasdskJX8qbvX7E/gpu_clusters')
+    //       .doc();
+    //   await docref.set({
+    //     ...qs.data()!,
+    //     'id': docref.id,
+    //     'serial_number': NumberFormat('NVD00000000000').format(i + 1),
+    //     'asset_tag': NumberFormat('GPLC0000000000').format(i + 1),
+    //   });
+    // }
     gpuClustersSubscription ??= databaseRepository
         .gpuClustersStream(companyId: user?.companyId)
         .listen((e) {

@@ -80,14 +80,15 @@ class AdminOnboardingCubit extends Cubit<AdminOnboardingState> {
         'userType': 'corporate_admin',
         'requestId': selectedRequest!.id,
       });
+      print(res.data);
+      requests = await databaseRepository.getRequests();
+      emit(AdminOnboardingLoaded(requests: requests));
     } catch (e) {
       // print(e);
+      print(e);
       emit(AdminOnboardingError(error: e.toString()));
     }
     // print(res?.data);
-
-    requests = await databaseRepository.getRequests();
-    emit(AdminOnboardingLoaded(requests: requests));
   }
 
   void viewRequest(Request request) async {

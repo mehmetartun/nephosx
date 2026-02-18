@@ -127,8 +127,8 @@ class CompaniesCubit extends Cubit<CompaniesState> {
       collectionPath: 'requests',
       data: {
         'data': data,
-        'status': 'pending',
-        'type': 'create_company',
+        'status': RequestStatus.pending.fieldName,
+        'type': RequestType.createCompany.fieldName,
         'request_date': Timestamp.now(),
         'requestor_id': user!.uid,
       },

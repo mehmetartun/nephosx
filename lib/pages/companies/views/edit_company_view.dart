@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nephosx/constants.dart';
 import 'package:nephosx/widgets/company_info_card.dart';
 import 'package:nephosx/widgets/dialogs/add_edit_address_dialog.dart';
 import 'package:nephosx/widgets/formfields/address_form_field.dart';
@@ -39,7 +40,7 @@ class _EditCompanyViewState extends State<EditCompanyView> {
         slivers: [
           // SliverAppBar(title: const Text("Edit Company")),
           SliverPadding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             sliver: SliverToBoxAdapter(
               child: MaxWidthBox(
                 alignment: Alignment.topLeft,

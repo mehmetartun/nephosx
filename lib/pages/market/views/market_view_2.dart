@@ -148,12 +148,12 @@
 //                 child: SizedBox(
 //                   width: 1200,
 //                   child: Padding(
-//                     padding: const EdgeInsets.all(20.0),
+//                     padding:kColumnPadding,
 //                     child: Column(
 //                       mainAxisSize: MainAxisSize.min,
 //                       children: [
 //                         Container(
-//                           padding: const EdgeInsets.all(20.0),
+//                           padding:kColumnPadding,
 //                           decoration: BoxDecoration(
 //                             // color: Theme.of(context).colorScheme.surface,
 //                             borderRadius: BorderRadius.circular(0),

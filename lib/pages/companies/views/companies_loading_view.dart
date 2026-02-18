@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nephosx/constants.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -9,7 +10,7 @@ class CompaniesLoadingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: kColumnPadding,
         child: MaxWidthBox(
           alignment: Alignment.topCenter,
           maxWidth: 500,

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../../constants.dart';
+
 class NewUserView extends StatefulWidget {
   const NewUserView({
     super.key,
@@ -66,7 +68,7 @@ class _NewUserViewState extends State<NewUserView> {
               child: Form(
                 key: formKey,
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: kColumnPadding,
                   child: Column(
                     children: [
                       RichText(

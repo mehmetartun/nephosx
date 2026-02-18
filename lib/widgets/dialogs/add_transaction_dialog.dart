@@ -3,6 +3,7 @@ import 'package:nephosx/model/enums.dart';
 import 'package:nephosx/model/slot.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../constants.dart';
 import '../../model/company.dart';
 import '../../model/consideration.dart';
 import '../../model/datacenter.dart';
@@ -72,7 +73,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
         child: Dialog(
           // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

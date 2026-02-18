@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../constants.dart';
+
 class AddGpuClusterDialog extends StatefulWidget {
   const AddGpuClusterDialog({Key? key, required this.onAddGpuCluster})
     : super(key: key);
@@ -22,7 +24,7 @@ class _AddGpuClusterDialogState extends State<AddGpuClusterDialog> {
         maxWidth: 500,
         child: Dialog(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: kColumnPadding,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

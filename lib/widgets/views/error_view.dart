@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants.dart';
+
 class ErrorView extends StatelessWidget {
   final String title;
   final String message;
@@ -17,7 +19,7 @@ class ErrorView extends StatelessWidget {
       appBar: AppBar(title: Text(title)),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: kColumnPadding,
           child: Column(
             children: [
               Container(

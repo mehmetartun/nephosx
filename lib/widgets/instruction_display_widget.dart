@@ -1,6 +1,8 @@
 import 'package:nephosx/model/app_instruction.dart';
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 class InstructionDisplayWidget extends StatelessWidget {
   const InstructionDisplayWidget({
     super.key,
@@ -32,7 +34,7 @@ class InstructionDisplayWidget extends StatelessWidget {
                     ),
                   ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: kColumnPadding,
               child: Text(
                 appInstruction.title,
                 style: Theme.of(context).textTheme.headlineLarge,
@@ -40,7 +42,7 @@ class InstructionDisplayWidget extends StatelessWidget {
             ),
 
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: kColumnPadding,
               child: Text(
                 appInstruction.description,
                 style: Theme.of(context).textTheme.bodyLarge,

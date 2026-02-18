@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../../constants.dart';
 import '../../../model/address.dart';
 import '../../../model/datacenter.dart';
 import '../../../widgets/dialogs/add_edit_address_dialog.dart';
@@ -53,7 +54,7 @@ class _DatacenterAddEditViewState extends State<DatacenterAddEditView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: kColumnPadding,
         child: MaxWidthBox(
           alignment: Alignment.topCenter,
           maxWidth: 500,

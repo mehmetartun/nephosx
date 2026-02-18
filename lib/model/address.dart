@@ -90,6 +90,17 @@ class Address {
     return text;
   }
 
+  static Address get mock => Address(
+    addressLine1: "123 Main St",
+    addressLine2: "Apt 4B",
+    addressLine3: "Suite 100",
+    zipCode: "12345",
+    city: "New York",
+    state: AddressState.usny,
+    country: Country.us,
+    description: "Mock Address",
+  );
+
   static List<Country> get sortedCountries {
     final favorites = [
       Country.us,

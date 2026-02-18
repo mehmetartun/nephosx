@@ -7,7 +7,7 @@ class PlatformSettingsService {
   PlatformSettingsService._();
 
   static PlatformSettingsService get instance => _instance;
-  late final DatabaseRepository databaseRepository;
+  late DatabaseRepository databaseRepository;
 
   PlatformSettings _platformSettings = PlatformSettings.defaultSettings;
 

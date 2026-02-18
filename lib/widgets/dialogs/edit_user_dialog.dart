@@ -4,6 +4,7 @@ import 'package:nephosx/widgets/user_list_tile.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 import '../../blocs/authentication/authentication_bloc.dart';
+import '../../constants.dart';
 import '../../model/enums.dart';
 import '../../model/user.dart';
 
@@ -36,7 +37,7 @@ class _EditUserDialogState extends State<EditUserDialog> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: kColumnPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

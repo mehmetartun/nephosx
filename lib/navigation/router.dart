@@ -18,6 +18,7 @@ import '../pages/profile/profile_page.dart';
 import '../pages/sign_in/views/email_verification_view.dart';
 import '../pages/sign_in/views/new_password_view.dart';
 import '../pages/users/users_page.dart';
+import '../pages/widgets/widgets_page.dart';
 import '../theme/theme_page.dart';
 import '../widgets/animation_widget.dart';
 import '../widgets/scaffolds/admin_with_navrail.dart';
@@ -80,7 +81,7 @@ class NestedRouter {
   late final GoRouter _router = GoRouter(
     debugLogDiagnostics: true,
     // navigatorKey: _rootNavigatorKey,
-    initialLocation: "/market",
+    initialLocation: "/widgets",
     redirect: (BuildContext context, GoRouterState state) {
       // print('Mathced Location ${state.matchedLocation}');
       // print('Uri ${state.uri.toString()}');
@@ -101,7 +102,7 @@ class NestedRouter {
             // return MyNavigatorRoute.dataEntryTop.path;
             // return MyNavigatorRoute.consumptionEntry.path;
 
-            return "/market";
+            return "/widgets";
             // return null;
           } else {
             // print(state.matchedLocation);
@@ -166,6 +167,11 @@ class NestedRouter {
         path: MyNavigatorRoute.theme.path,
         name: MyNavigatorRoute.theme.name,
         builder: (BuildContext context, GoRouterState state) => ThemePage(),
+      ),
+      GoRoute(
+        path: MyNavigatorRoute.widgets.path,
+        name: MyNavigatorRoute.widgets.name,
+        builder: (BuildContext context, GoRouterState state) => WidgetsPage(),
       ),
       GoRoute(
         path: MyNavigatorRoute.home.path,
@@ -373,6 +379,22 @@ class NestedRouter {
                                       BuildContext context,
                                       GoRouterState state,
                                     ) => const AdminOnboardingPage(),
+                              ),
+                            ],
+                          ),
+                          StatefulShellBranch(
+                            routes: [
+                              GoRoute(
+                                // The screen to display as the root in the third tab of the
+                                // bottom navigation bar.
+                                // name: "settings",
+                                path: MyNavigatorRoute.adminCompanies.path,
+                                name: MyNavigatorRoute.adminCompanies.name,
+                                builder:
+                                    (
+                                      BuildContext context,
+                                      GoRouterState state,
+                                    ) => const CompaniesPage(),
                               ),
                             ],
                           ),

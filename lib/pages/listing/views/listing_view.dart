@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:nephosx/widgets/occupation_view_paint.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import '../../../constants.dart';
 import '../../../model/gpu_cluster.dart';
 import '../../../model/gpu_transaction.dart';
 import '../../../model/listing.dart';
@@ -43,7 +44,7 @@ class _ListingViewState extends State<ListingView> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: kColumnPadding,
           child: MaxWidthBox(
             alignment: Alignment.topLeft,
             maxWidth: 1000,
